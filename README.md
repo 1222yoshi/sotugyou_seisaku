@@ -76,3 +76,6 @@ MVP後
 ・「#私を構成する９枚」機能は上記ミニアプリのようにItunes Search APIを使います。
 ・マッチング機能は上記ミニアプリで完成させたアルゴリズムを使います。
 ・出題機能、実力数値化機能は上記ミニアプリで実験的に作ったクイズ機能のアルゴリズムを使います。
+
+Figma：https://www.figma.com/board/K7q67jCstH6s1qHU3zpTs3/%E5%8D%92%E6%A5%AD%E5%88%B6%E4%BD%9C?node-id=0-1&t=FpfalHLFOA7c9RfU -1
+
