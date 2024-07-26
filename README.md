@@ -79,3 +79,4 @@ MVP後
 
 Figma：https://www.figma.com/design/mSpr7uukL96Z7vVGmuyinA/%E5%8D%92%E6%A5%AD%E5%88%B6%E4%BD%9CUI?node-id=0-1&t=3C7fo46dZeLdAfAg-1
 
+ER図：https://gyazo.com/53c90bea9ea1d885a090cb8177c0ba3b
