@@ -1,0 +1,2 @@
+class OtherUsersController < ApplicationController
+end
