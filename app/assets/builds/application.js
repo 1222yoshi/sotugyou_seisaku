@@ -10882,6 +10882,96 @@
 
   // app/javascript/application.js
   var bootstrap = __toESM(require_bootstrap());
+  var isReload = true;
+  document.addEventListener("DOMContentLoaded", () => {
+    const neonText = document.querySelector(".neon-text-on");
+    if (isReload) {
+      startBlinkingForElements();
+      isReload = false;
+    } else {
+      applyNoAnimationStyles(neonText);
+    }
+    neonText.addEventListener("mouseout", () => {
+      if (!isReload) {
+        neonText.classList.add("no-animation");
+      }
+    });
+    neonText.addEventListener("mouseover", () => {
+      neonText.classList.remove("no-animation");
+    });
+  });
+  function startBlinkingForElements() {
+    const blinkingElements = document.querySelectorAll(".blinking");
+    blinkingElements.forEach((element) => {
+      const startBlinking = () => {
+        element.classList.add("blinking");
+        setTimeout(() => {
+          element.classList.remove("blinking");
+          setTimeout(() => {
+            element.classList.add("blinking");
+            setTimeout(() => {
+              element.classList.remove("blinking");
+            }, 150);
+          }, 100);
+        }, 1e3);
+      };
+      startBlinking();
+    });
+  }
+  var links = document.querySelectorAll("a");
+  links.forEach((link) => {
+    link.addEventListener("click", (e) => {
+      e.preventDefault();
+      const neonText = document.querySelector(".neon-text-on");
+      applyNoAnimationStyles(neonText);
+      setTimeout(() => {
+        window.location.href = link.href;
+      }, 100);
+    });
+  });
+  function applyNoAnimationStyles(neonText) {
+    neonText.classList.add("no-animation");
+    neonText.style.animation = "none";
+    neonText.style.color = "#8bd3ff";
+    neonText.style.textShadow = "0 0 5px #02a5dc, 0 0 10px #02a5dc, 0 0 15px #02a5dc";
+  }
+  document.addEventListener("DOMContentLoaded", () => {
+    const buttons = document.querySelectorAll(".menu-button, .likes-button");
+    buttons.forEach((button) => {
+      const menu = button.classList.contains("menu-button") ? document.querySelector(".home-menu") : document.querySelector(".likes-menu");
+      button.addEventListener("click", (e) => {
+        e.preventDefault();
+        toggleMenu(button, menu);
+      });
+      document.addEventListener("click", (e) => {
+        if (!button.contains(e.target) && !menu.contains(e.target)) {
+          closeMenu(button, menu);
+        }
+      });
+      button.addEventListener("mouseleave", () => {
+        if (menu.style.display === "block") {
+          button.classList.add("no-animation");
+        }
+      });
+      button.addEventListener("mouseover", () => {
+        button.classList.remove("no-animation");
+      });
+    });
+    function toggleMenu(button, menu) {
+      if (menu.style.display === "block") {
+        closeMenu(button, menu);
+      } else {
+        menu.style.display = "block";
+        button.classList.remove("neon-text-off");
+        button.classList.add("neon-icon-on");
+      }
+    }
+    function closeMenu(button, menu) {
+      menu.style.display = "none";
+      button.classList.remove("neon-icon-on");
+      button.classList.add("neon-text-off");
+    }
+  });
 })();
 /*! Bundled license information:
 
