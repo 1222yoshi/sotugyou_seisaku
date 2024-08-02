@@ -13,3 +13,157 @@
  *= require_tree .
  *= require_self
  */
+ @font-face {
+    font-family: 'ShinRetroMaruGothic';
+    src: url('/assets/shin-retro-maru-gothic.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+  }
+  
+  header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 75px;
+    border-bottom: 2px solid #884915;
+    margin: 0 20px;
+    padding: 15px;
+    background: transparent;
+    animation: orange-glow 0.5s ease-in-out forwards, orange-color-change 0.5s ease-in-out forwards;
+  }
+
+  @keyframes orange-glow {
+    0% {
+      border-bottom-shadow: none;
+    }
+    100% {
+      box-shadow: 
+      0 2px 2px -2px #965a28, 
+      0 5px 5px -5px #965a28,
+      0 7px 7px -7px #965a28,
+      0 -2px 1px -2px #965a28 inset, 
+      0 -5px 4px -5px #965a28 inset,
+      0 -7px 6px -7px #965a28 inset;
+    }
+  }
+
+  @keyframes orange-color-change {
+    0% {
+      border-bottom-color: #884915;
+    }
+    100% {
+      border-bottom-color: #ff9a48;
+    }
+  }
+  
+  body {
+    padding-top: 75px;
+    margin: 0 20px;
+    background-color: #050505; 
+    color: #b2b2b2;
+    font-family: 'ShinRetroMaruGothic';
+    width: 100%;
+  }
+
+  .neon-text-on {
+    color: #127292;
+    animation: blue-glow 0.3s ease-in-out forwards, blue-color-change 0.3s ease-in-out forwards;
+  }
+
+  .neon-text-on:hover {
+    animation: none;
+    color: #8bd3ff;
+    text-shadow:
+      0 0 5px #02a5dc, 
+      0 0 10px #02a5dc,
+      0 0 15px #02a5dc,
+      0 0 20px #02a5dc;
+  }
+
+  .neon-text-on.no-animation {
+    animation: none;
+    color: #8bd3ff;
+    text-shadow:
+      0 0 5px #02a5dc, 
+      0 0 10px #02a5dc,
+      0 0 15px #02a5dc;
+}
+
+  @keyframes blue-glow {
+    0% {
+      text-shadow: none;
+    }
+    100% {
+      text-shadow: 
+        0 0 5px #02a5dc, 
+        0 0 10px #02a5dc,
+        0 0 15px #02a5dc;
+    }
+  }
+
+  @keyframes blue-color-change {
+    0% {
+      color: #127292;
+    }
+    100% {
+      color: #8bd3ff;
+    }
+  }
+
+  .neon-icon-on {
+    color: #127292;
+    animation: blue-icon-glow 0.3s ease-in-out forwards, blue-icon-color-change 0.3s ease-in-out forwards;
+  }
+
+  .neon-icon-on:hover {
+    animation: none;
+    color: #8bd3ff;
+    filter: drop-shadow(0 0 5px #02a5dc) drop-shadow(0 0 10px #02a5dc);
+  }
+
+  .neon-icon-on.no-animation {
+    animation: none;
+    color: #8bd3ff;
+    filter: drop-shadow(0 0 5px #02a5dc);
+}
+
+  @keyframes blue-icon-glow {
+    0% {
+      filter: drop-shadow(0 0 0 transparent);
+    }
+    100% {
+      filter: drop-shadow(0 0 5px #02a5dc);
+    }
+  }
+
+  @keyframes blue-icon-color-change {
+    0% {
+      color: #127292;
+    }
+    100% {
+      color: #8bd3ff;
+    }
+  }
+
+  .blinking {
+    color: #127292;
+    text-shadow: none;
+  }
+ 
+  .neon-text-off {
+    color: #127292;
+  }
+
+  .neon-text-off:hover {
+    color: #8bd3ff; /* ネオンテキストオンの時の文字色にする */
+  }
+
+  .home-menu {
+    position: absolute;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    padding: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+}
