@@ -13,6 +13,17 @@
  *= require_tree .
  *= require_self
  */
+
+/* スクロールバーのハンドル（つまみ部分） */
+::-webkit-scrollbar-thumb {
+  background: #884915; /* ハンドルの色を設定 */
+}
+
+/* スクロールバーのハンドルをホバーしたとき */
+::-webkit-scrollbar-thumb:hover {
+  background: #ff9a48; /* ホバー時の色を設定 */
+}
+
  @font-face {
     font-family: 'ShinRetroMaruGothic';
     src: url('/assets/shin-retro-maru-gothic.ttf') format('truetype');
@@ -59,11 +70,12 @@
   
   body {
     padding-top: 75px;
-    margin: 0 20px;
+    margin: 0 35px;
     background-color: #050505; 
     color: #b2b2b2;
     font-family: 'ShinRetroMaruGothic';
     width: 100%;
+    overflow-x: hidden;
   }
 
   .neon-text-on {
@@ -71,6 +83,10 @@
     animation: blue-glow 0.3s ease-in-out forwards, blue-color-change 0.3s ease-in-out forwards;
   }
 
+  .neon-text-on-no-link {
+    color: #127292;
+    animation: blue-glow 0.3s ease-in-out forwards, blue-color-change 0.3s ease-in-out forwards;
+  }
   .neon-text-on:hover {
     animation: none;
     color: #8bd3ff;
@@ -166,4 +182,23 @@
     padding: 10px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
     z-index: 1000;
+}
+
+.input-field {
+  border: 2px solid #127292;
+  background: transparent;
+  outline: none;
+  border-radius: 10px;
+}
+
+.input-field:focus {
+  border: 2px solid #8bd3ff;
+  box-shadow:
+      0 0 2px #02a5dc, 
+      0 0 5px #02a5dc,
+      0 0 7px #02a5dc,
+      0 0 2px #02a5dc inset, 
+      0 0 5px #02a5dc inset,
+      0 0 7px #02a5dc inset;
+  outline: none;
 }
