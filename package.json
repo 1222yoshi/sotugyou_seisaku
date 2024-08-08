@@ -4,8 +4,6 @@
   "dependencies": {
     "@hotwired/turbo-rails": "^8.0.4",
     "@popperjs/core": "^2.11.5",
-    "bootstrap": "^5.2.0",
-    "bootstrap-icons": "^1.9.1",
     "esbuild": "^0.23.0",
     "sass": "^1.54.0"
   },
