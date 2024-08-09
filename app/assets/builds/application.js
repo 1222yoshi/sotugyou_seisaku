@@ -5801,14 +5801,7 @@
     } else {
       applyNoAnimationStyles(neonText);
     }
-    neonText.addEventListener("mouseout", () => {
-      if (!isReload) {
-        neonText.classList.add("no-animation");
-      }
-    });
-    neonText.addEventListener("mouseover", () => {
-      neonText.classList.remove("no-animation");
-    });
+    addHoverListeners(neonText);
   });
   function startBlinkingForElements() {
     const blinkingElements = document.querySelectorAll(".blinking");
@@ -5828,6 +5821,22 @@
       startBlinking();
     });
   }
+  function applyNoAnimationStyles(neonText) {
+    neonText.classList.add("no-animation");
+    neonText.style.animation = "none";
+    neonText.style.color = "#8bd3ff";
+    neonText.style.textShadow = "0 0 5px #02a5dc, 0 0 10px #02a5dc, 0 0 15px #02a5dc";
+  }
+  function addHoverListeners(neonText) {
+    neonText.addEventListener("mouseout", () => {
+      if (!isReload) {
+        neonText.classList.add("no-animation");
+      }
+    });
+    neonText.addEventListener("mouseover", () => {
+      neonText.classList.remove("no-animation");
+    });
+  }
   var links = document.querySelectorAll("a");
   links.forEach((link) => {
     link.addEventListener("click", (e) => {
@@ -5839,12 +5848,6 @@
       }, 100);
     });
   });
-  function applyNoAnimationStyles(neonText) {
-    neonText.classList.add("no-animation");
-    neonText.style.animation = "none";
-    neonText.style.color = "#8bd3ff";
-    neonText.style.textShadow = "0 0 5px #02a5dc, 0 0 10px #02a5dc, 0 0 15px #02a5dc";
-  }
   document.addEventListener("DOMContentLoaded", () => {
     const buttons = document.querySelectorAll(".menu-button, .likes-button");
     buttons.forEach((button) => {
@@ -5881,6 +5884,20 @@
       button.classList.remove("neon-icon-on");
       button.classList.add("neon-text-off");
     }
+  });
+  document.addEventListener("DOMContentLoaded", function() {
+    const inputs = document.querySelectorAll(".input-field");
+    const submitButton = document.getElementById("submit-button");
+    function checkInputs() {
+      const allFilled = Array.from(inputs).every((input) => input.value.trim() !== "");
+      submitButton.className = allFilled ? "neon-text-on" : "neon-text-off";
+      if (allFilled) {
+        addHoverListeners(submitButton);
+      }
+    }
+    inputs.forEach((input) => {
+      input.addEventListener("input", checkInputs);
+    });
   });
 })();
 /*! Bundled license information:
