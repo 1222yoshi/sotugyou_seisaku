@@ -70,7 +70,6 @@
   
   body {
     padding-top: 75px;
-    margin: 0 35px;
     background-color: #050505; 
     color: #b2b2b2;
     font-family: 'ShinRetroMaruGothic';
@@ -177,10 +176,10 @@
 
   .home-menu {
     position: absolute;
-    background-color: #fff;
-    border: 1px solid #ccc;
-    padding: 10px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+    top: 110%;
+    right: 0;
+    background-color: #050505;
+    padding: 8px;
     z-index: 1000;
 }
 
@@ -192,6 +191,7 @@
 }
 
 .input-field:focus {
+  background: transparent;
   border: 2px solid #8bd3ff;
   box-shadow:
       0 0 2px #02a5dc, 
@@ -200,5 +200,11 @@
       0 0 2px #02a5dc inset, 
       0 0 5px #02a5dc inset,
       0 0 7px #02a5dc inset;
+  outline: none;
+}
+
+.input-field:not(:placeholder-shown) {
+  background: transparent;
+  border: 2px solid #8bd3ff;
   outline: none;
 }

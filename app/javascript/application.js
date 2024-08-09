@@ -14,16 +14,7 @@ document.addEventListener('DOMContentLoaded', () => {
         applyNoAnimationStyles(neonText);
     }
 
-    neonText.addEventListener('mouseout', () => {
-        // ホバー解除時にアニメーションを始めないようにする
-        if (!isReload) {
-            neonText.classList.add('no-animation');
-        }
-    });
-
-    neonText.addEventListener('mouseover', () => {
-        neonText.classList.remove('no-animation');
-    });
+    addHoverListeners(neonText);
 });
 
 function startBlinkingForElements() {
@@ -51,6 +42,28 @@ function startBlinkingForElements() {
     });
 }
 
+// no-animationスタイルを適用する関数
+function applyNoAnimationStyles(neonText) {
+    neonText.classList.add('no-animation'); // アニメーションを無効に
+    neonText.style.animation = 'none'; // アニメーションを無効にする
+    neonText.style.color = '#8bd3ff'; // 色を設定
+    neonText.style.textShadow = '0 0 5px #02a5dc, 0 0 10px #02a5dc, 0 0 15px #02a5dc'; // テキストシャドウを設定
+}
+
+// hover時にno-animationクラスの付与/削除を行うリスナーを追加
+function addHoverListeners(neonText) {
+    neonText.addEventListener('mouseout', () => {
+        // ホバー解除時にアニメーションを始めないようにする
+        if (!isReload) {
+            neonText.classList.add('no-animation');
+        }
+    });
+
+    neonText.addEventListener('mouseover', () => {
+        neonText.classList.remove('no-animation');
+    });
+}
+
 // リンクをクリックした時にアニメーションを無効にする
 const links = document.querySelectorAll('a');
 
@@ -68,14 +81,6 @@ links.forEach(link => {
         }, 100);
     });
 });
-
-// no-animationスタイルを適用する関数
-function applyNoAnimationStyles(neonText) {
-    neonText.classList.add('no-animation'); // アニメーションを無効に
-    neonText.style.animation = 'none'; // アニメーションを無効にする
-    neonText.style.color = '#8bd3ff'; // 色を設定
-    neonText.style.textShadow = '0 0 5px #02a5dc, 0 0 10px #02a5dc, 0 0 15px #02a5dc'; // テキストシャドウを設定
-}
 
 document.addEventListener('DOMContentLoaded', () => {
     const buttons = document.querySelectorAll('.menu-button, .likes-button'); // すべてのボタンを取得
@@ -124,4 +129,23 @@ document.addEventListener('DOMContentLoaded', () => {
         button.classList.remove('neon-icon-on'); // クラスをリセット
         button.classList.add('neon-text-off'); // クラスを戻す
     }
+});
+
+document.addEventListener('DOMContentLoaded', function() {
+    const inputs = document.querySelectorAll('.input-field');
+    const submitButton = document.getElementById('submit-button');
+  
+    function checkInputs() {
+      const allFilled = Array.from(inputs).every(input => input.value.trim() !== '');
+      submitButton.className = allFilled ? 'neon-text-on' : 'neon-text-off';
+      
+      // neon-text-onクラスが付与されたらリスナーを追加
+      if (allFilled) {
+        addHoverListeners(submitButton);
+      }
+    }
+  
+    inputs.forEach(input => {
+      input.addEventListener('input', checkInputs);
+    });
 });
