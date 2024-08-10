@@ -5792,16 +5792,62 @@
   addEventListener("turbo:before-fetch-request", encodeMethodIntoRequestBody);
 
   // app/javascript/application.js
-  var isReload = true;
-  document.addEventListener("DOMContentLoaded", () => {
+  document.addEventListener("turbo:load", () => {
     const neonText = document.querySelector(".neon-text-on");
-    if (isReload) {
-      startBlinkingForElements();
-      isReload = false;
-    } else {
+    startBlinkingForElements();
+    if (neonText) {
       applyNoAnimationStyles(neonText);
+      addHoverListeners(neonText);
     }
-    addHoverListeners(neonText);
+    document.querySelectorAll(".menu-button, .likes-button").forEach((button) => {
+      const menu = button.classList.contains("menu-button") ? document.querySelector(".home-menu") : document.querySelector(".likes-menu");
+      button.addEventListener("click", (e) => {
+        e.preventDefault();
+        toggleMenu(button, menu);
+      });
+      document.addEventListener("click", (e) => {
+        if (!button.contains(e.target) && !menu.contains(e.target)) {
+          closeMenu(button, menu);
+        }
+      });
+      button.addEventListener("mouseleave", () => {
+        if (menu.style.display === "block") {
+          button.classList.add("no-animation");
+        }
+      });
+      button.addEventListener("mouseover", () => {
+        button.classList.remove("no-animation");
+      });
+    });
+    const inputs = document.querySelectorAll(".input-field");
+    const submitButton = document.getElementById("submit-button");
+    function checkInputs() {
+      const allFilled = Array.from(inputs).every((input) => input.value.trim() !== "");
+      submitButton.className = allFilled ? "neon-text-on" : "neon-text-off";
+      if (allFilled) {
+        addHoverListeners(submitButton);
+      }
+    }
+    inputs.forEach((input) => {
+      input.addEventListener("input", checkInputs);
+    });
+    document.querySelectorAll(".flash").forEach((flash) => {
+      flash.addEventListener("click", function() {
+        this.style.display = "none";
+      });
+      setTimeout(() => {
+        flash.style.display = "none";
+      }, 3e3);
+    });
+    document.querySelectorAll("a").forEach((link) => {
+      link.addEventListener("click", (e) => {
+        e.preventDefault();
+        applyNoAnimationStyles(neonText);
+        setTimeout(() => {
+          window.location.href = link.href;
+        }, 100);
+      });
+    });
   });
   function startBlinkingForElements() {
     const blinkingElements = document.querySelectorAll(".blinking");
@@ -5837,68 +5883,20 @@
       neonText.classList.remove("no-animation");
     });
   }
-  var links = document.querySelectorAll("a");
-  links.forEach((link) => {
-    link.addEventListener("click", (e) => {
-      e.preventDefault();
-      const neonText = document.querySelector(".neon-text-on");
-      applyNoAnimationStyles(neonText);
-      setTimeout(() => {
-        window.location.href = link.href;
-      }, 100);
-    });
-  });
-  document.addEventListener("DOMContentLoaded", () => {
-    const buttons = document.querySelectorAll(".menu-button, .likes-button");
-    buttons.forEach((button) => {
-      const menu = button.classList.contains("menu-button") ? document.querySelector(".home-menu") : document.querySelector(".likes-menu");
-      button.addEventListener("click", (e) => {
-        e.preventDefault();
-        toggleMenu(button, menu);
-      });
-      document.addEventListener("click", (e) => {
-        if (!button.contains(e.target) && !menu.contains(e.target)) {
-          closeMenu(button, menu);
-        }
-      });
-      button.addEventListener("mouseleave", () => {
-        if (menu.style.display === "block") {
-          button.classList.add("no-animation");
-        }
-      });
-      button.addEventListener("mouseover", () => {
-        button.classList.remove("no-animation");
-      });
-    });
-    function toggleMenu(button, menu) {
-      if (menu.style.display === "block") {
-        closeMenu(button, menu);
-      } else {
-        menu.style.display = "block";
-        button.classList.remove("neon-text-off");
-        button.classList.add("neon-icon-on");
-      }
+  function toggleMenu(button, menu) {
+    if (menu.style.display === "block") {
+      closeMenu(button, menu);
+    } else {
+      menu.style.display = "block";
+      button.classList.remove("neon-text-off");
+      button.classList.add("neon-icon-on");
     }
-    function closeMenu(button, menu) {
-      menu.style.display = "none";
-      button.classList.remove("neon-icon-on");
-      button.classList.add("neon-text-off");
-    }
-  });
-  document.addEventListener("DOMContentLoaded", function() {
-    const inputs = document.querySelectorAll(".input-field");
-    const submitButton = document.getElementById("submit-button");
-    function checkInputs() {
-      const allFilled = Array.from(inputs).every((input) => input.value.trim() !== "");
-      submitButton.className = allFilled ? "neon-text-on" : "neon-text-off";
-      if (allFilled) {
-        addHoverListeners(submitButton);
-      }
-    }
-    inputs.forEach((input) => {
-      input.addEventListener("input", checkInputs);
-    });
-  });
+  }
+  function closeMenu(button, menu) {
+    menu.style.display = "none";
+    button.classList.remove("neon-icon-on");
+    button.classList.add("neon-text-off");
+  }
 })();
 /*! Bundled license information:
 

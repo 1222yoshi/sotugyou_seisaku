@@ -14,6 +14,31 @@
  *= require_self
  */
 
+.flash {
+  cursor: pointer;
+  background: transparent;
+  border: 2px solid transparent;
+  border-radius: 8px;
+  text-align: center;
+  position: fixed; /* 追加 */
+  top: 85px; /* 上からの位置を指定 */
+  left: 50%;
+  transform: translateX(-50%);
+  width: 500px;
+  z-index: 1000; /* 他の要素の上に表示されるように */
+}
+
+.flash-success {
+  color: #30dfa2;
+  border-color: #30dfa2;
+  filter: drop-shadow(0 0 5px #0e9868);
+}
+
+.flash-danger {
+  color: #fd6565;
+  border-color: #fd6565;
+  filter: drop-shadow(0 0 5px #dc0202);
+}
 /* スクロールバーのハンドル（つまみ部分） */
 ::-webkit-scrollbar-thumb {
   background: #884915; /* ハンドルの色を設定 */
