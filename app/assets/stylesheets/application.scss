@@ -141,13 +141,12 @@
     color: #b2b2b2;
     font-family: 'ShinRetroMaruGothic';
     width: 100%;
-    overflow-x: hidden;
   }
 
   .show-border {
     width: 400px;
-    height: 2px;
-    background-color: #b2b2b2;
+    border-top: 2px solid;
+    border-color: #b2b2b2;
     margin-left: -15px;
   }
 
@@ -245,7 +244,7 @@
   }
 
   .neon-text-off:hover {
-    color: #8bd3ff; /* ネオンテキストオンの時の文字色にする */
+    color: #02a5dc; /* ネオンテキストオンの時の文字色にする */
   }
 
   .home-menu {
@@ -259,6 +258,13 @@
 
 .input-field {
   border: 2px solid #127292;
+  background: transparent;
+  outline: none;
+  border-radius: 10px;
+}
+
+.input-field:hover {
+  border: 2px solid #02a5dc;
   background: transparent;
   outline: none;
   border-radius: 10px;
@@ -304,4 +310,33 @@
 .neon-logo-on {
   color: #127292;
   animation: blue-icon-glow 0.3s ease-in-out forwards, blue-icon-color-change 0.3s ease-in-out forwards;
+}
+
+.neon-logo-off {
+  color: #127292;
+}
+
+.file-field::file-selector-button {
+  border: 2px solid #127292;
+  color: #127292;
+  background: transparent;
+  outline: none;
+  border-radius: 10px;
+}
+
+.file-field::file-selector-button:hover {
+  border: 2px solid #02a5dc;
+  color: #02a5dc;
+  background: transparent;
+  outline: none;
+  border-radius: 10px;
+}
+
+.profile-submit {
+  color: #127292;
+  border-bottom: 2px solid #884915;
+}
+
+.profile-submit:hover {
+  animation: blue-glow 0.3s ease-in-out forwards, blue-color-change 0.3s ease-in-out forwards, orange-glow 0.3s ease-in-out forwards, orange-color-change 0.3s ease-in-out forwards;
 }
