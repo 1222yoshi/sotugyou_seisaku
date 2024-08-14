@@ -29,15 +29,55 @@
 }
 
 .flash-success {
-  color: #30dfa2;
-  border-color: #30dfa2;
-  filter: drop-shadow(0 0 5px #0e9868);
+  color: #1f8360;
+  border-color: #1f8360;
+  animation: success-glow 0.3s ease-in-out forwards, success-color-change 0.3s ease-in-out forwards;
+}
+
+@keyframes success-glow {
+  0% {
+    filter: drop-shadow(0 0 0 transparent);
+  }
+  100% {
+    filter: drop-shadow(0 0 5px #0e9868);
+  }
+}
+
+@keyframes success-color-change {
+  0% {
+    color: #1f8360;
+    border-color: #1f8360;
+  }
+  100% {
+    color: #30dfa2;
+    border-color: #30dfa2;
+  }
 }
 
 .flash-danger {
-  color: #fd6565;
-  border-color: #fd6565;
-  filter: drop-shadow(0 0 5px #dc0202);
+  color: #b74b4b;
+  border-color: #b74b4b;
+  animation: danger-glow 0.3s ease-in-out forwards, danger-color-change 0.3s ease-in-out forwards;
+}
+
+@keyframes danger-glow {
+  0% {
+    filter: drop-shadow(0 0 0 transparent);
+  }
+  100% {
+    filter: drop-shadow(0 0 5px #dc0202);
+  }
+}
+
+@keyframes danger-color-change {
+  0% {
+    color: #b74b4b;
+    border-color: #b74b4b;
+  }
+  100% {
+    color: #fd6565;
+    border-color: #fd6565;
+  }
 }
 /* スクロールバーのハンドル（つまみ部分） */
 ::-webkit-scrollbar-thumb {
@@ -66,7 +106,7 @@
     margin: 0 20px;
     padding: 15px;
     background: transparent;
-    animation: orange-glow 0.5s ease-in-out forwards, orange-color-change 0.5s ease-in-out forwards;
+    animation: orange-glow 0.3s ease-in-out forwards, orange-color-change 0.3s ease-in-out forwards;
   }
 
   @keyframes orange-glow {
@@ -95,11 +135,19 @@
   
   body {
     padding-top: 75px;
+    padding-left: 35px;
+    padding-right: 35px; 
     background-color: #050505; 
     color: #b2b2b2;
     font-family: 'ShinRetroMaruGothic';
     width: 100%;
-    overflow-x: hidden;
+  }
+
+  .show-border {
+    width: 400px;
+    border-top: 2px solid;
+    border-color: #b2b2b2;
+    margin-left: -15px;
   }
 
   .neon-text-on {
@@ -196,7 +244,7 @@
   }
 
   .neon-text-off:hover {
-    color: #8bd3ff; /* ネオンテキストオンの時の文字色にする */
+    color: #02a5dc; /* ネオンテキストオンの時の文字色にする */
   }
 
   .home-menu {
@@ -215,21 +263,80 @@
   border-radius: 10px;
 }
 
+.input-field:hover {
+  border: 2px solid #02a5dc;
+  background: transparent;
+  outline: none;
+  border-radius: 10px;
+}
+
 .input-field:focus {
   background: transparent;
-  border: 2px solid #8bd3ff;
-  box-shadow:
+  border: 2px solid #127292;
+  outline: none;
+  animation: blue-field-glow 0.3s ease-in-out forwards, blue-field-color-change 0.3s ease-in-out forwards;
+}
+
+@keyframes blue-field-glow {
+  0% {
+    
+  }
+  100% {
+    box-shadow:
       0 0 2px #02a5dc, 
       0 0 5px #02a5dc,
       0 0 7px #02a5dc,
       0 0 2px #02a5dc inset, 
       0 0 5px #02a5dc inset,
       0 0 7px #02a5dc inset;
-  outline: none;
+  }
+}
+
+@keyframes blue-field-color-change {
+  0% {
+    border-color: #127292;
+  }
+  100% {
+    border-color: #8bd3ff;
+  }
 }
 
 .input-field:not(:placeholder-shown) {
   background: transparent;
   border: 2px solid #8bd3ff;
   outline: none;
+}
+
+.neon-logo-on {
+  color: #127292;
+  animation: blue-icon-glow 0.3s ease-in-out forwards, blue-icon-color-change 0.3s ease-in-out forwards;
+}
+
+.neon-logo-off {
+  color: #127292;
+}
+
+.file-field::file-selector-button {
+  border: 2px solid #127292;
+  color: #127292;
+  background: transparent;
+  outline: none;
+  border-radius: 10px;
+}
+
+.file-field::file-selector-button:hover {
+  border: 2px solid #02a5dc;
+  color: #02a5dc;
+  background: transparent;
+  outline: none;
+  border-radius: 10px;
+}
+
+.profile-submit {
+  color: #127292;
+  border-bottom: 2px solid #884915;
+}
+
+.profile-submit:hover {
+  animation: blue-glow 0.3s ease-in-out forwards, blue-color-change 0.3s ease-in-out forwards, orange-glow 0.3s ease-in-out forwards, orange-color-change 0.3s ease-in-out forwards;
 }

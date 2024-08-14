@@ -5796,7 +5796,6 @@
     const neonText = document.querySelector(".neon-text-on");
     startBlinkingForElements();
     if (neonText) {
-      applyNoAnimationStyles(neonText);
       addHoverListeners(neonText);
     }
     document.querySelectorAll(".menu-button, .likes-button").forEach((button) => {
@@ -5842,7 +5841,6 @@
     document.querySelectorAll("a").forEach((link) => {
       link.addEventListener("click", (e) => {
         e.preventDefault();
-        applyNoAnimationStyles(neonText);
         setTimeout(() => {
           window.location.href = link.href;
         }, 100);
@@ -5867,17 +5865,9 @@
       startBlinking();
     });
   }
-  function applyNoAnimationStyles(neonText) {
-    neonText.classList.add("no-animation");
-    neonText.style.animation = "none";
-    neonText.style.color = "#8bd3ff";
-    neonText.style.textShadow = "0 0 5px #02a5dc, 0 0 10px #02a5dc, 0 0 15px #02a5dc";
-  }
   function addHoverListeners(neonText) {
     neonText.addEventListener("mouseout", () => {
-      if (!isReload) {
-        neonText.classList.add("no-animation");
-      }
+      neonText.classList.add("no-animation");
     });
     neonText.addEventListener("mouseover", () => {
       neonText.classList.remove("no-animation");

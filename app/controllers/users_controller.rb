@@ -11,7 +11,7 @@ class UsersController < ApplicationController
       redirect_to root_path, success: 'アカウント登録が完了しました'
     else
       flash[:danger] = 'アカウント登録に失敗しました'
-      redirect_to new_user_path status: :unprocessable_entity
+      redirect_to new_user_path
     end
   end
 

@@ -1,0 +1,53 @@
+<h1 class="text-xl neon-text-on-no-link fixed top-7 left-1/2 transform -translate-x-1/2 z-10">プロフィール編集</h1>
+<div class="flex h-screen p-4">
+  <div class="flex-1 flex flex-col justify-start p-2">
+    <%= form_with model: @user, url: profile_path, method: :put do |f| %>
+      <div class="mb-8">
+        <%= f.label :"プロフィール画像", class: "neon-text-on-no-link text-2xl" %>
+        <%= image_tag current_user.profile_image_url, class: "w-20 h-20 rounded-full mt-4 mb-4"%> 
+        <%= f.file_field :profile_image, class: 'file-field' %>
+      </div>
+      <div class="mb-8">
+        <%= f.label :"名前", class: "neon-text-on-no-link text-2xl flex" %>
+        <%= f.text_field :name, placeholder: '名前', class: 'input-field mt-4',autocomplete: 'off' %>
+      </div>
+      <div class="mb-8 ">
+        <%= f.label :"リンク", class: "neon-text-on-no-link text-2xl flex" %>
+        <%= f.text_field :x_link, placeholder: 'Xリンク', class: 'input-field flex mt-4',autocomplete: 'off' %>
+        <%= f.text_field :instagram_link, placeholder: 'インスタリンク', class: 'input-field flex mt-4', autocomplete: 'off' %>
+        <%= f.text_field :youtube_link, placeholder: 'YouTubeリンク', class: 'input-field flex mt-4',autocomplete: 'off' %>
+        <%= f.text_field :custom_link, placeholder: 'その他リンク', class: 'input-field flex mt-4',autocomplete: 'off' %>
+      </div>
+    </div>
+    <div class="flex-1 flex flex-col justify-start p-2 mr-4">
+      <%= f.label :"活動エリア", class: "text-2xl neon-text-on-no-link " %>
+      <div class="flex">
+        <%= select_tag "user[area_ids][]", options_from_collection_for_select(Area.all, 'id', 'name', current_user.area_ids[0]), class: 'input-field w-40 mt-2 mb-10 mr-2' %>
+        <%= select_tag "user[area_ids][]", options_for_select([['なし', '']] + Area.pluck(:name, :id), current_user.area_ids[1]), class: 'input-field w-40 mt-2 mb-10 mr-2' %>
+        <%= select_tag "user[area_ids][]", options_for_select([['なし', '']] + Area.pluck(:name, :id), current_user.area_ids[2]), class: 'input-field w-40 mt-2 mb-10'%>
+      </div>
+      <%= f.label :"演奏楽器", class: "text-2xl neon-text-on-no-link " %>
+      <div class="flex">
+        <%= select_tag "user[instrument_ids][]", options_from_collection_for_select(Instrument.all, 'id', 'name', current_user.instrument_ids[0]), class: 'input-field w-40 mt-2 mr-2 mb-10' %>
+        <%= select_tag "user[instrument_ids][]", options_for_select([['なし', '']] + Instrument.pluck(:name, :id), current_user.instrument_ids[1]), class: 'input-field w-40 mt-2 mb-10' %>
+      </div>
+      <%= f.label :"生年月日", class: "neon-text-on-no-link text-2xl" %>
+      <div class="flex">
+        <%= f.select :birth_year, options_for_select((1900..Time.current.year).to_a.reverse, @user.birthdate&.year), { prompt: '年を選択' }, class: 'input-field w-40 mt-2 mb-10 mr-2' %>
+        <%= f.select :birth_month, options_for_select((1..12).to_a, @user.birthdate&.month), { prompt: '月を選択' }, class: 'input-field w-40 mt-2 mb-10 mr-2' %>
+        <%= f.select :birth_day, options_for_select((1..31).to_a, @user.birthdate&.day), { prompt: '日を選択' }, class: 'input-field w-40 mt-2 mb-10' %>
+      </div>
+      <%= f.label :"性別", class: "text-2xl neon-text-on-no-link" %>
+      <%= f.select :gender, options_for_select([['男性', 'male'], ['女性', 'female']], @user.gender), { include_blank: '性別を選択' }, class: 'input-field w-40 mt-2 mb-10' %>
+      <%= f.label :"目的", class: "text-2xl neon-text-on-no-link" %>
+      <%= f.select :purpose, options_for_select([['プロ志望', 'pro'], ['趣味', 'hobby']], @user.purpose), { include_blank: '目的を選択' }, class: 'input-field w-40 mt-2 mb-10' %>
+    </div>
+    <div class="flex-1 flex flex-col justify-start p-2 ml-4">
+      <%= f.label :"自己紹介", class: "text-2xl neon-text-on-no-link"%>
+      <%= f.text_area :introduction, rows: 10, class: 'input-field  mt-2 mb-12'%>
+      <div class="flex justify-end ">
+        <%= f.submit '保存', class: "profile-submit text-3xl"%>
+      </div>
+    </div>
+  <% end %>
+</div>

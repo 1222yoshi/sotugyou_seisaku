@@ -9,7 +9,6 @@ document.addEventListener('turbo:load', () => {
 
     // neonTextが存在する場合にno-animationスタイルを適用
     if (neonText) {
-        applyNoAnimationStyles(neonText); // リロード以外の時はno-animationを適用
         addHoverListeners(neonText); // hoverリスナ
     }
 
@@ -77,7 +76,6 @@ document.addEventListener('turbo:load', () => {
     document.querySelectorAll('a').forEach(link => {
         link.addEventListener('click', (e) => {
             e.preventDefault(); // デフォルトのリンク動作を無効に
-            applyNoAnimationStyles(neonText); // アニメーションを無効にする
 
             // ページ遷移を遅延させる（タイムアウトで遷移）
             setTimeout(() => {
@@ -113,21 +111,12 @@ function startBlinkingForElements() {
     });
 }
 
-// no-animationスタイルを適用する関数
-function applyNoAnimationStyles(neonText) {
-    neonText.classList.add('no-animation'); // アニメーションを無効に
-    neonText.style.animation = 'none'; // アニメーションを無効にする
-    neonText.style.color = '#8bd3ff'; // 色を設定
-    neonText.style.textShadow = '0 0 5px #02a5dc, 0 0 10px #02a5dc, 0 0 15px #02a5dc'; // テキストシャドウを設定
-}
 
 // hover時にno-animationクラスの付与/削除を行うリスナーを追加
 function addHoverListeners(neonText) {
     neonText.addEventListener('mouseout', () => {
         // ホバー解除時にアニメーションを始めないようにする
-        if (!isReload) {
             neonText.classList.add('no-animation');
-        }
     });
 
     neonText.addEventListener('mouseover', () => {
