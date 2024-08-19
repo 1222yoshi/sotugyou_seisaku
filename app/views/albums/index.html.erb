@@ -1,0 +1,61 @@
+<h1 class="text-xl neon-text-on-no-link fixed top-7 left-1/2 transform -translate-x-1/2 z-10">＃私を構成する９枚</h1>
+<div class="flex h-screen justify-between p-4 ">
+  <div class="flex flex-col justify-start fixed p-2 mt-6">
+    <div class="grid grid-cols-3">
+      <% @user_albums.each do |user_album| %>
+        <div class="flex  mb-24">
+          <div class="album w-32 h-32 overflow-hidden flex items-center justify-center">
+            <%= link_to album_path(user_album.album.itunes_album_id), class: "object-cover w-full h-full" do %>
+              <%= image_tag user_album.album.artwork_url, class: "object-cover w-full h-full" %>
+            <% end %>
+          </div>
+          <div class="w-48 mr-2 flex flex-col justify-center relative">
+            <div class="text-center">
+              <h3 class="mb-1"><%= user_album.album.album_name %></h3>
+              <p><%= user_album.album.artist_name %></p>
+            </div>
+            <div class="absolute  right-1 bottom-0">
+              <%= button_to album_path(user_album.album), method: :delete, class: "delete-icon" do %>
+                <svg width="20" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                <path fill-rule="evenodd" clip-rule="evenodd" d="M10.6763 0L13.3222 1.19209e-07C13.3223 1.19209e-07 13.3221 1.19209e-07 13.3222 1.19209e-07C14.1095 -0.000126243 14.8771 0.247518 15.5158 0.707841C16.1545 1.16822 16.6321 1.81798 16.881 2.565L17.2759 3.75H19.4871C19.4948 3.74993 19.5026 3.74993 19.5103 3.75H22C22.6904 3.75 23.25 4.30964 23.25 5C23.25 5.69036 22.6904 6.25 22 6.25H20.6638L19.5781 21.4275C19.5781 21.4276 19.5781 21.4274 19.5781 21.4275C19.5331 22.0578 19.2511 22.6482 18.7887 23.079C18.3262 23.51 17.7177 23.7497 17.0856 23.75H6.9125L6.91065 23.75C6.27898 23.7491 5.67107 23.509 5.20914 23.0782C4.74729 22.6474 4.46561 22.0578 4.42068 21.4278C4.42067 21.4277 4.42069 21.428 4.42068 21.4278L3.33613 6.25H2C1.30964 6.25 0.75 5.69036 0.75 5C0.75 4.30964 1.30964 3.75 2 3.75H4.48968C4.49743 3.74993 4.50518 3.74993 4.5129 3.75H6.72405L7.11905 2.565C7.11908 2.56491 7.11902 2.56509 7.11905 2.565C7.36778 1.8184 7.84519 1.16868 8.48348 0.708389C9.12185 0.248036 9.8892 0.000203967 10.6763 0ZM7.59617 6.25C7.61555 6.25045 7.6349 6.25045 7.65418 6.25H16.3458C16.3651 6.25045 16.3844 6.25045 16.4038 6.25H18.1574L17.0844 21.2496L6.91435 21.25L5.84251 6.25H7.59617ZM14.6407 3.75H9.35928L9.49085 3.35528C9.57376 3.10638 9.73297 2.88958 9.94576 2.73613C10.1585 2.58274 10.414 2.50014 10.6763 2.5C10.6761 2.5 10.6764 2.5 10.6763 2.5H13.3225C13.585 2.49994 13.8411 2.58249 14.054 2.73595C14.2669 2.88941 14.4261 3.10599 14.5091 3.355L14.6407 3.75ZM12 10C12.6904 10 13.25 10.5596 13.25 11.25V16.25C13.25 16.9404 12.6904 17.5 12 17.5C11.3096 17.5 10.75 16.9404 10.75 16.25V11.25C10.75 10.5596 11.3096 10 12 10Z"/>
+                </svg>
+              <% end %>
+            </div>
+          </div>
+        </div>
+      <% end %>
+    </div>
+    <%= button_to 'xに共有', share_album_path(@user_albums), method: :post %>
+  </div>
+  <div class="flex flex-col items-end p-2 ">
+    <%= form_tag(albums_path, method: "get") do %>
+      <%= text_field_tag :album, params[:album], placeholder: "アーティスト名、アルバム名、曲名", class: "input-field fixed right-8 w-80 z-10",autocomplete: 'off' %>
+    <% end %>  
+    <div class="mt-14 w-72 absolute right-10 z-0">
+    <% if @albums.present? %>
+      <% @albums.each do |album| %>
+        <div class="flex  mb-12">
+          <div class="album w-24 h-24 overflow-hidden flex items-center justify-center">
+            <%= link_to album_path(album['collectionId']), class: "object-cover w-full h-full" do %>
+              <%= image_tag(album['artworkUrl100'], class: "object-cover w-full h-full") %>
+            <% end %>
+          </div>
+          <div class="w-48 flex flex-col justify-center relative">
+            <div class="text-center">
+              <h3 class="mb-1 text-xs"><%= album['collectionName'] %></h3>
+              <p class="text-xs"><%= album['artistName'] %></p>
+            </div>
+            <div class="absolute  right-1 bottom-0">
+              <%= link_to choose_album_path(album['collectionId']), method: "post", class: "neon-off-on" do %>
+                <svg width="18" viewBox="0 0 18 18" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                <path d="M17.5 10H10V17.5H7.5V10H0V7.5H7.5V0H10V7.5H17.5V10Z"/>
+                </svg>
+              <% end %>
+            </div>
+          </div>
+        </div> 
+      <% end %>   
+    <% end %>
+    </div>
+  </div>
+</div>

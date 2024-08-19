@@ -253,7 +253,6 @@
     right: 0;
     background-color: #050505;
     padding: 8px;
-    z-index: 1000;
 }
 
 .input-field {
@@ -271,7 +270,8 @@
 }
 
 .input-field:focus {
-  background: transparent;
+
+  background-color: #050505;
   border: 2px solid #127292;
   outline: none;
   animation: blue-field-glow 0.3s ease-in-out forwards, blue-field-color-change 0.3s ease-in-out forwards;
@@ -302,7 +302,6 @@
 }
 
 .input-field:not(:placeholder-shown) {
-  background: transparent;
   border: 2px solid #8bd3ff;
   outline: none;
 }
@@ -339,4 +338,38 @@
 
 .profile-submit:hover {
   animation: blue-glow 0.3s ease-in-out forwards, blue-color-change 0.3s ease-in-out forwards, orange-glow 0.3s ease-in-out forwards, orange-color-change 0.3s ease-in-out forwards;
+}
+
+.neon-off-on {
+  color: #127292;
+}
+
+.neon-off-on:hover {
+  animation: blue-icon-glow 0.3s ease-in-out forwards, blue-icon-color-change 0.3s ease-in-out forwards;
+}
+
+.delete-icon {
+  color: #b74b4b;
+}
+
+.delete-icon:hover {
+  animation: red-icon-glow 0.3s ease-in-out forwards, red-icon-color-change 0.3s ease-in-out forwards;
+}
+
+@keyframes red-icon-glow {
+  0% {
+    filter: drop-shadow(0 0 0 transparent);
+  }
+  100% {
+    filter: drop-shadow(0 0 5px #dc0202);
+  }
+}
+
+@keyframes red-icon-color-change {
+  0% {
+    color: #b74b4b;
+  }
+  100% {
+    color: #fd6565;
+  }
 }

@@ -12,6 +12,8 @@ class User < ApplicationRecord
   has_many :areas, through: :user_areas
   has_many :user_instruments
   has_many :instruments, through: :user_instruments
+  has_many :user_albums
+  has_many :albums, through: :user_albums
 
   def age
     return unless birthdate.present?

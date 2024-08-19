@@ -8,7 +8,8 @@ class UsersController < ApplicationController
   def create
     @user = User.new(user_params)
     if @user.save
-      redirect_to root_path, success: 'アカウント登録が完了しました'
+      auto_login(@user)
+      redirect_to albums_path, success: 'アカウント登録が完了しました'
     else
       flash[:danger] = 'アカウント登録に失敗しました'
       redirect_to new_user_path

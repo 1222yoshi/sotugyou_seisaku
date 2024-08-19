@@ -1,5 +1,5 @@
 <h1 class="text-xl neon-text-on-no-link fixed top-7 left-1/2 transform -translate-x-1/2 z-10">プロフィール編集</h1>
-<div class="flex h-screen p-4">
+<div class="flex h-screen p-4 mt-4">
   <div class="flex-1 flex flex-col justify-start p-2">
     <%= form_with model: @user, url: profile_path, method: :put do |f| %>
       <div class="mb-8">
@@ -22,13 +22,13 @@
     <div class="flex-1 flex flex-col justify-start p-2 mr-4">
       <%= f.label :"活動エリア", class: "text-2xl neon-text-on-no-link " %>
       <div class="flex">
-        <%= select_tag "user[area_ids][]", options_from_collection_for_select(Area.all, 'id', 'name', current_user.area_ids[0]), class: 'input-field w-40 mt-2 mb-10 mr-2' %>
+        <%= select_tag "user[area_ids][]", options_from_collection_for_select(Area.all, 'id', 'name', current_user.area_ids[0] || Area.find_by(name: '東京都')&.id), class: 'input-field w-40 mt-2 mb-10 mr-2' %>
         <%= select_tag "user[area_ids][]", options_for_select([['なし', '']] + Area.pluck(:name, :id), current_user.area_ids[1]), class: 'input-field w-40 mt-2 mb-10 mr-2' %>
         <%= select_tag "user[area_ids][]", options_for_select([['なし', '']] + Area.pluck(:name, :id), current_user.area_ids[2]), class: 'input-field w-40 mt-2 mb-10'%>
       </div>
       <%= f.label :"演奏楽器", class: "text-2xl neon-text-on-no-link " %>
       <div class="flex">
-        <%= select_tag "user[instrument_ids][]", options_from_collection_for_select(Instrument.all, 'id', 'name', current_user.instrument_ids[0]), class: 'input-field w-40 mt-2 mr-2 mb-10' %>
+        <%= select_tag "user[instrument_ids][]", options_from_collection_for_select(Instrument.all, 'id', 'name', current_user.instrument_ids[0] || Instrument.find_by(name: 'リスナー')&.id), class: 'input-field w-40 mt-2 mr-2 mb-10' %>
         <%= select_tag "user[instrument_ids][]", options_for_select([['なし', '']] + Instrument.pluck(:name, :id), current_user.instrument_ids[1]), class: 'input-field w-40 mt-2 mb-10' %>
       </div>
       <%= f.label :"生年月日", class: "neon-text-on-no-link text-2xl" %>
