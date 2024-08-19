@@ -1,4 +1,4 @@
-<header class="flex justify-between items-center p-4">
+<header class="flex justify-between items-center p-4 z-20">
   <a href="/" class="text-4xl neon-text-on">M<span class="blinking">e</span>TRO NOTE</a>
   <div class="flex items-center space-x-10">
     <a href="#" class="neon-text-off chat-button">
@@ -15,9 +15,6 @@
     </svg>
     </a>
     <div class="likes-menu" style="display: none;">
-      <ul>
-        <li><a href="#">いいねしたユーザー</a></li>
-      </ul>
     </div>
     <a href="#" class="neon-text-off menu-button">  
       <svg width="30" viewBox="0 0 35 27" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
@@ -26,8 +23,9 @@
     </a>
     <div class="home-menu" style="display: none;">
       <ul style="text-align: right;">
-        <li><a href="#" class="neon-text-off">マイページ</a></li>
-        <li><a href="users/new" class="neon-text-off">アカウント登録</a></li>
+        <li><%= link_to "＃私を構成する９枚", albums_path, class: "neon-off-on" %></li>
+        <li><%= link_to "プロフィール", profile_path, class: "neon-off-on"%></li>
+        <li><%= button_to "ログアウト", logout_path, method: :delete, class: "neon-off-on"%></li>
       </ul>
     </div>
   </div>

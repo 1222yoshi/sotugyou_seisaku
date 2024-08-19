@@ -10,7 +10,16 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_08_14_050927) do
+ActiveRecord::Schema[7.1].define(version: 2024_08_16_084108) do
+  create_table "albums", force: :cascade do |t|
+    t.string "artist_name"
+    t.string "album_name"
+    t.string "itunes_album_id"
+    t.string "artwork_url"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "areas", force: :cascade do |t|
     t.string "name", null: false
     t.string "region"
@@ -22,6 +31,15 @@ ActiveRecord::Schema[7.1].define(version: 2024_08_14_050927) do
     t.string "name", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+  end
+
+  create_table "user_albums", force: :cascade do |t|
+    t.integer "user_id", null: false
+    t.integer "album_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["album_id"], name: "index_user_albums_on_album_id"
+    t.index ["user_id"], name: "index_user_albums_on_user_id"
   end
 
   create_table "user_areas", force: :cascade do |t|
@@ -61,6 +79,8 @@ ActiveRecord::Schema[7.1].define(version: 2024_08_14_050927) do
     t.index ["email"], name: "index_users_on_email", unique: true
   end
 
+  add_foreign_key "user_albums", "albums"
+  add_foreign_key "user_albums", "users"
   add_foreign_key "user_areas", "areas"
   add_foreign_key "user_areas", "users"
   add_foreign_key "user_instruments", "instruments"

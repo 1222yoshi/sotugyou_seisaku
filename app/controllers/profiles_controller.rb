@@ -23,7 +23,9 @@ class ProfilesController < ApplicationController
     end
   end
 
-  def show; end
+  def show
+    @user_albums = current_user.user_albums.includes(:album).order(created_at: :asc)
+  end
 
   private
 
@@ -39,6 +41,8 @@ class ProfilesController < ApplicationController
         params[:user][:birth_day].to_i
       )
       params[:user][:birthdate] = birthdate
+    else
+      params[:user][:birthdate] = nil
     end
   end
 
