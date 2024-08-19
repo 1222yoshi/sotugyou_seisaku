@@ -1,6 +1,6 @@
 require 'httparty'
 
-class ITunesSearchApi
+class ItunesSearchApi
   include HTTParty
   base_uri 'https://itunes.apple.com'
   format :json
