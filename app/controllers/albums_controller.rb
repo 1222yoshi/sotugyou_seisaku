@@ -90,7 +90,7 @@ class AlbumsController < ApplicationController
     @image_url = url_for("/album_grid_#{current_user.id}.png")
   
     # Twitterシェア用のURL生成
-    app_url = "https://metronote-a37794a02853.herokuapp.com/"
+    app_url = "https://metronote-a37794a02853.herokuapp.com/other_users/#{current_user.id}"
     x_url = "https://x.com/intent/tweet?url=#{CGI.escape(app_url)}"
   
     redirect_to x_url, allow_other_host: true

@@ -11,4 +11,5 @@ Rails.application.routes.draw do
       post 'share'
     end
   end
+  resources :other_users, only: %i[index show]
 end
