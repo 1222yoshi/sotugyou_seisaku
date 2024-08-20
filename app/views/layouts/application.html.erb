@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Sotusei</title>
+    <title>MeTRO NOTE</title>
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
@@ -9,6 +9,12 @@
 
     <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
     <%= javascript_importmap_tags %>
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="MeTRO NOTE">
+    <meta name="twitter:description" content="完全実力主義のバンドメンバーマッチングアプリ">
+    <meta name="twitter:image" content="https://metronote-a37794a02853.herokuapp.com/album_grid_<%= @user.id %>.png">
+    <meta name="twitter:url" content="https://metronote-a37794a02853.herokuapp.com/other_users/<%= @user.id %>">
   </head>
 
   <body>
