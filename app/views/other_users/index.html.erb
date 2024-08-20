@@ -1,5 +1,7 @@
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="あなたのアプリのタイトル">
 <meta name="twitter:description" content="アプリの説明文">
-<meta name="twitter:image" content="<%= image_url %>">
+<% if @image_url.present? %>
+  <meta name="twitter:image" content="<%= image_url %>">
+<% end %>
 <h1 >とりあえずトップページ</h1>
