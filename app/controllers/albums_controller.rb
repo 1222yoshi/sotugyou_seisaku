@@ -57,42 +57,30 @@ class AlbumsController < ApplicationController
   def share
     @user_albums = current_user.user_albums.includes(:album).order(created_at: :asc).limit(9)
   
+    require 'open-uri'
     # 画像全体のサイズ
-    grid_size = 300  # グリッド全体のサイズ
+    grid_size = 418  # グリッド全体のサイズ
     cell_size = grid_size / 3  # 各セルのサイズ
   
-    canvas_path = Rails.root.join('tmp', "canvas_#{current_user.id}.png")
-
-  
-    # 画像を読み込み
-    canvas = MiniMagick::Image.open(canvas_path)
-  
+    background_path = Rails.root.join('public', 'background.png')
+    canvas = MiniMagick::Image.open(background_path)
     # 各アルバムアートワークをグリッドに配置
     @user_albums.each_with_index do |user_album, index|
-      artwork = MiniMagick::Image.open(user_album.album.artwork_url)
-      artwork.resize "#{cell_size}x#{cell_size}"
+      artwork_url = user_album.album.artwork_url
+      puts artwork_url
+      URI.open(artwork_url) do |image|
+        artwork = MiniMagick::Image.read(image.read)
+        artwork.resize "#{cell_size}x#{cell_size}"
   
-      # グリッド上の位置を計算
-      x_position = (index % 3) * cell_size + 50 # 余白を考慮して位置を調整
-      y_position = (index / 3) * cell_size + 50
+        # グリッド上の位置を計算
+        x_position = (index % 3) * cell_size + 191 # 余白を考慮して位置を調整
+        y_position = (index / 3) * cell_size 
   
-      # アートワークをキャンバスに合成
-      canvas = canvas.composite(artwork) do |c|
-        c.geometry "+#{x_position}+#{y_position}"
+        # アートワークをキャンバスに合成
+        canvas = canvas.composite(artwork) do |c|
+          c.geometry "+#{x_position}+#{y_position}"
+        end
       end
-    end
-  
-    # テキスト "MeTRO NOTE" を追加
-    canvas.combine_options do |c|
-      c.gravity 'southeast' # 右下に配置
-      c.fill "#8bd3ff" # テキストの色を設定
-      c.font Rails.root.join('app/assets/fonts/shin-retro-maru-gothic.ttf').to_s # カスタムフォントのパス
-      c.pointsize 20 # フォントサイズを設定
-      c.draw "text 10,10 'MeTRO NOTE'" # テキストの描画位置を設定
-      c.annotate "+10+10", "text 0,0 'MeTRO NOTE'"
-      c.draw "text 0,0 'MeTRO NOTE'"
-      c.draw "text 1,1 'MeTRO NOTE'"
-      c.shadow "50x4+0+0"
     end
   
     # 一時的に画像を保存
