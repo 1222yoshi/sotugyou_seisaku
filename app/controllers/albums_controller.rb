@@ -4,8 +4,8 @@ class AlbumsController < ApplicationController
 
     if params[:artist].present? || params[:album].present? || params[:track].present?
       search_term = "#{params[:artist]} #{params[:album]} #{params[:track]}"
-      albums = ItunesSearchApi.search(term: search_term, media: 'music', entity: 'album', country: 'jp')
-      tracks = ItunesSearchApi.search(term: search_term, media: 'music', entity: 'musicTrack', country: 'jp')
+      albums = ITunesSearchAPI.search(term: search_term, media: 'music', entity: 'album', country: 'jp')
+      tracks = ITunesSearchAPI.search(term: search_term, media: 'music', entity: 'musicTrack', country: 'jp')
       @albums = (albums + tracks).select { |result| result['collectionId'].present? }.uniq { |result| result['collectionId'] }
     else
       @albums = []
@@ -15,13 +15,13 @@ class AlbumsController < ApplicationController
   end
   
   def show
-    @album = ItunesSearchApi.lookup(id: params[:id], media: 'music', entity: 'album', country: 'jp')
+    @album = ITunesSearchAPI.lookup(id: params[:id], media: 'music', entity: 'album', country: 'jp')
 
     @user_album = current_user.user_albums.joins(:album).find_by(albums: { itunes_album_id: params[:id] })
   end
 
   def choose
-    album_details = ItunesSearchApi.lookup(id: params[:id], media: 'music', entity: 'album', country: 'jp')
+    album_details = ITunesSearchAPI.lookup(id: params[:id], media: 'music', entity: 'album', country: 'jp')
     if album_details.nil?
       flash[:error] = "アルバムの詳細情報を取得できませんでした。"
       redirect_back(fallback_location: root_path)
