@@ -86,8 +86,6 @@ class AlbumsController < ApplicationController
     # 一時的に画像を保存
     public_file = Rails.root.join('public', "album_grid_#{current_user.id}.png")
     canvas.write(public_file)
-
-    @image_url = url_for("/album_grid_#{current_user.id}.png")
   
     # Twitterシェア用のURL生成
     app_url = "https://metronote-a37794a02853.herokuapp.com/other_users/#{current_user.id}"
