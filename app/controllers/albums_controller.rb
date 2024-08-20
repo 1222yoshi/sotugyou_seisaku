@@ -87,13 +87,13 @@ class AlbumsController < ApplicationController
     public_file = Rails.root.join('public', "album_grid_#{current_user.id}.png")
     canvas.write(public_file)
 
-    image_url = url_for("/album_grid_#{current_user.id}.png")
+    @image_url = url_for("/album_grid_#{current_user.id}.png")
   
     # Twitterシェア用のURL生成
     app_url = "https://metronote-a37794a02853.herokuapp.com/"
-    twitter_url = "https://twitter.com/intent/tweet?text=#{CGI.escape('Check out my albums!')}&url=#{CGI.escape(app_url)}&via=#{CGI.escape(current_user.x_link)}"
+    x_url = "https://x.com/intent/tweet?url=#{CGI.escape(app_url)}"
   
-    redirect_to twitter_url, allow_other_host: true
+    redirect_to x_url, allow_other_host: true
   end
 
   def destroy
