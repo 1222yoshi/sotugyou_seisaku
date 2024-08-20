@@ -8,7 +8,7 @@ Rails.application.routes.draw do
   resources :albums, only: %i[index show destroy] do
     member do
       get 'choose'
-      post 'share'
+      get 'share'
     end
   end
   resources :other_users, only: %i[index show]
