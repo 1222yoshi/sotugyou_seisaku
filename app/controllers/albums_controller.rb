@@ -85,6 +85,7 @@ class AlbumsController < ApplicationController
   
     # 一時的に画像を保存
     public_file = Rails.root.join('public', "album_grid_#{current_user.id}.png")
+    File.delete(public_file) if File.exist?(public_file)
     canvas.write(public_file)
   
     # Twitterシェア用のURL生成
