@@ -85,13 +85,13 @@ class AlbumsController < ApplicationController
   
     # 一時的に画像を保存
     public_file = Rails.root.join('public', "album_grid_#{current_user.id}.png")
-    File.delete(public_file) if File.exist?(public_file)
     canvas.write(public_file)
   
     # Twitterシェア用のURL生成
     app_url = "https://metronote-a37794a02853.herokuapp.com/other_users/#{current_user.id}"
     x_url = "https://x.com/intent/tweet?url=#{CGI.escape(app_url)}"
   
+    redirect_to x_url, allow_other_host: true
   end
 
   def destroy
