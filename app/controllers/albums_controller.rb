@@ -94,7 +94,7 @@ class AlbumsController < ApplicationController
     canvas.write(public_file)
   
     # Twitterシェア用のURL生成
-    app_url = "https://metronote-a37794a02853.herokuapp.com/other_users/#{current_user.id}"
+    app_url = "https://metronote-a37794a02853.herokuapp.com/other_users/#{current_user.id}?#{current_time}"
     x_url = "https://x.com/intent/tweet?url=#{CGI.escape(app_url)}"
   
     redirect_to x_url, allow_other_host: true
