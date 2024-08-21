@@ -8,7 +8,7 @@ class OtherUsersController < ApplicationController
     set_meta_tags   twitter: {
                     title: "＃私を構成する９枚",
                     card: "summary_large_image",
-                    url: "https://metronote-a37794a02853.herokuapp.com/other_users/#{@user.id}",
+                    url: "https://metronote-a37794a02853.herokuapp.com/other_users/#{@user.id}?#{current_time}",
                     image:  "https://metronote-a37794a02853.herokuapp.com/album_grid_#{@user.id}.png"
                   }
     @user_albums = @user.user_albums.includes(:album).order(created_at: :asc)
