@@ -3,9 +3,6 @@ class ApplicationController < ActionController::Base
 
   add_flash_types :success, :danger
   
-  def current_time
-    Time.now.strftime("%Y%m%d%H%M%S")
-  end
   private
 
   def not_authenticated
