@@ -10,13 +10,7 @@
     <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
     <%= javascript_importmap_tags %>
 
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="MeTRO NOTE">
-    <meta name="twitter:description" content="完全実力主義のバンドメンバーマッチングアプリ">
-    <% if @user.present? %>
-    <meta name="twitter:image" content="https://metronote-a37794a02853.herokuapp.com/album_grid_<%= @user.id %>.png">
-    <meta name="twitter:url" content="https://metronote-a37794a02853.herokuapp.com/other_users/<%= @user.id %>">
-    <% end %>
+    <%= display_meta_tags %>
   </head>
 
   <body>
