@@ -5,7 +5,11 @@ class OtherUsersController < ApplicationController
 
   def show
     @user = User.find(params[:id])
+    set_meta_tags   twitter: {
+                    title: "＃私を構成する９枚",
+                    url: "https://metronote-a37794a02853.herokuapp.com/other_users/#{@user.id}",
+                    image:  "https://metronote-a37794a02853.herokuapp.com/album_grid_#{@user.id}.png"
+                  }
     @user_albums = @user.user_albums.includes(:album).order(created_at: :asc)
   end
-
 end
