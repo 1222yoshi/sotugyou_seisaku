@@ -7,6 +7,7 @@ class OtherUsersController < ApplicationController
     @user = User.find(params[:id])
     set_meta_tags   twitter: {
                     title: "＃私を構成する９枚",
+                    card: "summary_large_image",
                     url: "https://metronote-a37794a02853.herokuapp.com/other_users/#{@user.id}",
                     image:  "https://metronote-a37794a02853.herokuapp.com/album_grid_#{@user.id}.png"
                   }
