@@ -1,8 +1,8 @@
 <h1 class="text-xl neon-text-on-no-link fixed top-7 left-1/2 transform -translate-x-1/2 z-10">＃私を構成する９枚</h1>
 <div class="flex h-screen justify-between p-4 ">
-<% if @user_albums.empty? %>
-<h1 class="neon-text-on-no-link text-2xl p-2 mt-4 fixed">好きな音楽を見つけて＃私を構成する９枚を作ってみましょう！　→</h1>
-<% end %>
+<% unless @user_albums.present? || current_user %>
+  <h1 class="neon-text-on-no-link text-2xl p-2 mt-4 fixed">好きな音楽を見つけて＃私を構成する９枚を作ってみましょう！　→</h1>
+<% else %>
   <div class="flex flex-col justify-start fixed p-2 mt-6">
     <div class="grid grid-cols-3">
       <% @user_albums.each do |user_album| %>
@@ -30,7 +30,8 @@
     </div>
     <%= link_to 'xに共有', share_album_path(@user_albums), class: "fixed bottom-2 left-1/2", target: "_blank" %>
   </div>
-  <div class="flex flex-col items-end p-2 ">
+<% end %>
+  <div class="flex flex-col items-end p-2 max-lg:mt-24">
     <%= form_tag(albums_path, method: "get") do %>
       <%= text_field_tag :album, params[:album], placeholder: "アーティスト名、アルバム名、曲名", class: "input-field fixed right-8 w-80 z-10",autocomplete: 'off' %>
     <% end %>  

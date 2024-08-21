@@ -1,6 +1,9 @@
 class AlbumsController < ApplicationController
+  skip_before_action :require_login, only: %i[index show]
   def index
-    @user_albums = current_user.user_albums.includes(:album).order(created_at: :asc)
+    if current_user
+      @user_albums = current_user.user_albums.includes(:album).order(created_at: :asc)
+    end
 
     if params[:artist].present? || params[:album].present? || params[:track].present?
       search_term = "#{params[:artist]} #{params[:album]} #{params[:track]}"
@@ -17,7 +20,9 @@ class AlbumsController < ApplicationController
   def show
     @album = ITunesSearchAPI.lookup(id: params[:id], media: 'music', entity: 'album', country: 'jp')
 
-    @user_album = current_user.user_albums.joins(:album).find_by(albums: { itunes_album_id: params[:id] })
+    if current_user
+      @user_album = current_user.user_albums.joins(:album).find_by(albums: { itunes_album_id: params[:id] })
+    end
   end
 
   def choose
