@@ -19,7 +19,9 @@ class ApplicationController < ActionController::Base
         url: "https://metronote-a37794a02853.herokuapp.com"
       },
       twitter: {
-        card: "summary_large_image"
+        site_name: "MeTRO NOTE",
+        description: "完全実力主義のバンドメンバーマッチングアプリ",
+        url: "https://metronote-a37794a02853.herokuapp.com"
       }
     }
 
