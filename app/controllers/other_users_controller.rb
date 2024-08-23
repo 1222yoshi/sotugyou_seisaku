@@ -1,7 +1,13 @@
 class OtherUsersController < ApplicationController
   skip_before_action :require_login, only: %i[index show]
 
-  def index; end
+  def index
+    if current_user
+      @other_users = User.where.not(id: current_user.id)
+    else
+      @other_users = User.all
+    end
+  end
 
   def show
     @user = User.find(params[:id])

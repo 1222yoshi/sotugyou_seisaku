@@ -9,7 +9,7 @@ class UsersController < ApplicationController
     @user = User.new(user_params)
     if @user.save
       auto_login(@user)
-      redirect_to albums_path, success: 'アカウント登録が完了しました'
+      redirect_to profile_path, success: 'アカウント登録が完了しました'
     else
       flash[:danger] = 'アカウント登録に失敗しました'
       redirect_to new_user_path
