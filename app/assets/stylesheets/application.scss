@@ -24,7 +24,7 @@
   top: 85px; /* 上からの位置を指定 */
   left: 50%;
   transform: translateX(-50%);
-  width: 500px;
+  width: 400px;
   z-index: 1000; /* 他の要素の上に表示されるように */
 }
 
@@ -80,7 +80,7 @@
   }
 }
 /* スクロールバーのハンドル（つまみ部分） */
-::-webkit-scrollbar-thumb {
+scrollbar {
   background: #884915; /* ハンドルの色を設定 */
 }
 
@@ -91,7 +91,7 @@
 
  @font-face {
     font-family: 'ShinRetroMaruGothic';
-    src: url('/assets/shin-retro-maru-gothic.ttf') format('truetype');
+    src: url('shin-retro-maru-gothic.ttf') format('truetype');
     font-weight: normal;
     font-style: normal;
   }
