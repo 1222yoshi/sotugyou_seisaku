@@ -5821,6 +5821,7 @@
     const inputs = document.querySelectorAll(".input-field");
     const submitButton = document.getElementById("submit-button");
     function checkInputs() {
+      if (!submitButton) return;
       const allFilled = Array.from(inputs).every((input) => input.value.trim() !== "");
       submitButton.className = allFilled ? "neon-text-on" : "neon-text-off";
       if (allFilled) {
@@ -5837,14 +5838,6 @@
       setTimeout(() => {
         flash.style.display = "none";
       }, 3e3);
-    });
-    document.querySelectorAll("a").forEach((link) => {
-      link.addEventListener("click", (e) => {
-        e.preventDefault();
-        setTimeout(() => {
-          window.location.href = link.href;
-        }, 100);
-      });
     });
   });
   function startBlinkingForElements() {
