@@ -7,9 +7,14 @@ class AlbumsController < ApplicationController
 
     if params[:artist].present? || params[:album].present? || params[:track].present?
       search_term = "#{params[:artist]} #{params[:album]} #{params[:track]}"
-      albums = ITunesSearchAPI.search(term: search_term, media: 'music', entity: 'album', country: 'jp')
-      tracks = ITunesSearchAPI.search(term: search_term, media: 'music', entity: 'musicTrack', country: 'jp')
-      @albums = (albums + tracks).select { |result| result['collectionId'].present? }.uniq { |result| result['collectionId'] }
+      begin
+        albums = ITunesSearchAPI.search(term: search_term, media: 'music', entity: 'album', country: 'jp')
+        tracks = ITunesSearchAPI.search(term: search_term, media: 'music', entity: 'musicTrack', country: 'jp')
+        @albums = (albums + tracks).select { |result| result['collectionId'].present? }.uniq { |result| result['collectionId'] }
+      rescue JSON::ParserError => e
+        @albums = []
+        flash.now[:danger] = "再試行してください。"
+      end
     else
       @albums = []
     end
@@ -26,11 +31,10 @@ class AlbumsController < ApplicationController
   end
 
   def choose
-    album_details = ITunesSearchAPI.lookup(id: params[:id], media: 'music', entity: 'album', country: 'jp')
-    if album_details.nil?
-      flash[:error] = "アルバムの詳細情報を取得できませんでした。"
-      redirect_back(fallback_location: root_path)
-      return
+    begin
+      album_details = ITunesSearchAPI.lookup(id: params[:id], media: 'music', entity: 'album', country: 'jp')
+    rescue JSON::ParserError => e
+      flash.now[:danger] = "再試行してください。"
     end
 
     album_record = Album.find_or_create_by(
@@ -51,6 +55,7 @@ class AlbumsController < ApplicationController
     else
       @user_album = current_user.user_albums.new(album: album_record)
       if @user_album.save
+        current_user.update(like_music: current_user.user_albums.map { |ua| "#{ua.album.artist_name}の#{ua.album.album_name}" }.join(", "))
         redirect_to albums_path(album: album_param), success: "アルバムを保存しました。"
       else
         flash[:danger] = "アルバムの保存に失敗しました。"
@@ -113,6 +118,7 @@ class AlbumsController < ApplicationController
     album_param = session[:album_search]
     user_album = current_user.user_albums.find_by(album_id: params[:id])
     user_album.destroy
+    current_user.update(like_music: current_user.user_albums.map { |ua| "#{ua.album.artist_name}の#{ua.album.album_name}" }.join(", "))
     flash[:danger] = "アルバムを削除しました。"
     redirect_to albums_path(album: album_param)
   end

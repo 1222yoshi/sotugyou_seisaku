@@ -21,7 +21,6 @@
   border-radius: 8px;
   text-align: center;
   position: fixed; /* 追加 */
-  top: 85px; /* 上からの位置を指定 */
   left: 50%;
   transform: translateX(-50%);
   width: 400px;
@@ -371,5 +370,142 @@ scrollbar {
   }
   100% {
     color: #fd6565;
+  }
+}
+
+.other_user_box {
+  border: 2px solid #127292;
+  border-color: #127292;
+  background: transparent;
+  border-radius: 20px;
+}
+
+.s-neon {
+  color: #b2356d;
+  animation: s-glow 0.3s ease-in-out forwards, s-color-change 0.3s ease-in-out forwards;
+}
+
+@keyframes s-glow {
+  0% {
+    text-shadow: none;
+  }
+  100% {
+    text-shadow: 
+      0 0 5px  #ff6eaf
+      0 0 10px #ff6eaf,
+      0 0 15px #ff6eaf;
+  }
+}
+
+@keyframes s-color-change {
+  0% {
+    color: #b2356d;
+  }
+  100% {
+    color: #ff8ec1;
+  }
+}
+
+.a-neon {
+  color: #b74b4b;
+  animation: a-glow 0.3s ease-in-out forwards, a-color-change 0.3s ease-in-out forwards;
+}
+
+@keyframes a-glow {
+  0% {
+    text-shadow: none;
+  }
+  100% {
+    text-shadow: 
+      0 0 5px  #dc0202
+      0 0 10px #dc0202,
+      0 0 15px #dc0202;
+  }
+}
+
+@keyframes a-color-change {
+  0% {
+    color: #b74b4b;
+  }
+  100% {
+    color: #fd6565;
+  }
+}
+
+.b-neon {
+  color: #b3b74b;
+  animation: b-glow 0.3s ease-in-out forwards, b-color-change 0.3s ease-in-out forwards;
+}
+
+@keyframes b-glow {
+  0% {
+    text-shadow: none;
+  }
+  100% {
+    text-shadow: 
+      0 0 5px  #dee356
+      0 0 10px #dee356,
+      0 0 15px #dee356;
+  }
+}
+
+@keyframes b-color-change {
+  0% {
+    color: #b3b74b;
+  }
+  100% {
+    color: #fbff7c;
+  }
+}
+
+.c-neon {
+  color: #1f8360;
+  animation: c-glow 0.3s ease-in-out forwards, c-color-change 0.3s ease-in-out forwards;
+}
+
+@keyframes c-glow {
+  0% {
+    text-shadow: none;
+  }
+  100% {
+    text-shadow: 
+      0 0 5px  #0e9868
+      0 0 10px #0e9868,
+      0 0 15px #0e9868;
+  }
+}
+
+@keyframes c-color-change {
+  0% {
+    color: #1f8360;
+  }
+  100% {
+    color: #30dfa2;
+  }
+}
+
+.d-neon {
+  color: #1f2483;
+  animation: d-glow 0.3s ease-in-out forwards, d-color-change 0.3s ease-in-out forwards;
+}
+
+@keyframes d-glow {
+  0% {
+    text-shadow: none;
+  }
+  100% {
+    text-shadow: 
+      0 0 5px  #383ebd
+      0 0 10px #383ebd,
+      0 0 15px #383ebd;
+  }
+}
+
+@keyframes d-color-change {
+  0% {
+    color: #1f2483;
+  }
+  100% {
+    color: #787fff;
   }
 }

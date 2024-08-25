@@ -1,5 +1,5 @@
-<% flash.each do |message_type, message| %>
-  <div class="flash flash-<%= message_type %> text-xl">
+<% flash.each_with_index do |(message_type, message), index| %>
+  <div class="flash flash-<%= message_type %> text-xl" style="top: <%= 85 + (index *50) %>px;">
     <%= message %>
   </div>
 <% end %>

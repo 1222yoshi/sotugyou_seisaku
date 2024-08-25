@@ -48,6 +48,7 @@ document.addEventListener('turbo:load', () => {
     const submitButton = document.getElementById('submit-button');
 
     function checkInputs() {
+        if (!submitButton) return;
         const allFilled = Array.from(inputs).every(input => input.value.trim() !== '');
         submitButton.className = allFilled ? 'neon-text-on' : 'neon-text-off';
         
@@ -70,18 +71,6 @@ document.addEventListener('turbo:load', () => {
         setTimeout(() => {
             flash.style.display = 'none'; // 3秒後に非表示にする
         }, 3000);
-    });
-
-    // リンクをクリックした時にアニメーションを無効にする処理
-    document.querySelectorAll('a').forEach(link => {
-        link.addEventListener('click', (e) => {
-            e.preventDefault(); // デフォルトのリンク動作を無効に
-
-            // ページ遷移を遅延させる（タイムアウトで遷移）
-            setTimeout(() => {
-                window.location.href = link.href; // リンク先に遷移
-            }, 100);
-        });
     });
 });
 
