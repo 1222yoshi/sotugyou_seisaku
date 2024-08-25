@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_08_16_084108) do
+ActiveRecord::Schema[7.1].define(version: 2024_08_24_102139) do
   create_table "albums", force: :cascade do |t|
     t.string "artist_name"
     t.string "album_name"
@@ -31,6 +31,17 @@ ActiveRecord::Schema[7.1].define(version: 2024_08_16_084108) do
     t.string "name", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+  end
+
+  create_table "matches", force: :cascade do |t|
+    t.integer "user_id", null: false
+    t.integer "other_user_id", null: false
+    t.integer "score", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["other_user_id"], name: "index_matches_on_other_user_id"
+    t.index ["user_id", "other_user_id"], name: "index_matches_on_user_id_and_other_user_id", unique: true
+    t.index ["user_id"], name: "index_matches_on_user_id"
   end
 
   create_table "user_albums", force: :cascade do |t|
@@ -76,9 +87,12 @@ ActiveRecord::Schema[7.1].define(version: 2024_08_16_084108) do
     t.string "instagram_link"
     t.string "youtube_link"
     t.string "custom_link"
+    t.text "like_music"
     t.index ["email"], name: "index_users_on_email", unique: true
   end
 
+  add_foreign_key "matches", "users"
+  add_foreign_key "matches", "users", column: "other_user_id"
   add_foreign_key "user_albums", "albums"
   add_foreign_key "user_albums", "users"
   add_foreign_key "user_areas", "areas"

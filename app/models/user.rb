@@ -8,13 +8,15 @@ class User < ApplicationRecord
   validates :name, presence: true, length: { maximum: 255 }
   validates :email, presence: true, uniqueness: true
 
-  has_many :user_areas
+  has_many :user_areas, dependent: :destroy
   has_many :areas, through: :user_areas
-  has_many :user_instruments
+  has_many :user_instruments, dependent: :destroy
   has_many :instruments, through: :user_instruments
-  has_many :user_albums
+  has_many :user_albums, dependent: :destroy
   has_many :albums, through: :user_albums
-
+  has_many :matches
+  has_many :other_users, through: :matches, source: :other_user
+  
   def age
     return unless birthdate.present?
     today = Date.today

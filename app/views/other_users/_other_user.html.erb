@@ -17,7 +17,29 @@
     </div>
   </div> 
   <div class="flex flex-col p-2 ml-4">
-    <div class="show-border mt-32 text-center">
+    <div class="flex items-center mt-6">
+      <span class="text-2xl">AIマッチ：</span>
+      <div class="text-3xl">
+        <% if current_user && current_user.user_albums.present? %>
+          <% if other_user.match_score >= 90 %>
+            <div class="s-neon">S</div>
+          <% elsif other_user.match_score >=70 && other_user.match_score < 90 %>
+            <div class="a-neon">A</div>
+          <% elsif other_user.match_score >=50 && other_user.match_score < 70 %>
+            <div class="b-neon">B</div>
+          <% elsif other_user.match_score >=30 && other_user.match_score < 50 %>
+            <div class="c-neon">C</div>
+          <% elsif other_user.match_score >=10 && other_user.match_score < 30 %>
+            <div class="d-neon">D</div>
+          <% else %>
+            E
+          <% end %>
+        <% else %>
+          ？
+        <% end %>
+      </div>
+    </div>
+    <div class="show-border mt-16 text-center">
       <div class="p-4 ">
         <div class="mb-6 text-xl">
         <% other_user.areas.each do |area| %>
