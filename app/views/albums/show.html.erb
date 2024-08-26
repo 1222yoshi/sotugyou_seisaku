@@ -1,5 +1,5 @@
 <h1 class="text-xl neon-text-on-no-link fixed top-7 left-1/2 transform -translate-x-1/2 z-10 max-lg:text-xs"><%= @album['collectionName'] %></h1>
-<div class="flex flex-col h-screen p-4">
+<div class="p-4">
   <div class="flex justify-start fixed p-2">
     <div class="album w-32 h-32 overflow-hidden flex items-center justify-center">
       <%= image_tag @album['artworkUrl100'] , class: "object-cover w-full h-full"%>
@@ -26,10 +26,22 @@
           <% end %>
       </div>
     </div>
-  </div>
-  <div class="fixed p-2 mt-48">
-  <iframe style="border:none; overflow:hidden; width:300px; height:600px;" 
+    <div class="fixed p-2 mt-48">
+      <iframe style="border:none; overflow:hidden; width:300px; height:600px;" 
                 src="https://embed.music.apple.com/jp/album/<%= @album['collectionId'] %>" 
                 frameborder="0" allow="autoplay *; encrypted-media *;" allowfullscreen></iframe>
+    </div>
+  </div>
+</div>
+<% if @album_users.present? %>
+  <div class="neon-text-on-no-link text-2xl left-1/2 fixed">このアルバムを選んだユーザー</div>
+<% else %>
+  <div class="neon-text-on-no-link text-2xl left-1/2 fixed">このアルバムを選んだユーザーはいません</div>
+<% end %>
+<div class="flex flex-row-reverse p-4">
+  <div class="flex flex-col p-2 mt-6">
+    <% if @album_users.present? %>
+      <%= render partial: 'album_user', collection: @album_users %>
+    <% end %>
   </div>
 </div>
