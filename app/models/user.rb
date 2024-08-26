@@ -47,4 +47,8 @@ class User < ApplicationRecord
       '未設定'
     end
   end
+
+  def self.ransackable_attributes(auth_object = nil)
+    ["name"] # ここで検索可能な属性を指定
+  end
 end
