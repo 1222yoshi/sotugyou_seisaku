@@ -25,7 +25,7 @@ class OtherUsersController < ApplicationController
         current_user_likes = current_user.like_music
         other_users_likes = recent_users.map { |user| { id: user.id, likes: user.like_music } }
 
-        content = "私と他のユーザーとのマッチ度（0から100の範囲、点数には必ず一貫性を持ってください、ビートルズとオアシスのように違うアーティストでも音楽性や界隈、ルーツが近ければそれに準じた点数をつけてください、音楽が無いユーザーはマッチ度0。）を以下の【出力形式:】より後に書いてあるの配列の形で返してください。それ以外の発言は絶対にしないでください。\n"
+        content = "私と他のユーザーとのマッチ度（0から100の範囲、ビートルズとオアシスのように違うアーティストでも音楽性や界隈、ルーツが近ければそれに準じた点数をつけてください、音楽が無いユーザーはマッチ度0、同じアーティストの組み合わせでユーザーごとに点数のばらつきが出ないように採点基準の一貫性を強く持ってください。）を以下の【出力形式:】より後に書いてあるの配列の形で返してください。それ以外の発言は絶対にしないでください。\n"
         content += "私の好きな音楽: #{current_user_likes}\n"
         content += "他のユーザーの好きな音楽:\n"
         other_users_likes.each do |user|
@@ -91,7 +91,7 @@ class OtherUsersController < ApplicationController
         current_user_likes = current_user.like_music
         other_user_likes = { id: @user.id, likes: @user.like_music }
 
-        content = "私と他のユーザーとのマッチ度（0から100の範囲、点数には必ず一貫性を持ってください、ビートルズとオアシスのように違うアーティストでも音楽性や界隈、ルーツが近ければそれに準じた点数をつけてください、音楽が無いユーザーはマッチ度0。）を以下の【出力形式:】より後に書いてあるの配列の形で返してください。それ以外の発言は絶対にしないでください。\n"
+        content = "私と他のユーザーとのマッチ度（0から100の範囲、ビートルズとオアシスのように違うアーティストでも音楽性や界隈、ルーツが近ければそれに準じた点数をつけてください、音楽が無いユーザーはマッチ度0、同じアーティストの組み合わせでユーザーごとに点数のばらつきが出ないように採点基準の一貫性を強く持ってください。）を以下の【出力形式:】より後に書いてあるの配列の形で返してください。それ以外の発言は絶対にしないでください。\n"
         content += "私の好きな音楽: #{current_user_likes}\n"
         content += "他のユーザーの好きな音楽:\n"
         content += "ユーザーID: #{other_user_likes[:id]}, 音楽: #{other_user_likes[:likes]}\n"

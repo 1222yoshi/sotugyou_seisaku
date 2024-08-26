@@ -23,11 +23,21 @@ class AlbumsController < ApplicationController
   end
   
   def show
-    @album = ITunesSearchAPI.lookup(id: params[:id], media: 'music', entity: 'album', country: 'jp')
+    begin
+      @album = ITunesSearchAPI.lookup(id: params[:id], media: 'music', entity: 'album', country: 'jp')
+    rescue SocketError => e
+      flash.now[:danger] = "再試行してください。"
+    end
 
     if current_user
-      @user_album = current_user.user_albums.joins(:album).find_by(albums: { itunes_album_id: params[:id] })
-    end
+      @user_album = current_user.user_albums.joins(:album).find_by(albums: { itunes_album_id: params[:id] })        
+      @album_users = User.joins(:user_albums)
+                         .where(user_albums: { album_id: Album.find_by(itunes_album_id: params[:id]).id })
+                         .where.not(id: current_user.id)
+    else
+      @album_users = User.joins(:user_albums)
+                         .where(user_albums: { album_id: Album.find_by(itunes_album_id: params[:id]).id })    
+    end                     
   end
 
   def choose
