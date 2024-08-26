@@ -25,7 +25,7 @@ class OtherUsersController < ApplicationController
         current_user_likes = current_user.like_music
         other_users_likes = recent_users.map { |user| { id: user.id, likes: user.like_music } }
 
-        content = "私と他のユーザーとのマッチ度（0から100の範囲、点数には必ず一貫性を持ってください、ビートルズとオアシスのように違うアーティストでも音楽性や界隈、ルーツが近ければそれに準じた点数をつけてください、音楽がないユーザーは0点。）を以下の出力形式で返してください。それ以外を発言してしまうとエラーが起こります。\n"
+        content = "私と他のユーザーとのマッチ度（0から100の範囲、点数には必ず一貫性を持ってください、ビートルズとオアシスのように違うアーティストでも音楽性や界隈、ルーツが近ければそれに準じた点数をつけてください、音楽が無いユーザーはマッチ度0。）を以下の【出力形式:】より後に書いてあるの配列の形で返してください。それ以外の発言は絶対にしないでください。\n"
         content += "私の好きな音楽: #{current_user_likes}\n"
         content += "他のユーザーの好きな音楽:\n"
         other_users_likes.each do |user|
@@ -55,6 +55,8 @@ class OtherUsersController < ApplicationController
           end
         rescue Faraday::TooManyRequestsError => e
           flash.now[:danger] = "マッチ更新失敗、時間を置いてください。"
+        rescue JSON::ParserError => each
+          flash.now[:danger] = "AIが予期せぬ返答をしました。"
         rescue Faraday::ServerError => e
           flash.now[:danger] = "再試行してください。"  
         end
@@ -89,7 +91,7 @@ class OtherUsersController < ApplicationController
         current_user_likes = current_user.like_music
         other_user_likes = { id: @user.id, likes: @user.like_music }
 
-        content = "私と他のユーザーとのマッチ度（0から100の範囲、点数には必ず一貫性を持ってください、ビートルズとオアシスのように違うアーティストでも音楽性や界隈、ルーツが近ければそれに準じた点数をつけてください、音楽がないユーザーは0点。）を以下の出力形式で返してください。それ以外を発言してしまうとエラーが起こります。\n"
+        content = "私と他のユーザーとのマッチ度（0から100の範囲、点数には必ず一貫性を持ってください、ビートルズとオアシスのように違うアーティストでも音楽性や界隈、ルーツが近ければそれに準じた点数をつけてください、音楽が無いユーザーはマッチ度0。）を以下の【出力形式:】より後に書いてあるの配列の形で返してください。それ以外の発言は絶対にしないでください。\n"
         content += "私の好きな音楽: #{current_user_likes}\n"
         content += "他のユーザーの好きな音楽:\n"
         content += "ユーザーID: #{other_user_likes[:id]}, 音楽: #{other_user_likes[:likes]}\n"
@@ -116,6 +118,8 @@ class OtherUsersController < ApplicationController
           match_record.touch
         rescue Faraday::TooManyRequestsError => e
           flash.now[:danger] = "マッチ更新失敗、時間を置いてください。"
+        rescue JSON::ParserError => each
+          flash.now[:danger] = "AIが予期せぬ返答をしました。"
         rescue Faraday::ServerError => e
           flash.now[:danger] = "再試行してください。"  
         end
@@ -130,7 +134,7 @@ class OtherUsersController < ApplicationController
                     title: "＃私を構成する９枚",
                     card: "summary_large_image",
                     url: "https://metronote.jp/other_users/#{@user.id}",
-                    image:  "https://metronote.jp/album_grid_#{@user.id}.png"
+                    image:  "https://#{ENV['AWS_BUCKET_NAME']}.s3.us-east-1.amazonaws.com/album_grid_#{@user.id}.png"
                   }
     @user_albums = @user.user_albums.includes(:album).order(created_at: :asc)
   end

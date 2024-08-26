@@ -101,10 +101,12 @@ class AlbumsController < ApplicationController
       end
     end
   
-    # 一時的に画像を保存
-    public_file = Rails.root.join('public', "album_grid_#{current_user.id}.png")
-    File.delete(public_file) if File.exist?(public_file)
-    canvas.write(public_file)
+    s3_bucket = s3.bucket(ENV['AWS_BUCKET_NAME']) # バケット名を指定
+    object_key = "album_grid_#{current_user.id}.png"
+
+    s3_bucket.object(object_key).delete if s3_bucket.object(object_key).exists?
+
+    s3_bucket.object(object_key).put(body: File.open(public_file))
   
     # Twitterシェア用のURL生成
     current_time = Time.now.strftime("%Y%m%d%H%M%S")
