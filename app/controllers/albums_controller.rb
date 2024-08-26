@@ -101,6 +101,7 @@ class AlbumsController < ApplicationController
       end
     end
   
+    s3 = Aws::S3::Resource.new(region: 'us-east-1')
     s3_bucket = s3.bucket(ENV['AWS_BUCKET_NAME']) # バケット名を指定
     object_key = "album_grid_#{current_user.id}.png"
 
