@@ -68,6 +68,7 @@ class AlbumsController < ApplicationController
     @user_albums = current_user.user_albums.includes(:album).order(created_at: :asc).limit(9)
   
     require 'open-uri'
+    require 'stringio'
     # 画像全体のサイズ
     grid_size = 418  # グリッド全体のサイズ
     cell_size = grid_size / 3  # 各セルのサイズ
@@ -101,13 +102,21 @@ class AlbumsController < ApplicationController
       end
     end
   
+    # メモリ上に画像を書き込む
+    output = StringIO.new
+    canvas.write(output)
+
+    # S3に画像をアップロード
     s3 = Aws::S3::Resource.new(region: 'us-east-1')
     s3_bucket = s3.bucket(ENV['AWS_BUCKET_NAME']) # バケット名を指定
     object_key = "album_grid_#{current_user.id}.png"
 
+    # 既存のオブジェクトを削除
     s3_bucket.object(object_key).delete if s3_bucket.object(object_key).exists?
 
-    s3_bucket.object(object_key).put(body: File.open(public_file))
+    # メモリの内容をS3にアップロード
+    output.rewind # StringIOのポインタを先頭に戻す
+    s3_bucket.object(object_key).put(body: output.read)
   
     # Twitterシェア用のURL生成
     current_time = Time.now.strftime("%Y%m%d%H%M%S")
