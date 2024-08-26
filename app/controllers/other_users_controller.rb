@@ -3,6 +3,8 @@ class OtherUsersController < ApplicationController
   skip_before_action :require_login, only: %i[index show]
 
   def index
+    @q = User.ransack(params[:q])
+
     if current_user && current_user.user_albums.present?
       other_users = User.where.not(id: current_user.id)
 
@@ -62,16 +64,17 @@ class OtherUsersController < ApplicationController
         end
       end
 
-      @other_users = User.joins("LEFT JOIN matches ON matches.other_user_id = users.id")
+      @other_users = @q.result(distinct: true)
+                    .joins("LEFT JOIN matches ON matches.other_user_id = users.id")
                     .where(matches: { user_id: current_user.id })
                     .where.not(id: current_user.id) # 自分以外のユーザーを取得
                     .distinct
                     .order('matches.score DESC')
                     .select("users.*, matches.score as match_score")
     elsif current_user
-      @other_users = User.left_joins(:user_albums).group('users.id').where.not(id: current_user.id).order('COUNT(user_albums.id) DESC')
+      @other_users = @q.result(distinct: true).left_joins(:user_albums).group('users.id').where.not(id: current_user.id).order('COUNT(user_albums.id) DESC')
     else
-      @other_users = User.left_joins(:user_albums).group('users.id').order('COUNT(user_albums.id) DESC')
+      @other_users = @q.result(distinct: true).left_joins(:user_albums).group('users.id').order('COUNT(user_albums.id) DESC')
     end
   end
 

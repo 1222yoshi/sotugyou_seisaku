@@ -3,5 +3,8 @@
     <%= render partial: 'other_user', collection: @other_users %>
   </div>
   <div class="flex flex-col items-end p-2 max-lg:mt-24">
+  <%= search_form_for @q, url: other_users_path, method: :get do |f| %>
+    <%= f.search_field :name_cont, placeholder: "ユーザー名", class: "input-field fixed right-8 w-80 z-10",autocomplete: 'off' %>
+  <% end %> 
   </div>
 </div>
