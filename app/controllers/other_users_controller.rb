@@ -67,14 +67,22 @@ class OtherUsersController < ApplicationController
       @other_users = @q.result(distinct: true)
                     .joins("LEFT JOIN matches ON matches.other_user_id = users.id")
                     .where(matches: { user_id: current_user.id })
-                    .where.not(id: current_user.id) # 自分以外のユーザーを取得
-                    .distinct
-                    .order('matches.score DESC')
                     .select("users.*, matches.score as match_score")
+                    .order('match_score DESC')
+
     elsif current_user
-      @other_users = @q.result(distinct: true).left_joins(:user_albums).group('users.id').where.not(id: current_user.id).order('COUNT(user_albums.id) DESC, users.id')
+      @other_users = @q.result(distinct: true)q
+                       .left_joins(:user_albums)
+                       .select('users.*, COUNT(user_albums.id) as albums_count')
+                       .group('users.id')
+                       .where.not(id: current_user.id)
+                       .order('albums_count DESC')
     else
-      @other_users = @q.result(distinct: true).left_joins(:user_albums).group('users.id').order('COUNT(user_albums.id) DESC, users.id')
+      @other_users = @q.result(distinct: true)
+                       .left_joins(:user_albums)
+                       .select('users.*, COUNT(user_albums.id) as albums_count')
+                       .group('users.id')
+                       .order('albums_count DESC')
     end
   end
 
