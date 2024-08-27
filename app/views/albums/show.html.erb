@@ -34,9 +34,17 @@
   </div>
 </div>
 <% if @album_users.present? %>
-  <div class="neon-text-on-no-link text-2xl left-1/2 fixed">このアルバムを選んだユーザー</div>
+  <% if @user_album.present? %>
+    <div class="neon-text-on-no-link text-2xl left-1/2 fixed">このアルバム選んだ他のユーザー</div>
+  <% else %>
+    <div class="neon-text-on-no-link text-2xl left-1/2 fixed">このアルバムを選んだユーザー</div>
+  <% end %>
 <% else %>
-  <div class="neon-text-on-no-link text-2xl left-1/2 fixed">このアルバムを選んだユーザーはいません</div>
+  <% if @user_album.present? %>
+    <div class="neon-text-on-no-link text-2xl left-1/2 fixed">このアルバムを選んだ他のユーザーはいません</div>
+  <% else %>
+    <div class="neon-text-on-no-link text-2xl left-1/2 fixed">このアルバムを選んだユーザーはいません</div>
+  <% end %>
 <% end %>
 <div class="flex flex-row-reverse p-4">
   <div class="flex flex-col p-2 mt-6">

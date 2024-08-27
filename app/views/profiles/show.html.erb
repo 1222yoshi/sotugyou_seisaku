@@ -1,5 +1,5 @@
 <h1 class="text-xl neon-text-on-no-link fixed top-7 left-1/2 transform -translate-x-1/2 z-10">プロフィール</h1>
-<div class="flex h-screen justify-between  p-4">
+<div class="flex h-screen justify-between p-4">
   <div class="flex flex-col p-2">
     <div class="flex items-center mb-4">
       <%= image_tag current_user.profile_image_url, class: "w-20 h-20 rounded-full mr-4"%> 
@@ -7,6 +7,9 @@
         <span class="text-2xl"><%= current_user.name %></span>
         <span class="text-xl"><%= current_user.email %></span>
       </div> 
+      <div class="flex ml-auto">
+        <%= link_to "編集", edit_profile_path(@user), class: "profile-submit text-3xl"%>
+      </div>
     </div>
     <div class="text-xl flex items-center">
       <div class="<%= current_user.x_link.present? ? 'neon-logo-on' : 'neon-logo-off'%>">  
@@ -49,7 +52,7 @@
         <%= current_user.custom_link %>
       <% end %>
     </div>
-    <div class="show-border mt-4 text-center">
+    <div class="show-border mt-4 text-center border-blue">
       <div class="p-4">
         <div class="mb-6 text-xl">
         <% current_user.areas.each do |area| %>
@@ -74,24 +77,35 @@
         </div>
       </div>
     </div>
-    <div class="show-border">
+    <div class="show-border border-blue">
       <div class="text-xl p-4">
         <%= current_user.introduction %>
-      </div>
-      <div class="flex justify-end ">
-        <%= link_to "編集", edit_profile_path(@user), class: "profile-submit text-3xl"%>
       </div>
     </div>
   </div>
   <div class="flex flex-col justify-center p-2">
     <%= link_to albums_path do %>
-      <div class="grid grid-cols-3">
-        <% @user_albums.each do |user_album| %>
-          <div class="album w-40 h-40 overflow-hidden flex items-center justify-center">
-            <%= image_tag user_album.album.artwork_url, class: "object-cover w-full h-full" %>
-          </div>
-        <% end %>
-      </div>
+      <% if @user_albums.present? %>
+        <div class="grid grid-cols-3">
+          <% @user_albums.each do |user_album| %>
+            <div class="album w-40 h-40 overflow-hidden flex items-center justify-center">
+              <%= image_tag user_album.album.artwork_url, class: "object-cover w-full h-full" %>
+            </div>
+          <% end %>
+        </div>
+      <% else %>
+        <div class="album-no-grid grid-neon">
+          <div class="grid-neon"></div>
+          <div class="grid-neon"></div>
+          <div class="grid-neon"></div>
+          <div class="grid-neon"></div>
+          <div class="grid-neon"></div>
+          <div class="grid-neon"></div>
+          <div class="grid-neon"></div>
+          <div class="grid-neon"></div>
+          <div class="grid-neon"></div>
+        </div>
+      <% end %>
     <% end %>
   </div>
 </div>

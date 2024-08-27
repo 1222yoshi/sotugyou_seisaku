@@ -6,15 +6,29 @@
       <% end %>
       <span class="text-2xl"><%= other_user.name %></span>
     </div>
-    <div class="grid grid-cols-3">
-      <% other_user.user_albums.includes(:album).order(created_at: :asc).each do |user_album| %>
-        <%= link_to album_path(user_album.album.itunes_album_id) do %>
-          <div class="album w-40 h-40 overflow-hidden flex items-center justify-center">
-            <%= image_tag user_album.album.artwork_url, class: "object-cover w-full h-full" %>
-          </div>
+    <% if other_user.user_albums.present? %>
+      <div class="grid grid-cols-3">
+        <% other_user.user_albums.includes(:album).order(created_at: :asc).each do |user_album| %>
+          <%= link_to album_path(user_album.album.itunes_album_id) do %>
+            <div class="album w-40 h-40 overflow-hidden flex items-center justify-center">
+              <%= image_tag user_album.album.artwork_url, class: "object-cover w-full h-full" %>
+            </div>
+          <% end %>
         <% end %>
-      <% end %>
-    </div>
+      </div>
+    <% else %>
+      <div class="album-no-grid">
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        </div>
+    <% end %>
   </div> 
   <div class="flex flex-col p-2 ml-4">
     <div class="flex items-center mt-6">
@@ -39,7 +53,7 @@
         <% end %>
       </div>
     </div>
-    <div class="show-border mt-16 text-center">
+    <div class="show-border mt-16 text-center border-orange">
       <div class="p-4 ">
         <div class="mb-6 text-xl">
         <% other_user.areas.each do |area| %>
@@ -64,7 +78,7 @@
         </div>
       </div>
     </div>
-    <div class="show-border h-64">
+    <div class="show-border border-orange h-64">
       <div class="text-xl p-4">
         <%= other_user.introduction %>
       </div>
