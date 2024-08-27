@@ -72,9 +72,9 @@ class OtherUsersController < ApplicationController
                     .order('matches.score DESC')
                     .select("users.*, matches.score as match_score")
     elsif current_user
-      @other_users = @q.result(distinct: true).left_joins(:user_albums).group('users.id').where.not(id: current_user.id).order('COUNT(user_albums.id) DESC')
+      @other_users = @q.result(distinct: true).left_joins(:user_albums).group('users.id').where.not(id: current_user.id).order('COUNT(user_albums.id) DESC, users.id')
     else
-      @other_users = @q.result(distinct: true).left_joins(:user_albums).group('users.id').order('COUNT(user_albums.id) DESC')
+      @other_users = @q.result(distinct: true).left_joins(:user_albums).group('users.id').order('COUNT(user_albums.id) DESC, users.id')
     end
   end
 
