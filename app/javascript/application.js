@@ -131,3 +131,11 @@ function closeMenu(button, menu) {
     button.classList.add('neon-text-off'); // クラスを戻す
 }
 
+document.addEventListener('input', function(event) {
+    if (event.target.matches('.input-field, .file-field')) {
+      const label = event.target.closest('div').querySelector('label');
+      if (label) {
+        label.classList.add('neon-text-on-no-link');
+      }
+    }
+  });
