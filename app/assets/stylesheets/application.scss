@@ -333,6 +333,7 @@ scrollbar {
 .profile-submit {
   color: #127292;
   border-bottom: 2px solid #884915;
+  padding-bottom: 2px;
 }
 
 .profile-submit:hover {
@@ -508,4 +509,33 @@ scrollbar {
   100% {
     color: #787fff;
   }
+}
+
+.album-no-grid {
+  display: grid;
+            grid-template-columns: repeat(3, 159px);
+            grid-template-rows: repeat(3, 159px);
+            border: 2px solid #127292; /* 外枠 */
+            border-radius: 6px; /* 外枠の角を丸く */
+            overflow: hidden;
+}
+
+.album-no-grid div {
+  border: 2px solid #127292; /* 各セルのボーダー */
+}
+
+.grid-neon {
+  color: #127292;
+}
+
+.grid-neon:hover {
+  animation: blue-icon-glow 0.3s ease-in-out forwards, blue-field-color-change 0.3s ease-in-out forwards;
+}
+
+.border-blue {
+  border-color: #127292;
+}
+
+.border-orange {
+  border-color: #884915;
 }

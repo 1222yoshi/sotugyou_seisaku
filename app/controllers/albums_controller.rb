@@ -31,13 +31,22 @@ class AlbumsController < ApplicationController
 
     if current_user
       @user_album = current_user.user_albums.joins(:album).find_by(albums: { itunes_album_id: params[:id] })        
-      @album_users = User.joins(:user_albums)
-                         .where(user_albums: { album_id: Album.find_by(itunes_album_id: params[:id]).id })
-                         .where.not(id: current_user.id)
-    else
-      @album_users = User.joins(:user_albums)
-                         .where(user_albums: { album_id: Album.find_by(itunes_album_id: params[:id]).id })    
     end                     
+
+    choosed_album = Album.find_by(itunes_album_id: params[:id])
+    
+    if choosed_album
+      if current_user
+        @album_users = User.joins(:user_albums)
+                           .where(user_albums: { album_id: choosed_album.id })
+                           .where.not(id: current_user.id)
+      else
+        @album_users = User.joins(:user_albums)
+                           .where(user_albums: { album_id: choosed_album.id })    
+      end
+    else
+      @album_users = []
+    end
   end
 
   def choose
