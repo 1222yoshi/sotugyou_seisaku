@@ -71,7 +71,7 @@ class OtherUsersController < ApplicationController
                     .order('match_score DESC')
 
     elsif current_user
-      @other_users = @q.result(distinct: true)q
+      @other_users = @q.result(distinct: true)
                        .left_joins(:user_albums)
                        .select('users.*, COUNT(user_albums.id) as albums_count')
                        .group('users.id')
