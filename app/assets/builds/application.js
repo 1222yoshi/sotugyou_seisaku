@@ -5880,6 +5880,14 @@
     button.classList.remove("neon-icon-on");
     button.classList.add("neon-text-off");
   }
+  document.addEventListener("input", function(event) {
+    if (event.target.matches(".input-field, .file-field")) {
+      const label = event.target.closest("div").querySelector("label");
+      if (label) {
+        label.classList.add("neon-text-on-no-link");
+      }
+    }
+  });
 })();
 /*! Bundled license information:
 
