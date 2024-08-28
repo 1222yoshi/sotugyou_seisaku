@@ -49,6 +49,10 @@ class User < ApplicationRecord
   end
 
   def self.ransackable_attributes(auth_object = nil)
-    ["name"] # ここで検索可能な属性を指定
+    ["name", "purpose"] # ここで検索可能な属性を指定
+  end
+
+  def self.ransackable_associations(auth_object = nil)
+    ["areas", "user_areas", "instruments", "user_instruments"] # ここで検索可能なアソシエーションを指定
   end
 end

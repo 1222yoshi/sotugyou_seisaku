@@ -72,6 +72,24 @@ document.addEventListener('turbo:load', () => {
             flash.style.display = 'none'; // 3秒後に非表示にする
         }, 3000);
     });
+
+    document.querySelectorAll('.select-field').forEach(select => {
+        if (select.value === '') {
+          select.classList.remove('selected');
+        } else {
+          select.classList.add('selected');
+        }
+      });
+
+      document.querySelectorAll('.select-field, .file-field').forEach(select => {
+        select.addEventListener('change', function() {
+          if (this.value === '') {
+            this.classList.remove('selected');
+          } else {
+            this.classList.add('selected');
+          }
+        });
+      });
 });
 
 // blinkingアニメーションを開始する関数
@@ -132,10 +150,11 @@ function closeMenu(button, menu) {
 }
 
 document.addEventListener('input', function(event) {
-    if (event.target.matches('.input-field, .file-field')) {
+    if (event.target.matches('.input-field, .file-field, .select-field')) {
       const label = event.target.closest('div').querySelector('label');
       if (label) {
         label.classList.add('neon-text-on-no-link');
       }
     }
-  });
+});
+

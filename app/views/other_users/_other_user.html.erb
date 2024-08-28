@@ -15,19 +15,16 @@
             </div>
           <% end %>
         <% end %>
+        <% (other_user.user_albums.count...9).each do %>
+          <div class="no-album"></div>
+        <% end %>
       </div>
     <% else %>
       <div class="album-no-grid">
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        </div>
+        <% 9.times.each do %>
+          <div></div>
+        <% end %>
+      </div>
     <% end %>
   </div> 
   <div class="flex flex-col p-2 ml-4">

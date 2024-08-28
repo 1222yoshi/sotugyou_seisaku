@@ -10,7 +10,7 @@
       </div>
       <div class="mb-8">
         <%= f.label :name, "名前", class: "neon-logo-off text-2xl flex" %>
-        <%= f.text_field :name, placeholder: '名前', class: 'input-field mt-4',autocomplete: 'off' %>
+        <%= f.text_field :name, placeholder: '最大10文字', class: 'input-field mt-4',autocomplete: 'off', maxlength: 10, size: 20 %>
       </div>
       <div class="mb-8 ">
         <%= f.label :x_link, "リンク", class: "neon-logo-off text-2xl flex" %>
@@ -25,38 +25,38 @@
         <%= f.label :"活動エリア", class: "text-2xl neon-logo-off" %>
         <fieldset class="flex">
           <%= select_tag "user[area_ids][]", options_from_collection_for_select(Area.all, 'id', 'name', current_user.area_ids[0] || Area.find_by(name: '東京都')&.id), class: 'input-field w-40 mt-2 mb-10 mr-2' %>
-          <%= select_tag "user[area_ids][]", options_for_select([['なし', '']] + Area.pluck(:name, :id), current_user.area_ids[1]), class: 'input-field w-40 mt-2 mb-10 mr-2' %>
-          <%= select_tag "user[area_ids][]", options_for_select([['なし', '']] + Area.pluck(:name, :id), current_user.area_ids[2]), class: 'input-field w-40 mt-2 mb-10'%>
+          <%= select_tag "user[area_ids][]", options_for_select([['なし', '']] + Area.pluck(:name, :id), current_user.area_ids[1]), class: 'select-field w-40 mt-2 mb-10 mr-2' %>
+          <%= select_tag "user[area_ids][]", options_for_select([['なし', '']] + Area.pluck(:name, :id), current_user.area_ids[2]), class: 'select-field w-40 mt-2 mb-10'%>
         </fieldset>
       </div>
       <div>
         <%= f.label :"演奏楽器", class: "text-2xl neon-logo-off" %>
         <fieldset class="flex">
           <%= select_tag "user[instrument_ids][]", options_from_collection_for_select(Instrument.all, 'id', 'name', current_user.instrument_ids[0] || Instrument.find_by(name: 'リスナー')&.id), class: 'input-field w-40 mt-2 mr-2 mb-10' %>
-          <%= select_tag "user[instrument_ids][]", options_for_select([['なし', '']] + Instrument.pluck(:name, :id), current_user.instrument_ids[1]), class: 'input-field w-40 mt-2 mb-10' %>
+          <%= select_tag "user[instrument_ids][]", options_for_select([['なし', '']] + Instrument.pluck(:name, :id), current_user.instrument_ids[1]), class: 'select-field w-40 mt-2 mb-10' %>
         </fieldset>
       </div>
       <div>
         <%= f.label :birth_year, "生年月日", class: "neon-logo-off text-2xl" %>
         <fieldset class="flex">
-          <%= f.select :birth_year, options_for_select((1900..Time.current.year).to_a.reverse, @user.birthdate&.year), { prompt: '年を選択' }, class: 'input-field w-40 mt-2 mb-10 mr-2' %>
-          <%= f.select :birth_month, options_for_select((1..12).to_a, @user.birthdate&.month), { prompt: '月を選択' }, class: 'input-field w-40 mt-2 mb-10 mr-2' %>
-          <%= f.select :birth_day, options_for_select((1..31).to_a, @user.birthdate&.day), { prompt: '日を選択' }, class: 'input-field w-40 mt-2 mb-10' %>
+          <%= f.select :birth_year, options_for_select((1900..Time.current.year).to_a.reverse, @user.birthdate&.year), { prompt: '年を選択' }, class: 'select-field w-40 mt-2 mb-10 mr-2' %>
+          <%= f.select :birth_month, options_for_select((1..12).to_a, @user.birthdate&.month), { prompt: '月を選択' }, class: 'select-field w-40 mt-2 mb-10 mr-2' %>
+          <%= f.select :birth_day, options_for_select((1..31).to_a, @user.birthdate&.day), { prompt: '日を選択' }, class: 'select-field w-40 mt-2 mb-10' %>
         </fieldset>
       </div>
       <div class="flex flex-col">
         <%= f.label :gender, "性別", class: "text-2xl neon-logo-off" %>
-        <%= f.select :gender, options_for_select([['男性', 'male'], ['女性', 'female']], @user.gender), { include_blank: '性別を選択' }, class: 'input-field w-40 mt-2 mb-10' %>
+        <%= f.select :gender, options_for_select([['男性', 'male'], ['女性', 'female']], @user.gender), { include_blank: '性別を選択' }, class: 'select-field w-40 mt-2 mb-10' %>
       </div>
       <div class="flex flex-col">
         <%= f.label :purpose, "目的", class: "text-2xl neon-logo-off" %>
-        <%= f.select :purpose, options_for_select([['プロ志望', 'pro'], ['趣味', 'hobby']], @user.purpose), { include_blank: '目的を選択' }, class: 'input-field w-40 mt-2 mb-10' %>
+        <%= f.select :purpose, options_for_select([['プロ志望', 'pro'], ['趣味', 'hobby']], @user.purpose), { include_blank: '目的を選択' }, class: 'select-field w-40 mt-2 mb-10' %>
       </div>
     </div>
     <div class="flex-1 flex flex-col justify-start p-2 ml-4">
       <div class="flex flex-col">
         <%= f.label :introduction, "自己紹介", class: "text-2xl neon-logo-off"%>
-        <%= f.text_area :introduction, rows: 10, class: 'input-field  mt-2 mb-12'%>
+        <%= f.text_area :introduction, placeholder: '最大144文字', rows: 10, class: 'input-field  mt-2 mb-12', maxlength: 144 %>
       </div>
       <div class="flex justify-end ">
         <%= f.submit '保存', class: "profile-submit text-3xl"%>

@@ -84,6 +84,18 @@ class OtherUsersController < ApplicationController
                        .group('users.id')
                        .order('albums_count DESC')
     end
+
+    if params[:areas_name].present?
+      @other_users = @other_users.joins(:areas).where(areas: { id: params[:areas_name] })
+    end
+
+    if params[:instruments_name].present?
+      @other_users = @other_users.joins(:instruments).where(instruments: { id: params[:instruments_name] })
+    end
+
+    if params[:purpose].present?
+      @other_users = @other_users.where(users: { purpose: params[:purpose] })
+    end
   end
 
   def show

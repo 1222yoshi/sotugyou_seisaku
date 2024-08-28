@@ -330,6 +330,41 @@ scrollbar {
   border-radius: 10px;
 }
 
+.file-field.selected::file-selector-button {
+  border: 2px solid #8bd3ff;
+  color: #8bd3ff;
+  background: transparent;
+  outline: none;
+  border-radius: 10px;
+}
+
+.select-field {
+  border: 2px solid #127292;
+  background: transparent;
+  outline: none;
+  border-radius: 10px;
+}
+
+.select-field:hover {
+  border: 2px solid #02a5dc;
+  background: transparent;
+  outline: none;
+  border-radius: 10px;
+}
+
+.select-field:focus {
+
+  background-color: #050505;
+  border: 2px solid #127292;
+  outline: none;
+  animation: blue-field-glow 0.3s ease-in-out forwards, blue-field-color-change 0.3s ease-in-out forwards;
+}
+
+.select-field.selected {
+  border: 2px solid #8bd3ff;
+  outline: none;
+}
+
 .profile-submit {
   color: #127292;
   border-bottom: 2px solid #884915;
@@ -538,4 +573,59 @@ scrollbar {
 
 .border-orange {
   border-color: #884915;
+}
+
+.no-album-neon {
+  height: 159px;
+  width: 159px;
+  border: 2px solid #127292; /* 外枠 */
+  border-radius: 6px; /* 外枠の角を丸く */
+  overflow: hidden;
+}
+
+.no-album-neon:hover {
+  animation: blue-icon-glow 0.3s ease-in-out forwards, blue-field-color-change 0.3s ease-in-out forwards;
+}
+
+.no-album {
+  height: 159px;
+  width: 159px;
+  border: 2px solid #127292; /* 外枠 */
+  border-radius: 6px; /* 外枠の角を丸く */
+  overflow: hidden;
+}
+
+.login-button {
+  color: #884915;
+  border: 2px solid #127292;
+  border-radius: 8px;
+  padding: 3px 6px;
+}
+
+.login-button:hover {
+  animation: blue-field-glow 0.3s ease-in-out forwards, blue-field-color-change 0.3s ease-in-out forwards, orange-text-glow 0.3s ease-in-out forwards, orange-text-color-change 0.3s ease-in-out forwards;
+}
+
+
+
+
+@keyframes orange-text-glow {
+  0% {
+    text-shadow: none;
+  }
+  100% {
+    text-shadow: 
+    0 0 5px #965a28, 
+    0 0 10px #965a28,
+    0 0 15px #965a28;
+  }
+}
+
+@keyframes orange-text-color-change {
+  0% {
+    color: #884915;
+  }
+  100% {
+    color: #ff9a48;
+  }
 }
