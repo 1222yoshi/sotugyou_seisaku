@@ -1,10 +1,26 @@
 <div class="flex p-4">
-  <div class="flex flex-col p-2 mt-6">
+  <div class="flex flex-col p-2 mt-6 ml-4">
+    <% unless @other_users.present? %>
+      <div class="neon-text-on-no-link text-2xl right-1/2 fixed">条件に合うユーザーはいませんでした。</div>
+    <% end %>
     <%= render partial: 'other_user', collection: @other_users %>
   </div>
   <div class="flex flex-col items-end p-2 max-lg:mt-24">
-  <%= search_form_for @q, url: other_users_path, method: :get do |f| %>
-    <%= f.search_field :name_cont, placeholder: "ユーザー名", class: "input-field fixed right-8 w-80 z-10",autocomplete: 'off' %>
-  <% end %> 
+    <%= search_form_for @q, url: other_users_path, method: :get do |f| %>
+      <%= f.search_field :name_cont, value: params.dig(:q, :name_cont), placeholder: "ユーザー名", class: "input-field fixed right-8 w-80 z-10",autocomplete: 'off' %>
+      <div>
+        <%= f.label :"活動エリア", class: "text-2xl neon-logo-off fixed right-60 top-48"%>  
+        <%= select_tag :areas_name, options_for_select([['指定無し', '']] + Area.pluck(:name, :id), selected: params[:areas_name]), class: "select-field fixed right-48 w-40 z-10 top-56" %>
+      </div>
+      <div>
+        <%= f.label :"演奏楽器", style: "right: 263px;", class: "text-2xl neon-logo-off fixed top-72"%>  
+        <%= select_tag :instruments_name, options_for_select([['指定無し', '']] + Instrument.pluck(:name, :id), selected: params[:instruments_name]), class: "select-field fixed right-48 w-40 z-10 top-80" %>
+      </div>
+      <div>
+        <%= f.label :purpose, "目的", style: "right: 310px;", class: "text-2xl neon-logo-off fixed top-96" %>  
+        <%= select_tag :purpose, options_for_select([['指定無し', ''], ['プロ志望', 'pro'], ['趣味', 'hobby']],  selected: params[:purpose]), class: "select-field fixed right-48 w-40 z-10 bottom-80" %>
+      </div>
+      <%= f.submit '検索', class: "profile-submit text-3xl fixed bottom-16 right-16"%>
+    <% end %> 
   </div>
 </div>

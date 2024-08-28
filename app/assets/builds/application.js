@@ -5839,6 +5839,22 @@
         flash.style.display = "none";
       }, 3e3);
     });
+    document.querySelectorAll(".select-field").forEach((select) => {
+      if (select.value === "") {
+        select.classList.remove("selected");
+      } else {
+        select.classList.add("selected");
+      }
+    });
+    document.querySelectorAll(".select-field, .file-field").forEach((select) => {
+      select.addEventListener("change", function() {
+        if (this.value === "") {
+          this.classList.remove("selected");
+        } else {
+          this.classList.add("selected");
+        }
+      });
+    });
   });
   function startBlinkingForElements() {
     const blinkingElements = document.querySelectorAll(".blinking");
@@ -5881,7 +5897,7 @@
     button.classList.add("neon-text-off");
   }
   document.addEventListener("input", function(event) {
-    if (event.target.matches(".input-field, .file-field")) {
+    if (event.target.matches(".input-field, .file-field, .select-field")) {
       const label = event.target.closest("div").querySelector("label");
       if (label) {
         label.classList.add("neon-text-on-no-link");
