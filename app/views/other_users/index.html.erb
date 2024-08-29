@@ -7,7 +7,7 @@
   </div>
   <div class="flex flex-col items-end p-2 max-lg:mt-24">
     <%= search_form_for @q, url: other_users_path, method: :get do |f| %>
-      <%= f.search_field :name_cont, value: params.dig(:q, :name_cont), placeholder: "ユーザー名", class: "input-field fixed right-8 w-80 z-10",autocomplete: 'off' %>
+      <%= f.search_field :name_cont, value: params.dig(:q, :name_cont), placeholder: "ユーザー名", class: "input-field fixed right-8 w-80 z-10 mt-6",autocomplete: 'off' %>
       <div>
         <%= f.label :"活動エリア", class: "text-2xl neon-logo-off fixed right-60 top-48"%>  
         <%= select_tag :areas_name, options_for_select([['指定無し', '']] + Area.pluck(:name, :id), selected: params[:areas_name]), class: "select-field fixed right-48 w-40 z-10 top-56" %>
@@ -18,7 +18,7 @@
       </div>
       <div>
         <%= f.label :purpose, "目的", style: "right: 310px;", class: "text-2xl neon-logo-off fixed top-96" %>  
-        <%= select_tag :purpose, options_for_select([['指定無し', ''], ['プロ志望', 'pro'], ['趣味', 'hobby']],  selected: params[:purpose]), class: "select-field fixed right-48 w-40 z-10 bottom-80" %>
+        <%= select_tag :purpose, options_for_select([['指定無し', ''], ['趣味', 'hobby'], ['プロ志望', 'pro']],  selected: params[:purpose]), class: "select-field fixed right-48 w-40 z-10 bottom-80" %>
       </div>
       <%= f.submit '検索', class: "profile-submit text-3xl fixed bottom-16 right-16"%>
     <% end %> 

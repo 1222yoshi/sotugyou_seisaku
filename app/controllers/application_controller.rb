@@ -12,16 +12,16 @@ class ApplicationController < ActionController::Base
   def prepare_meta_tags(options = {})
     defaults = {
       site:        "MeTRO NOTE",
-      description: "完全実力主義のバンドメンバーマッチングアプリ",
+      description: "バンドメンバーマッチングアプリ",
       og: {
-        site_name: "MeTRO NOTE",
-        description: "完全実力主義のバンドメンバーマッチングアプリ",
-        url: "https://metronote-a37794a02853.herokuapp.com"
+        site_name: :site,
+        description: :description,
+        url: "https://metronote.jp"
+        image: image_url('metro-sea.png')
       },
       twitter: {
-        site_name: "MeTRO NOTE",
-        description: "完全実力主義のバンドメンバーマッチングアプリ",
-        url: "https://metronote-a37794a02853.herokuapp.com"
+        card: 'summary_large_image',
+        image: image_url('metro-sea.png')
       }
     }
 

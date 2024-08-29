@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_08_24_102139) do
+ActiveRecord::Schema[7.1].define(version: 2024_08_29_022502) do
   create_table "albums", force: :cascade do |t|
     t.string "artist_name"
     t.string "album_name"
@@ -39,6 +39,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_08_24_102139) do
     t.integer "score", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "match_album"
     t.index ["other_user_id"], name: "index_matches_on_other_user_id"
     t.index ["user_id", "other_user_id"], name: "index_matches_on_user_id_and_other_user_id", unique: true
     t.index ["user_id"], name: "index_matches_on_user_id"
@@ -80,7 +81,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_08_24_102139) do
     t.datetime "updated_at", null: false
     t.date "birthdate"
     t.string "gender"
-    t.string "purpose"
+    t.string "purpose", default: "hobby"
     t.text "introduction"
     t.string "profile_image"
     t.string "x_link"
