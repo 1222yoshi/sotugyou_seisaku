@@ -159,7 +159,7 @@ class OtherUsersController < ApplicationController
     end
 
     set_meta_tags   twitter: {
-                    title: "＃私を構成する９枚",
+                    title: "＃私を構成する９枚 | MeTRO NOTE",
                     card: "summary_large_image",
                     url: "https://metronote.jp/other_users/#{@user.id}",
                     image:  "https://#{ENV['AWS_BUCKET_NAME']}.s3.us-east-1.amazonaws.com/album_grid_#{@user.id}.png"
