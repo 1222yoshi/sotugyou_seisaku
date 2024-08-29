@@ -27,13 +27,13 @@ class OtherUsersController < ApplicationController
         current_user_likes = current_user.like_music
         other_users_likes = recent_users.map { |user| { id: user.id, likes: user.like_music } }
 
-        content = "私と他のユーザーとのマッチ度（0から100の範囲、ビートルズとオアシスのように違うアーティストでも音楽性や界隈、ルーツが近ければそれに準じた点数をつけてください、音楽が無いユーザーはマッチ度0、同じアーティストの組み合わせでユーザーごとに点数のばらつきが出ないように採点基準の一貫性を強く持ってください。）を以下の【出力形式:】より後に書いてあるの配列の形で返してください。それ以外の発言は絶対にしないでください。\n"
+        content = "私と他のユーザーとのマッチ度（0から100の範囲、ビートルズとオアシスのように違うアーティストでも音楽性や界隈、ルーツが近ければそれに準じた点数をつけてください、音楽が無いユーザーはマッチ度0、同じアーティストの組み合わせでユーザーごとに点数のばらつきが出ないように採点基準の一貫性を強く持ってください。）とその相手のユーザーの最大9枚のアルバムの中で一番私の音楽性に近いアルバムのid（もし私と他のユーザーが全く同じidのアルバムを選んでいたら、そのアルバムは絶対に選ばないでください、アルバムが一枚でもある限りはマッチ度が0だったとしても、最大9枚から私と全く同じ音楽以外で一番共通点のある一枚を選んで絶対にidを返してください。）を一つ以下の【出力形式:】より後に書いてあるの配列の形で返してください。それ以外の発言は絶対にしないでください。\n"
         content += "私の好きな音楽: #{current_user_likes}\n"
         content += "他のユーザーの好きな音楽:\n"
         other_users_likes.each do |user|
           content += "ユーザーID: #{user[:id]}, 音楽: #{user[:likes]}\n"
         end
-        content += '出力形式: [ { "other_user_id": user_id1, "match_score": match_score1}, { "other_user_id": user_id2, "match_score": match_score2}, ... ]'
+        content += '出力形式: [ { "other_user_id": user_id1, "match_score": match_score1, "best_album_id": album_id1}, { "other_user_id": user_id2, "match_score": match_score2, "best_album_id": album_id2}, ... ]'
 
         begin
           client = OpenAI::Client.new(access_token: ENV['OPENAI_API_KEY'])
@@ -52,6 +52,7 @@ class OtherUsersController < ApplicationController
             other_user_id: match["other_user_id"]
           )
             match_record.score = match["match_score"]
+            match_record.match_album = match["best_album_id"]
             match_record.save
             match_record.touch
           end
@@ -67,7 +68,8 @@ class OtherUsersController < ApplicationController
       @other_users = @q.result(distinct: true)
                     .joins("LEFT JOIN matches ON matches.other_user_id = users.id")
                     .where(matches: { user_id: current_user.id })
-                    .select("users.*, matches.score as match_score")
+                    .select("users.*, matches.score as match_score, matches.match_album")
+                    .where.not(id: current_user.id)
                     .order('match_score DESC')
 
     elsif current_user
@@ -100,7 +102,7 @@ class OtherUsersController < ApplicationController
 
   def show
     @user = User.find(params[:id])
-    if current_user && current_user.user_albums.present?
+    if current_user && current_user.user_albums.present? && current_user != @user
       last_updated_time = Match.where(user_id: current_user.id, other_user_id: @user.id)
                                .maximum(:updated_at)
 
@@ -114,15 +116,14 @@ class OtherUsersController < ApplicationController
         current_user_likes = current_user.like_music
         other_user_likes = { id: @user.id, likes: @user.like_music }
 
-        content = "私と他のユーザーとのマッチ度（0から100の範囲、ビートルズとオアシスのように違うアーティストでも音楽性や界隈、ルーツが近ければそれに準じた点数をつけてください、音楽が無いユーザーはマッチ度0、同じアーティストの組み合わせでユーザーごとに点数のばらつきが出ないように採点基準の一貫性を強く持ってください。）を以下の【出力形式:】より後に書いてあるの配列の形で返してください。それ以外の発言は絶対にしないでください。\n"
+        content = "私と他のユーザーとのマッチ度（0から100の範囲、ビートルズとオアシスのように違うアーティストでも音楽性や界隈、ルーツが近ければそれに準じた点数をつけてください、音楽が無いユーザーはマッチ度0、同じアーティストの組み合わせでユーザーごとに点数のばらつきが出ないように採点基準の一貫性を強く持ってください。）とその相手のユーザーの最大9枚のアルバムの中で一番私の音楽性に近いアルバムのid（もし私と他のユーザーが全く同じidのアルバムを選んでいたら、そのアルバムは絶対に選ばないでください、アルバムが一枚でもある限りはマッチ度が0だったとしても、最大9枚から私と全く同じ音楽以外で一番共通点のある一枚を選んで絶対にidを返してください。）を一つ以下の【出力形式:】より後に書いてあるの配列の形で返してください。それ以外の発言は絶対にしないでください。\n"
         content += "私の好きな音楽: #{current_user_likes}\n"
         content += "他のユーザーの好きな音楽:\n"
         content += "ユーザーID: #{other_user_likes[:id]}, 音楽: #{other_user_likes[:likes]}\n"
-        content += '出力形式: [ { "other_user_id": user_id, "match_score": match_score} ]'
+        content += '出力形式: [ { "other_user_id": user_id, "match_score": match_score, "best_album_id": album_id} ]'
 
-        client = OpenAI::Client.new(access_token: ENV['OPENAI_API_KEY'])
         begin
-          client = OpenAI::Client.new(access_token: )
+          client = OpenAI::Client.new(access_token: ENV['OPENAI_API_KEY'])
           response = client.chat(
             parameters: {
               model: "gpt-4o-mini", # モデルを変更
@@ -137,6 +138,7 @@ class OtherUsersController < ApplicationController
             other_user_id: match_scores[0]["other_user_id"]
           )
           match_record.score = match_scores[0]["match_score"]
+          match_record.match_album = match_scores[0]["best_album_id"]
           match_record.save
           match_record.touch
         rescue Faraday::TooManyRequestsError => e
@@ -147,10 +149,13 @@ class OtherUsersController < ApplicationController
           flash.now[:danger] = "再試行してください。"  
         end
       end
-      @user = User
-           .joins("LEFT JOIN matches ON matches.other_user_id = users.id AND matches.user_id = #{current_user.id}")
-           .select("users.*, matches.score as match_score")
-           .find(params[:id])
+      @user = User.joins("LEFT JOIN matches ON matches.other_user_id = users.id AND matches.user_id = #{current_user.id}")
+                  .select("users.*, matches.score as match_score, matches.match_album")
+                  .find(params[:id])
+    end
+
+    if current_user == @user
+      redirect_to profile_path
     end
 
     set_meta_tags   twitter: {

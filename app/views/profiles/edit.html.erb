@@ -36,6 +36,10 @@
           <%= select_tag "user[instrument_ids][]", options_for_select([['なし', '']] + Instrument.pluck(:name, :id), current_user.instrument_ids[1]), class: 'select-field w-40 mt-2 mb-10' %>
         </fieldset>
       </div>
+      <div class="flex flex-col">
+        <%= f.label :purpose, "目的", class: "text-2xl neon-logo-off" %>
+        <%= f.select :purpose, options_for_select([['趣味', 'hobby'], ['プロ志望', 'pro']], @user.purpose || 'hobby'), {}, class: 'select-field w-40 mt-2 mb-10' %>
+      </div>
       <div>
         <%= f.label :birth_year, "生年月日", class: "neon-logo-off text-2xl" %>
         <fieldset class="flex">
@@ -47,10 +51,6 @@
       <div class="flex flex-col">
         <%= f.label :gender, "性別", class: "text-2xl neon-logo-off" %>
         <%= f.select :gender, options_for_select([['男性', 'male'], ['女性', 'female']], @user.gender), { include_blank: '性別を選択' }, class: 'select-field w-40 mt-2 mb-10' %>
-      </div>
-      <div class="flex flex-col">
-        <%= f.label :purpose, "目的", class: "text-2xl neon-logo-off" %>
-        <%= f.select :purpose, options_for_select([['プロ志望', 'pro'], ['趣味', 'hobby']], @user.purpose), { include_blank: '目的を選択' }, class: 'select-field w-40 mt-2 mb-10' %>
       </div>
     </div>
     <div class="flex-1 flex flex-col justify-start p-2 ml-4">

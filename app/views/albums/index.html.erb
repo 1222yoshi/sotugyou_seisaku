@@ -43,9 +43,9 @@
 <% end %>
   <div class="flex flex-col items-end p-2 max-lg:mt-24">
     <%= form_tag(albums_path, method: "get") do %>
-      <%= text_field_tag :album, params[:album], placeholder: "アーティスト名、アルバム名、曲名", class: "input-field fixed right-8 w-80 z-10",autocomplete: 'off' %>
+      <%= text_field_tag :album, params[:album], placeholder: "アーティスト名、アルバム名、曲名", class: "input-field fixed right-8 w-80 z-10 mt-6",autocomplete: 'off' %>
     <% end %>  
-    <div class="mt-14 w-72 absolute right-10 z-0">
+    <div class="mt-20 w-72 absolute right-10 z-0">
     <% if @albums.present? %>
       <% @albums.each do |album| %>
         <div class="flex  mb-12">

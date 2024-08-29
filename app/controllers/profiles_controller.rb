@@ -9,10 +9,10 @@ class ProfilesController < ApplicationController
     selected_instruments = params[:user][:instrument_ids].reject(&:blank?)
 
     if selected_areas.uniq.length != selected_areas.length
-      flash.now[:danger] = "選択したエリアに重複があります。"
+      flash[:danger] = "選択したエリアに重複があります。"
       redirect_to profile_path
     elsif selected_instruments.uniq.length != selected_instruments.length
-      flash[:dager] = "選択した楽器に重複があります。"
+      flash[:danger] = "選択した楽器に重複があります。"
       redirect_to profile_path
     else
       if @user.update(user_params)
