@@ -97,7 +97,7 @@ class AlbumsController < ApplicationController
     grid_size = 418  # グリッド全体のサイズ
     cell_size = grid_size / 3  # 各セルのサイズ
   
-    background_path = Rails.root.join('assets', 'images', 'metro-sea.png')
+    background_path = Rails.root.join('public', 'metro-sea.png')
     canvas = MiniMagick::Image.open(background_path)
     # 各アルバムアートワークをグリッドに配置
     @user_albums.each_with_index do |user_album, index|
