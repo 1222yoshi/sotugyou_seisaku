@@ -13,7 +13,7 @@ class ApplicationController < ActionController::Base
   def prepare_meta_tags(options = {})
     defaults = {
       site: "MeTRO NOTE",
-      title: "MeTRO NOTE",
+      title: "バンドメンバーマッチングアプリ | MeTRO NOTE",
       description: "AIを使ったバンドメンバーマッチングアプリ",
       og: {
         site_name: :site,
