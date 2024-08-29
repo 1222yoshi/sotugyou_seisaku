@@ -16,7 +16,7 @@ class ApplicationController < ActionController::Base
       og: {
         site_name: :site,
         description: :description,
-        url: "https://metronote.jp"
+        url: "https://metronote.jp",
         image: image_url('metro-sea.png')
       },
       twitter: {
