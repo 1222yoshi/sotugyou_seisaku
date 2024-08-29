@@ -1,5 +1,6 @@
 class ApplicationController < ActionController::Base
   before_action :require_login
+  before_action :prepare_meta_tags, if: -> { request.get? }
 
   add_flash_types :success, :danger
   
@@ -17,11 +18,11 @@ class ApplicationController < ActionController::Base
         site_name: :site,
         description: :description,
         url: "https://metronote.jp",
-        image: image_url('metro-sea.png')
+        image: 'metro-sea.png'
       },
       twitter: {
         card: 'summary_large_image',
-        image: image_url('metro-sea.png')
+        image: 'metro-sea.png'
       }
     }
 
