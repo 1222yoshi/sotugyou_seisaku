@@ -14,20 +14,30 @@ document.addEventListener('turbo:load', () => {
 
 
     // メニューボタンに関する処理
-    document.querySelectorAll('.menu-button, .likes-button').forEach(button => {
+    document.querySelectorAll('.menu-button, .search-button').forEach(button => {
         const menu = button.classList.contains('menu-button') ? 
             document.querySelector('.home-menu') : 
-            document.querySelector('.likes-menu'); // ボタンに応じたメニューを取得
+            document.querySelector('.search-menu'); // ボタンに応じたメニューを取得
 
         button.addEventListener('click', (e) => {
-            e.preventDefault(); // デフォルトのリンク動作を無効に
+            e.preventDefault(); // デフォルトのリンク動作を無効
             toggleMenu(button, menu); // メニューのトグル処理を呼び出す
         });
 
+        button.addEventListener('click', function() {
+            if (button.classList.contains('search-button')) {
+                const inputField = document.querySelector('.input-field'); // インプットフィールドの取得
+                inputField.focus(); // インプットフィールドにフォーカスを当てる
+                const currentValue = inputField.value; // 現在の入力値を取得
+                inputField.setSelectionRange(currentValue.length, currentValue.length); 
+            }
+        });
         // メニュー外をクリックしたらメニューを非表示にする処理
         document.addEventListener('click', (e) => {
-            if (!button.contains(e.target) && !menu.contains(e.target)) {
-                closeMenu(button, menu); // メニューを閉じる処理を呼び出す
+            if (!(window.innerWidth >= 1024 && button.classList.contains('search-button'))) {
+              if (!button.contains(e.target) && !menu.contains(e.target)) {
+                  closeMenu(button, menu); // メニューを閉じる処理を呼び出す
+              }
             }
         });
 
@@ -90,6 +100,15 @@ document.addEventListener('turbo:load', () => {
           }
         });
       });
+
+      const searchButton = document.querySelector('.search-button');
+      // 表示を消したい要素を取得（クラス名を使う）
+      const elementToHide = document.querySelector('.element-to-hide');
+
+      // サーチボタンがクリックされたときの処理
+      searchButton.addEventListener('click', function() {
+        elementToHide.classList.toggle('hidden'); // 各要素にhiddenクラスを追加
+    });
 });
 
 // blinkingアニメーションを開始する関数

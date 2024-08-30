@@ -1,36 +1,28 @@
-<div class="flex justify-between p-4 other_user_box mb-8">
+<div class="flex justify-between lg:p-4 other_user_box mb-8">
   <div class="flex flex-col p-2">
-    <div class="flex items-center mb-4">
+    <div class="flex items-center lg:mb-4 max-lg:1">
       <%= link_to other_user_path(other_user) do %>
-        <%= image_tag other_user.profile_image_url, class: "w-20 h-20 rounded-full mr-4"%> 
+        <%= image_tag other_user.profile_image_url, class: "w-20 h-20 rounded-full lg:mr-4 max-lg:w-12 max-lg:h-12"%> 
       <% end %>
-      <span class="text-2xl"><%= other_user.name %></span>
+      <span class="lg:text-2xl max-lg:sm"><%= other_user.name %></span>
     </div>
-    <% if other_user.user_albums.present? %>
-      <div class="grid grid-cols-3">
-        <% other_user.user_albums.includes(:album).order(created_at: :asc).each do |user_album| %>
-          <%= link_to album_path(user_album.album.itunes_album_id) do %>
-            <div class="album w-40 h-40 overflow-hidden flex items-center justify-center">
-              <%= image_tag user_album.album.artwork_url, class: "object-cover w-full h-full" %>
-            </div>
-          <% end %>
+    <div class="grid grid-cols-3">
+      <% other_user.user_albums.includes(:album).order(created_at: :asc).each do |user_album| %>
+        <%= link_to album_path(user_album.album.itunes_album_id) do %>
+          <div class="album w-40 h-40 overflow-hidden flex items-center justify-center max-lg:w-12 max-lg:h-12">
+            <%= image_tag user_album.album.artwork_url, class: "object-cover w-full h-full" %>
+          </div>
         <% end %>
-        <% (other_user.user_albums.count...9).each do %>
-          <div class="no-album"></div>
-        <% end %>
-      </div>
-    <% else %>
-      <div class="album-no-grid">
-        <% 9.times.each do %>
-          <div></div>
-        <% end %>
-      </div>
-    <% end %>
+      <% end %>
+      <% (other_user.user_albums.count...9).each do %>
+        <div class="no-album"></div>
+      <% end %>
+    </div>
   </div> 
-  <div class="flex flex-col p-2 ml-4">
-    <div class="flex items-center mt-6">
-      <span class="text-2xl">AIマッチ：</span>
-      <div class="text-3xl">
+  <div class="flex flex-col p-2 ">
+    <div class="flex items-center lg:mt-6 max-lg:mt-2">
+      <span class="lg:text-2xl max-lg:text-sm">AIマッチ：</span>
+      <div class="lg:text-3xl">
         <% if current_user && current_user.user_albums.present? %>
           <% if other_user.match_score >= 90 %>
             <div class="s-neon">S</div>
@@ -50,33 +42,33 @@
         <% end %>
       </div>
     </div>
-    <div class="show-border mt-16 text-center border-orange">
-      <div class="p-4 ">
-        <div class="mb-6 text-xl">
+    <div class="show-border lg:mt-16 max-lg:mt-2 text-center border-orange">
+      <div class="lg:p-4 max-lg:p-1">
+        <div class="lg:mb-6 lg:text-xl max-lg:text-xs">
         <% other_user.areas.each do |area| %>
           <%= area.name %>
         <% end %>
         </div>
-        <div class="mb-6 text-xl">
+        <div class="lg:mb-6 lg:text-xl max-lg:text-xs">
         <% other_user.instruments.each do |instrument| %>
           <%= instrument.name %>
         <% end %>
         </div>
-        <div class="flex text-xl justify-center">
-          <div class="mr-4">
+        <div class="flex lg:text-xl max-lg:text-xs justify-center truncate">
+          <div class="lg:mr-4 max-lg:mr-1">
             <%= other_user.purpose_japanese %>
           </div>
-          <div class="mr-4">
+          <div class="lg:mr-4 max-lg:mr-1 truncate">
             <%= other_user.age %>
           </div>
-          <div class="mr-4">
+          <div class="lg:mr-4 truncate">
             <%= other_user.gender_japanese %>
           </div> 
         </div>
       </div>
     </div>
-    <div class="show-border border-orange h-64">
-      <div class="text-xl p-4">
+    <div class="show-border border-orange lg:w-80 lg:h-64 max-lg:h-16 max-lg:w-40">
+      <div class="lg:text-xl max-lg:text-xs lg:p-4 max-lg:text-ellipsis max-lg:line-clamp-4">
         <%= other_user.introduction %>
       </div>
     </div>

@@ -1,5 +1,5 @@
-<h1 class="text-xl neon-text-on-no-link fixed top-7 left-1/2 transform -translate-x-1/2 z-10"><%= @user.name %></h1>
-<div class="flex h-screen max-lg:flex-col lg:p-4 justify-between">
+<h1 class="text-xl neon-text-on-no-link fixed top-7 left-1/2 transform -translate-x-1/2 z-10 max-lg:text-sm max-lg:top-12  truncate"><%= @user.name %></h1>
+<div class="flex h-screen max-lg:flex-col lg:p-4 justify-between max-lg:mt-4">
   <div class="flex flex-col p-2">
     <div class="flex items-center mb-4">
       <%= image_tag @user.profile_image_url, class: "w-20 h-20 rounded-full mr-4"%> 
@@ -74,7 +74,7 @@
         <% end %>
       </div>
     </div>
-    <div class="show-border mt-4 text-center border-blue">
+    <div class="show-border mt-4 text-center border-blue ">
       <div class="p-4">
        <div class="mb-6 text-xl">
         <% @user.areas.each do |area| %>
@@ -99,21 +99,21 @@
         </div>
       </div>
     </div>
-    <div class="show-border border-blue">
+    <div class="show-border border-blue ">
       <div class="text-xl p-4">
         <%= @user.introduction %>
       </div>
     </div>
   </div>
-  <div class="flex flex-col justify-start fiexd mt-6 lg:p-2" >
-    <div class="grid grid-cols-3 max-lg:gap-8">
+  <div class="flex justify-center mt-6 lg:p-2 lg:flex-col" >
+    <div class="grid grid-cols-3">
       <% @user_albums.each do |user_album| %>
-        <div class="flex  lg:mb-24  max-lg:flex-col">
-          <div class="album w-32 h-32 overflow-hidden flex items-center justify-center max-lg:w-28 max-lg:h-28">
-            <%= link_to album_path(user_album.album.itunes_album_id), class: "object-cover w-full h-full" do %>
+        <div class="flex items-center lg:mb-24  max-lg:flex-col">
+          <%= link_to album_path(user_album.album.itunes_album_id) do %>
+            <div class="album w-32 h-32 overflow-hidden flex items-center justify-center max-lg:w-28 max-lg:h-28">
               <%= image_tag user_album.album.artwork_url, class: "object-cover w-full h-full" %>
-            <% end %>
-          </div>
+            </div>
+          <% end %>
           <div class="w-48 mr-2 flex flex-col justify-center relative max-lg:w-24">
             <div class="text-center">
               <h3 class="mb-1 max-lg:text-xs"><%= user_album.album.album_name %></h3>

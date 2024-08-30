@@ -1,5 +1,5 @@
-<h1 class="text-xl neon-text-on-no-link fixed top-7 left-1/2 transform -translate-x-1/2 z-10">アカウント登録</h1>
-<div class="flex items-center justify-center h-screen">
+<h1 class="text-xl neon-text-on-no-link fixed top-7 left-1/2 transform -translate-x-1/2 z-10 max-lg:text-sm max-lg:top-12">アカウント登録</h1>
+<div class="flex items-center justify-center h-screen xl:fixed left-1/2 right-1/2">
   <%= form_with model: @user do |f| %>
     <div class="mb-6">
       <%= f.text_field :name, placeholder: '名前', class: 'input-field',autocomplete: 'off' %>
@@ -13,8 +13,11 @@
     <div class="mb-6">
       <%= f.password_field :password_confirmation, placeholder: 'パスワード（確認用）', class: 'input-field',autocomplete: 'off' %>
     </div>
-    <div class="flex justify-end">
+    <div class="flex justify-end mb-8">
       <%= f.submit '登録', id: "submit-button", class: "neon-text-off"%>
+    </div>
+    <div class="flex justify-start">
+      <%= link_to "ログインはこちら", login_path, class: "neon-off-on"%>
     </div>
   <% end %>
 </div>

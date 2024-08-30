@@ -1,21 +1,33 @@
-<h1 class="text-xl neon-text-on-no-link fixed top-7 left-1/2 transform -translate-x-1/2 z-10">＃私を構成する９枚</h1>
-<div class="flex h-screen justify-between p-4 ">
+<h1 class="text-xl neon-text-on-no-link fixed top-7 left-1/2 transform -translate-x-1/2 z-10 max-lg:text-sm max-lg:top-12">＃私を構成する９枚</h1>
+<div class="fixed neon-text-off top-6 right-24 lg:invisible z-30 search-button">
+  <svg width="25" viewBox="0 0 20 20" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+    <path fill-rule="evenodd" clip-rule="evenodd" d="M8 2C6.4087 2 4.88258 2.63214 3.75736 3.75736C2.63214 4.88258 2 6.4087 2 8C2 8.78793 2.15519 9.56815 2.45672 10.2961C2.75825 11.0241 3.20021 11.6855 3.75736 12.2426C4.31451 12.7998 4.97595 13.2417 5.7039 13.5433C6.43185 13.8448 7.21207 14 8 14C8.78793 14 9.56815 13.8448 10.2961 13.5433C11.0241 13.2417 11.6855 12.7998 12.2426 12.2426C12.7998 11.6855 13.2417 11.0241 13.5433 10.2961C13.8448 9.56815 14 8.78793 14 8C14 6.4087 13.3679 4.88258 12.2426 3.75736C11.1174 2.63214 9.5913 2 8 2ZM2.34315 2.34315C3.84344 0.842855 5.87827 0 8 0C10.1217 0 12.1566 0.842855 13.6569 2.34315C15.1571 3.84344 16 5.87827 16 8C16 9.05057 15.7931 10.0909 15.391 11.0615C14.989 12.0321 14.3997 12.914 13.6569 13.6569C12.914 14.3997 12.0321 14.989 11.0615 15.391C10.0909 15.7931 9.05057 16 8 16C6.94943 16 5.90914 15.7931 4.93853 15.391C3.96793 14.989 3.08601 14.3997 2.34315 13.6569C1.60028 12.914 1.011 12.0321 0.608964 11.0615C0.206926 10.0909 0 9.05058 0 8C5.96046e-08 5.87827 0.842855 3.84344 2.34315 2.34315ZM14.7929 14.7929C15.1834 14.4024 15.8166 14.4024 16.2071 14.7929L19.7071 18.2929C20.0976 18.6834 20.0976 19.3166 19.7071 19.7071C19.3166 20.0976 18.6834 20.0976 18.2929 19.7071L14.7929 16.2071C14.4024 15.8166 14.4024 15.1834 14.7929 14.7929Z"/>
+  </svg>
+</div>
+<% if params[:album].present? %>
+  <%= link_to albums_path, class: "fixed delete-icon neon-text-off right-6 lg:invisible z-20 element-to-hide", style: "top: 92px;" do %>
+    <svg width="20" viewBox="0 0 45 45" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+      <path d="M43.4318 40.3807C43.6321 40.581 43.791 40.8189 43.8994 41.0806C44.0079 41.3424 44.0637 41.6229 44.0637 41.9062C44.0637 42.1896 44.0079 42.4701 43.8994 42.7319C43.791 42.9936 43.6321 43.2315 43.4318 43.4318C43.2314 43.6321 42.9936 43.791 42.7318 43.8995C42.4701 44.0079 42.1895 44.0637 41.9062 44.0637C41.6229 44.0637 41.3424 44.0079 41.0806 43.8995C40.8189 43.791 40.581 43.6321 40.3807 43.4318L22.5 25.5484L4.61927 43.4318C4.21467 43.8364 3.66592 44.0637 3.09373 44.0637C2.52154 44.0637 1.97278 43.8364 1.56818 43.4318C1.16358 43.0272 0.936279 42.4784 0.936279 41.9062C0.936279 41.3341 1.16358 40.7853 1.56818 40.3807L19.4516 22.5L1.56818 4.61929C1.16358 4.21469 0.936279 3.66593 0.936279 3.09374C0.936279 2.52155 1.16358 1.9728 1.56818 1.5682C1.97278 1.1636 2.52154 0.936295 3.09373 0.936295C3.66592 0.936295 4.21467 1.1636 4.61927 1.5682L22.5 19.4516L40.3807 1.5682C40.7853 1.1636 41.334 0.936295 41.9062 0.936295C42.4784 0.936295 43.0272 1.1636 43.4318 1.5682C43.8364 1.9728 44.0637 2.52155 44.0637 3.09374C44.0637 3.66593 43.8364 4.21469 43.4318 4.61929L25.5484 22.5L43.4318 40.3807Z"/>
+    </svg>
+  <% end %>
+<% end %>
+<div class="flex max-lg:justify-center h-screen lg:justify-between lg:p-4 ">
 <% if @user_albums.present? && current_user %>
-  <div class="flex flex-col justify-start fixed p-2 mt-6">
+  <div class="flex flex-col justify-center lg:fixed p-2 lg:mt-6 max-lg:mt-12">
     <div class="grid grid-cols-3">
       <% @user_albums.each do |user_album| %>
-        <div class="flex  mb-24">
+        <div class="flex item-center lg:mb-24  max-lg:flex-col">
           <%= link_to album_path(user_album.album.itunes_album_id) do %>
-            <div class="album w-32 h-32 overflow-hidden flex items-center justify-center">
+            <div class="album w-32 h-32 overflow-hidden flex items-center justify-center max-lg:w-28 max-lg:h-28">
               <%= image_tag user_album.album.artwork_url, class: "object-cover w-full h-full" %>
             </div>
           <% end %>
-          <div class="w-48 mr-2 flex flex-col justify-center relative">
+          <div class="w-48 mr-2 flex flex-col justify-center relative max-lg:w-24">
             <div class="text-center">
-              <h3 class="mb-1"><%= user_album.album.album_name %></h3>
-              <p><%= user_album.album.artist_name %></p>
+              <h3 class="mb-1 max-lg:text-xs"><%= user_album.album.album_name %></h3>
+              <p class="max-lg:text-xs"><%= user_album.album.artist_name %></p>
             </div>
-            <div class="absolute  right-1 bottom-0">
+            <div class="absolute lg:right-1 bottom-0 max-lg:right-0">
               <%= button_to album_path(user_album.album), method: :delete, class: "delete-icon" do %>
                 <svg width="20" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
                 <path fill-rule="evenodd" clip-rule="evenodd" d="M10.6763 0L13.3222 1.19209e-07C13.3223 1.19209e-07 13.3221 1.19209e-07 13.3222 1.19209e-07C14.1095 -0.000126243 14.8771 0.247518 15.5158 0.707841C16.1545 1.16822 16.6321 1.81798 16.881 2.565L17.2759 3.75H19.4871C19.4948 3.74993 19.5026 3.74993 19.5103 3.75H22C22.6904 3.75 23.25 4.30964 23.25 5C23.25 5.69036 22.6904 6.25 22 6.25H20.6638L19.5781 21.4275C19.5781 21.4276 19.5781 21.4274 19.5781 21.4275C19.5331 22.0578 19.2511 22.6482 18.7887 23.079C18.3262 23.51 17.7177 23.7497 17.0856 23.75H6.9125L6.91065 23.75C6.27898 23.7491 5.67107 23.509 5.20914 23.0782C4.74729 22.6474 4.46561 22.0578 4.42068 21.4278C4.42067 21.4277 4.42069 21.428 4.42068 21.4278L3.33613 6.25H2C1.30964 6.25 0.75 5.69036 0.75 5C0.75 4.30964 1.30964 3.75 2 3.75H4.48968C4.49743 3.74993 4.50518 3.74993 4.5129 3.75H6.72405L7.11905 2.565C7.11908 2.56491 7.11902 2.56509 7.11905 2.565C7.36778 1.8184 7.84519 1.16868 8.48348 0.708389C9.12185 0.248036 9.8892 0.000203967 10.6763 0ZM7.59617 6.25C7.61555 6.25045 7.6349 6.25045 7.65418 6.25H16.3458C16.3651 6.25045 16.3844 6.25045 16.4038 6.25H18.1574L17.0844 21.2496L6.91435 21.25L5.84251 6.25H7.59617ZM14.6407 3.75H9.35928L9.49085 3.35528C9.57376 3.10638 9.73297 2.88958 9.94576 2.73613C10.1585 2.58274 10.414 2.50014 10.6763 2.5C10.6761 2.5 10.6764 2.5 10.6763 2.5H13.3225C13.585 2.49994 13.8411 2.58249 14.054 2.73595C14.2669 2.88941 14.4261 3.10599 14.5091 3.355L14.6407 3.75ZM12 10C12.6904 10 13.25 10.5596 13.25 11.25V16.25C13.25 16.9404 12.6904 17.5 12 17.5C11.3096 17.5 10.75 16.9404 10.75 16.25V11.25C10.75 10.5596 11.3096 10 12 10Z"/>
@@ -27,7 +39,7 @@
       <% end %>
     </div>
     <% if current_user.user_albums.count == 9 %>
-      <div class="fixed bottom-2 left-1/2 items-center">
+      <div class="lg:fixed bottom-2 left-1/2 items-center max-lg:flex justify-center max-lg:mt-2 ">
         <%= link_to share_album_path(@user_albums), class: "text-xl  neon-off-on flex", target: "_blank", rel: "noopener noreferrer" do %>
           <p>＃私を構成する９枚を</p>
           <svg width="18" viewBox="0 0 30 31" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
@@ -39,19 +51,19 @@
     <% end %>
   </div>
 <% else %>
-  <h1 class="neon-text-on-no-link text-2xl p-2 mt-4 fixed right-1/2">好きな音楽を見つけて＃私を構成する９枚を作る  →</h1>
+  <h1 class="neon-text-on-no-link text-2xl p-2 mt-4 fixed right-1/2 max-lg:hidden">好きな音楽を見つけて＃私を構成する９枚を作る  →</h1>
 <% end %>
-  <div class="flex flex-col items-end p-2 max-lg:mt-24">
+  <div class="flex flex-col lg:p-2 max-lg:mt-2">
     <%= form_tag(albums_path, method: "get") do %>
-      <%= text_field_tag :album, params[:album], placeholder: "アーティスト名、アルバム名、曲名", class: "input-field fixed right-8 w-80 z-10 mt-6",autocomplete: 'off' %>
+      <%= text_field_tag :album, params[:album], placeholder: "アーティスト名、アルバム名、曲名", class: "input-field fixed lg:right-8 w-80 z-10 lg:mt-6  max-lg:left-1/2 max-lg:transform max-lg:-translate-x-1/2 search-menu max-lg:hidden",autocomplete: 'off' %>
     <% end %>  
-    <div class="mt-20 w-72 absolute right-10 z-0">
+    <div class="lg:mt-20 max-lg:mt-4 lg:w-72 max-lg:w-84 absolute lg:right-10 max-lg:left-1/2 max-lg:transform max-lg:-translate-x-1/2 z-0 search-back">
     <% if @albums.present? %>
       <% @albums.each do |album| %>
-        <div class="flex  mb-12">
+        <div class="flex mb-12">
           <div class="album w-24 h-24 overflow-hidden flex items-center justify-center">
             <%= link_to album_path(album['collectionId']), class: "object-cover w-full h-full" do %>
-              <%= image_tag(album['artworkUrl100'], class: "object-cover w-full h-full") %>
+              <%= image_tag(album['artworkUrl100'], class: "object-cover w-full h-full ") %>
             <% end %>
           </div>
           <div class="w-48 flex flex-col justify-center relative">
