@@ -27,6 +27,12 @@
   z-index: 1000; /* 他の要素の上に表示されるように */
 }
 
+@media (max-width: 1024px) { /* lgブレークポイント */
+  .flash {
+    width: 350px; /* lgサイズ以下の幅 */
+  }
+}
+
 .flash-success {
   color: #1f8360;
   border-color: #1f8360;
@@ -142,11 +148,16 @@ scrollbar {
     width: 100%;
   }
 
+  @media (max-width: 1024px) { /* lgブレークポイント */
+    body {
+      padding-left: 10px;
+      padding-right: 10px; 
+    }
+  }
+
   .show-border {
-    width: 400px;
     border-top: 2px solid;
     border-color: #b2b2b2;
-    margin-left: -15px;
   }
 
   .neon-text-on {
@@ -248,12 +259,29 @@ scrollbar {
 
   .home-menu {
     position: absolute;
-    top: 110%;
+    top: 103%;
     right: 0;
     background-color: #050505;
     padding: 8px;
+    text-align: right;
 }
 
+@media (max-width: 1024px) { /* lgブレークポイント */
+  .home-menu {
+    position: absolute;
+    top: 103%;
+    width: 120%;
+    background-color: #050505;
+    text-align: center;
+    right: 50%; /* 左端を画面の中央に設定 */
+    transform: translateX(50%);
+    
+
+}
+}
+.search-menu {
+  visibility : visible;
+}
 .input-field {
   border: 2px solid #127292;
   background: transparent;
@@ -312,6 +340,11 @@ scrollbar {
 
 .neon-logo-off {
   color: #127292;
+}
+
+input[type="file"]:focus {
+  outline: none; /* フォーカス時のアウトラインを消す */
+  border: none; /* ボーダーを消す */
 }
 
 .file-field::file-selector-button {
@@ -555,6 +588,13 @@ scrollbar {
             overflow: hidden;
 }
 
+@media (max-width: 1024px) { /* lgブレークポイント */
+  .album-no-grid {
+    grid-template-columns: repeat(3, 111px);
+    grid-template-rows: repeat(3, 111px);
+  }
+}
+
 .album-no-grid div {
   border: 2px solid #127292; /* 各セルのボーダー */
 }
@@ -583,6 +623,13 @@ scrollbar {
   overflow: hidden;
 }
 
+@media (max-width: 1024px) { /* lgブレークポイント */
+  .no-album-neon {
+    height: 111px;
+    width: 111px;
+  }
+}
+
 .no-album-neon:hover {
   animation: blue-icon-glow 0.3s ease-in-out forwards, blue-field-color-change 0.3s ease-in-out forwards;
 }
@@ -595,6 +642,13 @@ scrollbar {
   overflow: hidden;
 }
 
+@media (max-width: 1024px) { /* lgブレークポイント */
+  .no-album {
+    height: 47px;
+    width: 47px;
+  }
+}
+
 .login-button {
   color: #884915;
   border: 2px solid #127292;
@@ -605,9 +659,6 @@ scrollbar {
 .login-button:hover {
   animation: blue-field-glow 0.3s ease-in-out forwards, blue-field-color-change 0.3s ease-in-out forwards, orange-text-glow 0.3s ease-in-out forwards, orange-text-color-change 0.3s ease-in-out forwards;
 }
-
-
-
 
 @keyframes orange-text-glow {
   0% {
@@ -627,5 +678,41 @@ scrollbar {
   }
   100% {
     color: #ff9a48;
+  }
+}
+
+@media (max-width: 1024px) { /* lgブレークポイント */
+  .search-back {
+    background-color: #050505;
+    padding: 0 24px 0 24px;
+  }
+}
+
+.hidden {
+  display: none; /* 要素を非表示にする */
+}
+
+@media (max-width: 1024px) { /* lgブレークポイント */
+  .search-back-root {
+    background-color: #050505;
+    position: absolute;
+    width: 100%;
+    height: 60%;
+  }
+}
+
+@media (max-width: 1024px) { /* lgブレークポイント */
+  .purpose-text {
+    top: 352px;
+  }
+}
+
+.purpose-box {
+  top: 416px;
+}
+
+@media (max-width: 1024px) { /* lgブレークポイント */
+  .purpose-box {
+  top: 384px;
   }
 }

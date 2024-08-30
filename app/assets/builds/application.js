@@ -5798,15 +5798,25 @@
     if (neonText) {
       addHoverListeners(neonText);
     }
-    document.querySelectorAll(".menu-button, .likes-button").forEach((button) => {
-      const menu = button.classList.contains("menu-button") ? document.querySelector(".home-menu") : document.querySelector(".likes-menu");
+    document.querySelectorAll(".menu-button, .search-button").forEach((button) => {
+      const menu = button.classList.contains("menu-button") ? document.querySelector(".home-menu") : document.querySelector(".search-menu");
       button.addEventListener("click", (e) => {
         e.preventDefault();
         toggleMenu(button, menu);
       });
+      button.addEventListener("click", function() {
+        if (button.classList.contains("search-button")) {
+          const inputField = document.querySelector(".input-field");
+          inputField.focus();
+          const currentValue = inputField.value;
+          inputField.setSelectionRange(currentValue.length, currentValue.length);
+        }
+      });
       document.addEventListener("click", (e) => {
-        if (!button.contains(e.target) && !menu.contains(e.target)) {
-          closeMenu(button, menu);
+        if (!(window.innerWidth >= 1024 && button.classList.contains("search-button"))) {
+          if (!button.contains(e.target) && !menu.contains(e.target)) {
+            closeMenu(button, menu);
+          }
         }
       });
       button.addEventListener("mouseleave", () => {
@@ -5854,6 +5864,11 @@
           this.classList.add("selected");
         }
       });
+    });
+    const searchButton = document.querySelector(".search-button");
+    const elementToHide = document.querySelector(".element-to-hide");
+    searchButton.addEventListener("click", function() {
+      elementToHide.classList.toggle("hidden");
     });
   });
   function startBlinkingForElements() {

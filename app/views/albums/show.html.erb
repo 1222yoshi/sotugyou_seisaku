@@ -1,6 +1,6 @@
-<h1 class="text-xl neon-text-on-no-link fixed top-7 left-1/2 transform -translate-x-1/2 z-10 max-lg:text-xs"><%= @album['collectionName'] %></h1>
-<div class="p-4">
-  <div class="flex justify-start fixed p-2">
+<h1 class="text-xl neon-text-on-no-link fixed top-7 left-1/2 transform -translate-x-1/2 z-10 max-lg:text-sm max-lg:top-12 truncate"><%= @album['collectionName'] %></h1>
+<div class="max-lg:flex max-lg:h-scrern max-lg:flex-col justify-center lg:p-4 max-lg:mt-4">
+  <div class="flex justify-center lg:fixed p-2">
     <div class="album w-32 h-32 overflow-hidden flex items-center justify-center">
       <%= image_tag @album['artworkUrl100'] , class: "object-cover w-full h-full"%>
     </div>
@@ -9,8 +9,7 @@
         <h3 class="mb-1"><%= @album['collectionName'] %></h3>
         <p><%= @album['artistName'] %></p>
       </div>
-      <div class="absolute  right-1 bottom-0">
-
+      <div class="absolute right-1 bottom-0">
           <% if @user_album.present? && current_user %>
             <%= button_to album_path(@user_album.album), method: :delete, class: "delete-icon" do %>
               <svg width="20" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
@@ -26,28 +25,28 @@
           <% end %>
       </div>
     </div>
-    <div class="fixed p-2 mt-48">
-      <iframe style="border:none; overflow:hidden; width:300px; height:600px;" 
-                src="https://embed.music.apple.com/jp/album/<%= @album['collectionId'] %>" 
-                frameborder="0" allow="autoplay *; encrypted-media *;" allowfullscreen></iframe>
-    </div>
+  </div>
+  <div class="lg:fixed p-2 lg:top-64 flex justify-center max-lg:mb-4">
+    <iframe style="border:none; overflow:hidden; width:300px; height:450px;" 
+            src="https://embed.music.apple.com/jp/album/<%= @album['collectionId'] %>" 
+            frameborder="0" allow="autoplay *; encrypted-media *;" allowfullscreen></iframe>
   </div>
 </div>
 <% if @album_users.present? %>
   <% if @user_album.present? %>
-    <div class="neon-text-on-no-link text-2xl left-1/2 fixed">このアルバム選んだ他のユーザー</div>
+    <div class="neon-text-on-no-link lg:text-2xl lg:left-1/2 lg:fixed text-xl flex justify-center">このアルバム選んだ他のユーザー</div>
   <% else %>
-    <div class="neon-text-on-no-link text-2xl left-1/2 fixed">このアルバムを選んだユーザー</div>
+    <div class="neon-text-on-no-link lg:text-2xl lg:left-1/2 lg:fixed text-xl flex justify-center">このアルバムを選んだユーザー</div>
   <% end %>
 <% else %>
   <% if @user_album.present? %>
-    <div class="neon-text-on-no-link text-2xl left-1/2 fixed">このアルバムを選んだ他のユーザーはいません</div>
+    <div class="neon-text-on-no-link lg:text-2xl lg:left-1/2 lg:fixed text-sm flex justify-center">このアルバムを選んだ他のユーザーはいません</div>
   <% else %>
-    <div class="neon-text-on-no-link text-2xl left-1/2 fixed">このアルバムを選んだユーザーはいません</div>
+    <div class="neon-text-on-no-link lg:text-2xl lg:left-1/2 lg:fixed text-xl flex justify-center">このアルバムを選んだユーザーはいません</div>
   <% end %>
 <% end %>
-<div class="flex flex-row-reverse p-4">
-  <div class="flex flex-col p-2 mt-6">
+<div class="flex lg:flex-row-reverse lg:p-4 max-lg:justify-center">
+  <div class="flex flex-col p-2 mt-6 max-lg:mt-2 lg:mr-6">
     <% if @album_users.present? %>
       <%= render partial: 'album_user', collection: @album_users %>
     <% end %>

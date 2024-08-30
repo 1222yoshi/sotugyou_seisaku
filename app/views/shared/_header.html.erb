@@ -1,7 +1,10 @@
-<header class="flex justify-between items-center p-4 z-20">
-  <a href="/" class="text-4xl neon-text-on invisible lg:visible">M<span class="blinking">e</span>TRO NOTE</a>
+<header class="flex justify-between items-center p-4 z-30">
+<% if current_user || request.path == login_path || request.path == new_user_path %>
+  <a href="/" class="text-4xl neon-text-on  max-lg:text-2xl">M<span class="blinking">e</span>TRO NOTE</a>
+<% else %>
+  <%= link_to "ログイン/新規登録", login_path, class: "login-button text-2xl max-lg:text-sm" %>
+<% end %>
   <div class="flex items-center space-x-10">
-  <% if current_user %>
   <!--
     <a href="#" class="neon-text-off chat-button">
       <svg width="45" viewBox="0 0 59 42" fill="currentColor" xmlns="http://www.w3.org/2000/svg" class="invisible lg:visible">
@@ -19,23 +22,18 @@
     <div class="likes-menu" style="display: none;">
     </div>
     -->
-    <% else %>
-      <%= link_to "ログイン/新規登録", login_path, class: "login-button text-xl" %>
-    <% end %>
     <a href="#" class="neon-text-off menu-button">  
       <svg width="30" viewBox="0 0 35 27" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
       <path d="M0.46875 2.25C0.46875 1.38706 1.16831 0.6875 2.03125 0.6875H32.9688C33.8317 0.6875 34.5312 1.38706 34.5312 2.25C34.5312 3.11294 33.8317 3.8125 32.9688 3.8125H2.03125C1.16831 3.8125 0.46875 3.11294 0.46875 2.25ZM0.46875 13.5C0.46875 12.6371 1.16831 11.9375 2.03125 11.9375H32.9688C33.8317 11.9375 34.5312 12.6371 34.5312 13.5C34.5312 14.3629 33.8317 15.0625 32.9688 15.0625H2.03125C1.16831 15.0625 0.46875 14.3629 0.46875 13.5ZM0.46875 24.75C0.46875 23.8871 1.16831 23.1875 2.03125 23.1875H32.9688C33.8317 23.1875 34.5312 23.8871 34.5312 24.75C34.5312 25.6129 33.8317 26.3125 32.9688 26.3125H2.03125C1.16831 26.3125 0.46875 25.6129 0.46875 24.75Z"/>
       </svg>
     </a>
-    <div class="home-menu" style="display: none;">
-      <ul style="text-align: right;">
-        <li><%= link_to "トップページ", root_path, class: "neon-off-on" %></li>
-        <li><%= link_to "プロフィール", profile_path, class: "neon-off-on"%></li>
-        <li><%= link_to "＃私を構成する９枚", albums_path, class: "neon-off-on" %></li>
-        <% if current_user %>
-          <li><%= button_to "ログアウト", logout_path, method: :delete, class: "delete-icon"%></li>
-        <% end %>
-      </ul>
+    <div class="home-menu flex flex-col" style="display: none;">
+      <%= link_to "トップページ", root_path, class: "neon-off-on max-lg:mb-4 flex flex-col" %>
+      <%= link_to "プロフィール", profile_path, class: "neon-off-on max-lg:mb-4 flex flex-col"%>
+      <%= link_to "＃私を構成する９枚", albums_path, class: "neon-off-on max-lg:mb-4 flex flex-col" %>
+      <% if current_user %>
+        <%= button_to "ログアウト", logout_path, method: :delete, class: "delete-icon"%>
+      <% end %>
     </div>
   </div>
 </header>

@@ -1,15 +1,15 @@
-<div class="flex justify-between p-4 other_user_box mb-8">
+<div class="flex justify-between lg:p-4 other_user_box mb-8">
   <div class="flex flex-col p-2">
-    <div class="flex items-center mb-4">
+    <div class="flex items-center lg:mb-4 max-lg:mb-1">
       <%= link_to other_user_path(album_user) do %>
-        <%= image_tag album_user.profile_image_url, class: "w-20 h-20 rounded-full mr-4"%> 
+        <%= image_tag album_user.profile_image_url, class: "w-20 h-20 rounded-full lg:mr-4 max-lg:w-12 max-lg:h-12"%> 
       <% end %>
-      <span class="text-2xl"><%= album_user.name %></span>
+      <span class="lg:text-2xl max-lg:sm"><%= album_user.name %></span>
     </div>
     <div class="grid grid-cols-3">
       <% album_user.user_albums.includes(:album).order(created_at: :asc).each do |user_album| %>
         <%= link_to album_path(user_album.album.itunes_album_id) do %>
-          <div class="album w-40 h-40 overflow-hidden flex items-center justify-center">
+          <div class="album w-40 h-40 overflow-hidden flex items-center justify-center max-lg:w-12 max-lg:h-12">
             <%= image_tag user_album.album.artwork_url, class: "object-cover w-full h-full" %>
           </div>
         <% end %>
@@ -19,34 +19,34 @@
        <% end %>
     </div>
   </div> 
-  <div class="flex flex-col p-2 ml-4">
-    <div class="show-border border-orange mt-32 text-center">
-      <div class="p-4 ">
-        <div class="mb-6 text-xl">
+  <div class="flex flex-col p-2">
+    <div class="show-border border-orange lg:mt-32 max-lg:mt-10 text-center">
+      <div class="lg:p-4 max-lg:p-1">
+        <div class="lg:mb-6 lg:text-xl max-lg:text-xs">
         <% album_user.areas.each do |area| %>
           <%= area.name %>
         <% end %>
         </div>
-        <div class="mb-6 text-xl">
+        <div class="lg:mb-6 lg:text-xl max-lg:text-xs">
         <% album_user.instruments.each do |instrument| %>
           <%= instrument.name %>
         <% end %>
         </div>
-        <div class="flex text-xl justify-center">
-          <div class="mr-4">
+        <div class="flex lg:text-xl max-lg:text-xs justify-center truncate">
+          <div class="lg:mr-4 max-lg:mr-1">
             <%= album_user.purpose_japanese %>
           </div>
-          <div class="mr-4">
+          <div class="lg:mr-4 max-lg:mr-1 truncate">
             <%= album_user.age %>
           </div>
-          <div class="mr-4">
+          <div class="lg:mr-4 truncate">
             <%= album_user.gender_japanese %>
           </div> 
         </div>
       </div>
     </div>
-    <div class="show-border border-orange h-64">
-      <div class="text-xl p-4">
+    <div class="show-border border-orange lg:w-80 lg:h-64 max-lg:h-16 max-lg:w-40">
+      <div class="lg:text-xl max-lg:text-xs lg:p-4 max-lg:text-ellipsis max-lg:line-clamp-4">
         <%= album_user.introduction %>
       </div>
     </div>

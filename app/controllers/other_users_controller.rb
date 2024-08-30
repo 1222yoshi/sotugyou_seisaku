@@ -57,7 +57,7 @@ class OtherUsersController < ApplicationController
             match_record.touch
           end
         rescue Faraday::TooManyRequestsError => e
-          flash.now[:danger] = "マッチ更新失敗、時間を置いてください。"
+          flash.now[:danger] = "マッチ情報の更新に失敗しました。"
         rescue JSON::ParserError => each
           flash.now[:danger] = "AIが予期せぬ返答をしました。"
         rescue Faraday::ServerError => e
