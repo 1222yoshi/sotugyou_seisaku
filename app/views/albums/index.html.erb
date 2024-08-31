@@ -59,7 +59,7 @@
 <% end %>
   <div class="flex flex-col lg:p-2 max-lg:mt-2">
     <%= form_tag(albums_path, method: "get") do %>
-      <%= text_field_tag :album, params[:album], placeholder: "アーティスト名、アルバム名、曲名", class: "input-field fixed lg:right-8 w-80 z-10 lg:mt-6  max-lg:left-1/2 max-lg:transform max-lg:-translate-x-1/2 search-menu max-lg:hidden",autocomplete: 'off', autocorrect: "off" %>
+      <%= text_field_tag :album, params[:album], placeholder: "アーティスト名、アルバム名、曲名", class: "input-field fixed lg:right-8 w-80 z-10 lg:mt-6  max-lg:left-1/2 max-lg:transform max-lg:-translate-x-1/2 search-menu max-lg:hidden",autocomplete: 'off'%>
     <% end %>  
     <div class="lg:mt-20 max-lg:mt-4 lg:w-72 max-lg:w-84 absolute lg:right-10 max-lg:left-1/2 max-lg:transform max-lg:-translate-x-1/2 z-0 search-back">
     <% if @albums.present? %>
