@@ -27,13 +27,11 @@ document.addEventListener('turbo:load', () => {
         button.addEventListener('click', function() {
             if (button.classList.contains('search-button')) {
                 const inputField = document.querySelector('.input-field'); // インプットフィールドの取得
-                const elementToHide = document.querySelector('.element-to-hide');
                 if (!inputField.hasAttribute('data-no-auto-focus')) {
                     inputField.focus(); // インプットフィールドにフォーカスを当てる
                     const currentValue = inputField.value; // 現在の入力値を取得
                     inputField.setSelectionRange(currentValue.length, currentValue.length); 
                 }
-                elementToHide.classList.toggle('hidden');
             }
         });
         // メニュー外をクリックしたらメニューを非表示にする処理
@@ -145,14 +143,19 @@ function addHoverListeners(neonText) {
     });
 }
 
+
+  const elementToHide = document.querySelector('.element-to-hide');
+
 // メニューのトグル処理を行う関数
 function toggleMenu(button, menu) {
     if (menu.style.display === 'block') {
         closeMenu(button, menu); // メニューを非表示にする処理
+        elementToHide.classList.remove('hidden'); 
     } else {
         menu.style.display = 'block'; // メニューを表示
         button.classList.remove('neon-text-off');
         button.classList.add('neon-icon-on'); // クラスを変更
+        elementToHide.classList.add('hidden'); 
     }
 }
 

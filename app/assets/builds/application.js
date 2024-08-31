@@ -5807,13 +5807,11 @@
       button.addEventListener("click", function() {
         if (button.classList.contains("search-button")) {
           const inputField = document.querySelector(".input-field");
-          const elementToHide = document.querySelector(".element-to-hide");
           if (!inputField.hasAttribute("data-no-auto-focus")) {
             inputField.focus();
             const currentValue = inputField.value;
             inputField.setSelectionRange(currentValue.length, currentValue.length);
           }
-          elementToHide.classList.toggle("hidden");
         }
       });
       document.addEventListener("click", (e) => {
@@ -5896,13 +5894,16 @@
       neonText.classList.remove("no-animation");
     });
   }
+  var elementToHide = document.querySelector(".element-to-hide");
   function toggleMenu(button, menu) {
     if (menu.style.display === "block") {
       closeMenu(button, menu);
+      elementToHide.classList.remove("hidden");
     } else {
       menu.style.display = "block";
       button.classList.remove("neon-text-off");
       button.classList.add("neon-icon-on");
+      elementToHide.classList.add("hidden");
     }
   }
   function closeMenu(button, menu) {
