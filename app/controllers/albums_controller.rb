@@ -52,39 +52,36 @@ class AlbumsController < ApplicationController
   def choose
     begin
       album_details = ITunesSearchAPI.lookup(id: params[:id], media: 'music', entity: 'album', country: 'jp')
-    rescue JSON::ParserError => e
-      flash.now[:danger] = "再試行してください。"
-    end
-
-    begin
+  
       album_record = Album.find_or_create_by(
         artist_name: album_details['artistName'],
         album_name: album_details['collectionName'],
         itunes_album_id: album_details['collectionId'],
         artwork_url: album_details['artworkUrl100']
       )
-    rescue NoMethodError => e
-      flash.now[:danger] = "再試行してください。"
-      return
-    end
 
-    album_param = session[:album_search]
+      album_param = session[:album_search]
 
-    if current_user.user_albums.count >= 9
-      flash[:danger] = "アルバムの追加は9枚までです。"
-      redirect_to albums_path(album: album_param)
-    elsif current_user.user_albums.exists?(album_id: album_record.id)
-      flash[:danger] = "同じアルバムは追加できません。"
-      redirect_to albums_path(album: album_param)
-    else
-      @user_album = current_user.user_albums.new(album: album_record)
-      if @user_album.save
-        current_user.update(like_music: current_user.user_albums.map { |ua| "#{ua.album.artist_name}の#{ua.album.album_name} (ID: #{ua.album.id})" }.join(", "))
-        redirect_to albums_path(album: album_param), success: "アルバムを保存しました。"
-      else
-        flash[:danger] = "アルバムの保存に失敗しました。"
+      if current_user.user_albums.count >= 9
+        flash[:danger] = "アルバムの追加は9枚までです。"
         redirect_to albums_path(album: album_param)
+      elsif current_user.user_albums.exists?(album_id: album_record.id)
+        flash[:danger] = "同じアルバムは追加できません。"
+        redirect_to albums_path(album: album_param)
+      else
+        @user_album = current_user.user_albums.new(album: album_record)
+        if @user_album.save
+          current_user.update(like_music: current_user.user_albums.map { |ua| "#{ua.album.artist_name}の#{ua.album.album_name} (ID: #{ua.album.id})" }.join(", "))
+          redirect_to albums_path(album: album_param), success: "アルバムを保存しました。"
+        else
+          flash[:danger] = "アルバムの保存に失敗しました。"
+          redirect_to albums_path(album: album_param)
+        end
       end
+
+    rescue JSON::ParserError, NoMethodError, StandardError => e
+      flash.now[:danger] = "再試行してください。"
+      redirect_to albums_path(album: album_param)
     end
   end
 

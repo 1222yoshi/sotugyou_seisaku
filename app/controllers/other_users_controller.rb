@@ -53,8 +53,10 @@ class OtherUsersController < ApplicationController
           )
             match_record.score = match["match_score"]
             match_record.match_album = match["best_album_id"]
-            match_record.save
-            match_record.touch
+            if match_record.save
+              match_record.touch
+              flash.now[:success] = "マッチ情報を更新しました。"
+            end
           end
         rescue Faraday::TooManyRequestsError => e
           flash.now[:danger] = "マッチ情報の更新に失敗しました。"
@@ -139,8 +141,10 @@ class OtherUsersController < ApplicationController
           )
           match_record.score = match_scores[0]["match_score"]
           match_record.match_album = match_scores[0]["best_album_id"]
-          match_record.save
-          match_record.touch
+          if match_record.save
+            match_record.touch
+            flash.now[:success] = "マッチ情報を更新しました。"
+          end
         rescue Faraday::TooManyRequestsError => e
           flash.now[:danger] = "マッチ更新失敗、時間を置いてください。"
         rescue JSON::ParserError => each
