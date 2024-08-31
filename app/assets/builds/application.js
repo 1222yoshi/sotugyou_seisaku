@@ -5793,7 +5793,7 @@
 
   // app/javascript/application.js
   document.addEventListener("turbo:load", () => {
-    const neonText = document.querySelector(".neon-text-on");
+    const neonText = document.querySelector(".neon-text-on, .login-button");
     startBlinkingForElements();
     if (neonText) {
       addHoverListeners(neonText);
@@ -5807,9 +5807,13 @@
       button.addEventListener("click", function() {
         if (button.classList.contains("search-button")) {
           const inputField = document.querySelector(".input-field");
-          inputField.focus();
-          const currentValue = inputField.value;
-          inputField.setSelectionRange(currentValue.length, currentValue.length);
+          const elementToHide = document.querySelector(".element-to-hide");
+          if (!inputField.hasAttribute("data-no-auto-focus")) {
+            inputField.focus();
+            const currentValue = inputField.value;
+            inputField.setSelectionRange(currentValue.length, currentValue.length);
+          }
+          elementToHide.classList.toggle("hidden");
         }
       });
       document.addEventListener("click", (e) => {
@@ -5864,11 +5868,6 @@
           this.classList.add("selected");
         }
       });
-    });
-    const searchButton = document.querySelector(".search-button");
-    const elementToHide = document.querySelector(".element-to-hide");
-    searchButton.addEventListener("click", function() {
-      elementToHide.classList.toggle("hidden");
     });
   });
   function startBlinkingForElements() {

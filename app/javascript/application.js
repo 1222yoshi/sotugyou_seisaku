@@ -2,7 +2,7 @@
 import "@hotwired/turbo-rails"
 
 document.addEventListener('turbo:load', () => {
-    const neonText = document.querySelector('.neon-text-on');
+    const neonText = document.querySelector('.neon-text-on, .login-button');
 
     // 毎回アニメーションを有効にする
     startBlinkingForElements();
@@ -27,9 +27,13 @@ document.addEventListener('turbo:load', () => {
         button.addEventListener('click', function() {
             if (button.classList.contains('search-button')) {
                 const inputField = document.querySelector('.input-field'); // インプットフィールドの取得
-                inputField.focus(); // インプットフィールドにフォーカスを当てる
-                const currentValue = inputField.value; // 現在の入力値を取得
-                inputField.setSelectionRange(currentValue.length, currentValue.length); 
+                const elementToHide = document.querySelector('.element-to-hide');
+                if (!inputField.hasAttribute('data-no-auto-focus')) {
+                    inputField.focus(); // インプットフィールドにフォーカスを当てる
+                    const currentValue = inputField.value; // 現在の入力値を取得
+                    inputField.setSelectionRange(currentValue.length, currentValue.length); 
+                }
+                elementToHide.classList.toggle('hidden');
             }
         });
         // メニュー外をクリックしたらメニューを非表示にする処理
@@ -100,15 +104,6 @@ document.addEventListener('turbo:load', () => {
           }
         });
       });
-
-      const searchButton = document.querySelector('.search-button');
-      // 表示を消したい要素を取得（クラス名を使う）
-      const elementToHide = document.querySelector('.element-to-hide');
-
-      // サーチボタンがクリックされたときの処理
-      searchButton.addEventListener('click', function() {
-        elementToHide.classList.toggle('hidden'); // 各要素にhiddenクラスを追加
-    });
 });
 
 // blinkingアニメーションを開始する関数
