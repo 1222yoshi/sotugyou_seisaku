@@ -34,15 +34,15 @@
 </div>
 <% if @album_users.present? %>
   <% if @user_album.present? %>
-    <div class="neon-text-on-no-link lg:text-2xl lg:left-1/2 lg:fixed text-xl flex justify-center">このアルバム選んだ他のユーザー</div>
+    <div class="neon-text-on-no-link lg:text-2xl lg:left-1/2 lg:fixed text-sm flex justify-center">このアルバム選んだ他のユーザー</div>
   <% else %>
-    <div class="neon-text-on-no-link lg:text-2xl lg:left-1/2 lg:fixed text-xl flex justify-center">このアルバムを選んだユーザー</div>
+    <div class="neon-text-on-no-link lg:text-2xl lg:left-1/2 lg:fixed text-sm flex justify-center">このアルバムを選んだユーザー</div>
   <% end %>
 <% else %>
   <% if @user_album.present? %>
     <div class="neon-text-on-no-link lg:text-2xl lg:left-1/2 lg:fixed text-sm flex justify-center">このアルバムを選んだ他のユーザーはいません</div>
   <% else %>
-    <div class="neon-text-on-no-link lg:text-2xl lg:left-1/2 lg:fixed text-xl flex justify-center">このアルバムを選んだユーザーはいません</div>
+    <div class="neon-text-on-no-link lg:text-2xl lg:left-1/2 lg:fixed text-sm flex justify-center">このアルバムを選んだユーザーはいません</div>
   <% end %>
 <% end %>
 <div class="flex lg:flex-row-reverse lg:p-4 max-lg:justify-center">
