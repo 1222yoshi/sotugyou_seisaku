@@ -13,7 +13,7 @@
   <div class=" lg:items-end lg:p-2 max-lg:pt-2 search-menu max-lg:hidden search-back-root">
     <%= search_form_for @q, url: other_users_path, method: :get do |f| %>
       <div>
-        <%= f.search_field :name_cont, value: params.dig(:q, :name_cont), placeholder: "ユーザー名", class: "input-field fixed lg:right-8 w-80 z-10 lg:mt-6 max-lg:left-1/2 max-lg:transform max-lg:-translate-x-1/2",autocomplete: 'off' %>
+        <%= f.search_field :name_cont, value: params.dig(:q, :name_cont), placeholder: "ユーザー名", class: "input-field fixed lg:right-8 w-80 z-10 lg:mt-6 max-lg:left-1/2 max-lg:transform max-lg:-translate-x-1/2",autocomplete: 'off', 'data-no-auto-focus': 'true' %>
       </div>
       <div>
         <%= f.label :"活動エリア", class: "text-2xl neon-logo-off fixed right-60 lg:top-48 max-lg:top-40"%>  

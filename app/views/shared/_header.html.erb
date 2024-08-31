@@ -29,8 +29,8 @@
     </a>
     <div class="home-menu flex flex-col" style="display: none;">
       <%= link_to "トップページ", root_path, class: "neon-off-on max-lg:mb-4 flex flex-col" %>
-      <%= link_to "プロフィール", profile_path, class: "neon-off-on max-lg:mb-4 flex flex-col"%>
       <%= link_to "＃私を構成する９枚", albums_path, class: "neon-off-on max-lg:mb-4 flex flex-col" %>
+      <%= link_to "プロフィール", profile_path, class: "neon-off-on max-lg:mb-4 flex flex-col"%>
       <% if current_user %>
         <%= button_to "ログアウト", logout_path, method: :delete, class: "delete-icon"%>
       <% end %>
