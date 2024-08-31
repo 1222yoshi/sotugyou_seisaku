@@ -143,11 +143,9 @@ function addHoverListeners(neonText) {
     });
 }
 
-
-  const elementToHide = document.querySelector('.element-to-hide');
-
 // メニューのトグル処理を行う関数
 function toggleMenu(button, menu) {
+    const elementToHide = document.querySelector('.element-to-hide');
     if (menu.style.display === 'block') {
         closeMenu(button, menu); // メニューを非表示にする処理
         elementToHide.classList.remove('hidden'); 

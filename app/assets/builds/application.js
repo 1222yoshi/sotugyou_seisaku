@@ -5894,8 +5894,8 @@
       neonText.classList.remove("no-animation");
     });
   }
-  var elementToHide = document.querySelector(".element-to-hide");
   function toggleMenu(button, menu) {
+    const elementToHide = document.querySelector(".element-to-hide");
     if (menu.style.display === "block") {
       closeMenu(button, menu);
       elementToHide.classList.remove("hidden");
