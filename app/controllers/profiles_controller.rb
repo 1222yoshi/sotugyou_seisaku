@@ -14,11 +14,14 @@ class ProfilesController < ApplicationController
     elsif selected_instruments.uniq.length != selected_instruments.length
       flash[:danger] = "選択した楽器に重複があります。"
       redirect_to profile_path
+    elsif params[:user][:name].empty?
+      flash[:danger] = "名前は必須項目です。"
+      redirect_to profile_path
     else
       if @user.update(user_params)
         redirect_to profile_path, success: 'プロフィールを更新しました。'
       else
-        flash[:danger] = "名前は必須項目です。"
+        flash[:danger] = "更新に失敗しました。"
         redirect_to profile_path
       end
     end

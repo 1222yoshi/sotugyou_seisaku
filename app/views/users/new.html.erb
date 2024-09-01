@@ -2,16 +2,16 @@
 <div class="flex items-center justify-center h-screen xl:fixed left-1/2 right-1/2">
   <%= form_with model: @user do |f| %>
     <div class="mb-6">
-      <%= f.text_field :name, placeholder: '名前', class: 'input-field',autocomplete: 'off' %>
+      <%= f.text_field :name, placeholder: '名前', class: 'input-field', style: "width: 200px;", autocomplete: 'off' %>
     </div>
     <div class="mb-6">
-      <%= f.text_field :email, placeholder: 'メールアドレス', class: 'input-field',autocomplete: 'off' %>
+      <%= f.text_field :email, placeholder: 'メールアドレス', class: 'input-field', style: "width: 200px;", autocomplete: 'off' %>
     </div>
     <div class="mb-6">
-      <%= f.password_field :password, placeholder: 'パスワード', class: 'input-field',autocomplete: 'off' %>
+      <%= f.password_field :password, placeholder: 'パスワード', class: 'input-field', style: "width: 200px;", autocomplete: 'off' %>
     </div>
     <div class="mb-6">
-      <%= f.password_field :password_confirmation, placeholder: 'パスワード（確認用）', class: 'input-field',autocomplete: 'off' %>
+      <%= f.password_field :password_confirmation, placeholder: 'パスワード（確認用）', class: 'input-field', style: "width: 200px;" ,autocomplete: 'off' %>
     </div>
     <div class="flex justify-end mb-8">
       <%= f.submit '登録', id: "submit-button", class: "neon-text-off"%>

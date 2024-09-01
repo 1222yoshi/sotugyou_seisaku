@@ -2,15 +2,15 @@
 import "@hotwired/turbo-rails"
 
 document.addEventListener('turbo:load', () => {
-    const neonText = document.querySelector('.neon-text-on, .login-button');
+    const neonTexts = document.querySelectorAll('.neon-text-on, .login-button, .neon-icon-on');
 
     // 毎回アニメーションを有効にする
     startBlinkingForElements();
 
     // neonTextが存在する場合にno-animationスタイルを適用
-    if (neonText) {
+    neonTexts.forEach(neonText => {
         addHoverListeners(neonText); // hoverリスナ
-    }
+    });
 
 
     // メニューボタンに関する処理

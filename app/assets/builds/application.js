@@ -5793,11 +5793,11 @@
 
   // app/javascript/application.js
   document.addEventListener("turbo:load", () => {
-    const neonText = document.querySelector(".neon-text-on, .login-button");
+    const neonTexts = document.querySelectorAll(".neon-text-on, .login-button, .neon-icon-on");
     startBlinkingForElements();
-    if (neonText) {
+    neonTexts.forEach((neonText) => {
       addHoverListeners(neonText);
-    }
+    });
     document.querySelectorAll(".menu-button, .search-button").forEach((button) => {
       const menu = button.classList.contains("menu-button") ? document.querySelector(".home-menu") : document.querySelector(".search-menu");
       button.addEventListener("click", (e) => {
