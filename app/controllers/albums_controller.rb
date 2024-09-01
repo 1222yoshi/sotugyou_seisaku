@@ -145,7 +145,6 @@ class AlbumsController < ApplicationController
     s3_bucket.object(object_key).put(body: output.read)
   
     # Twitterシェア用のURL生成
-    current_time = Time.now.strftime("%Y%m%d%H%M%S")
     app_url = "https://metronote.jp/other_users/#{current_user.id}?time=#{current_time}"
     x_url = "https://x.com/intent/tweet?url=#{CGI.escape(app_url)}"
   
