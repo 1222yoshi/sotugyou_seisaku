@@ -162,11 +162,12 @@ class OtherUsersController < ApplicationController
       redirect_to profile_path
     end
 
+    current_time = params[:time]
     set_meta_tags   twitter: {
                     title: "＃私を構成する９枚 | MeTRO NOTE",
                     card: "summary_large_image",
-                    url: "https://metronote.jp/other_users/#{@user.id}",
-                    image:  "https://#{ENV['AWS_BUCKET_NAME']}.s3.us-east-1.amazonaws.com/album_grid_#{@user.id}.png"
+                    url: "https://metronote.jp/other_users/#{@user.id}?time=#{current_time}",
+                    image:  "https://#{ENV['AWS_BUCKET_NAME']}.s3.us-east-1.amazonaws.com/album_grid_#{@user.id}_#{current_time}.png"
                   }
     @user_albums = @user.user_albums.includes(:album).order(created_at: :asc)
   end
