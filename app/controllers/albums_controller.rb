@@ -88,6 +88,8 @@ class AlbumsController < ApplicationController
   def share
     @user_albums = current_user.user_albums.includes(:album).order(created_at: :asc).limit(9)
   
+    current_time = Time.now.strftime("%Y%m%d%H%M%S")
+
     require 'open-uri'
     require 'stringio'
     # 画像全体のサイズ
@@ -130,10 +132,13 @@ class AlbumsController < ApplicationController
     # S3に画像をアップロード
     s3 = Aws::S3::Resource.new(region: 'us-east-1')
     s3_bucket = s3.bucket(ENV['AWS_BUCKET_NAME']) # バケット名を指定
-    object_key = "album_grid_#{current_user.id}.png"
+    object_key = "album_grid_#{current_user.id}_#{current_time}.png"
 
-    # 既存のオブジェクトを削除
-    s3_bucket.object(object_key).delete if s3_bucket.object(object_key).exists?
+    s3_bucket.objects(prefix: "album_grid_#{current_user.id}").each do |obj|
+      if obj.key.start_with?("album_grid_#{current_user.id}") 
+        obj.delete
+      end
+    end
 
     # メモリの内容をS3にアップロード
     output.rewind # StringIOのポインタを先頭に戻す
@@ -141,7 +146,7 @@ class AlbumsController < ApplicationController
   
     # Twitterシェア用のURL生成
     current_time = Time.now.strftime("%Y%m%d%H%M%S")
-    app_url = "https://metronote.jp/other_users/#{current_user.id}?#{current_time}"
+    app_url = "https://metronote.jp/other_users/#{current_user.id}?time=#{current_time}"
     x_url = "https://x.com/intent/tweet?url=#{CGI.escape(app_url)}"
   
     redirect_to x_url, allow_other_host: true
