@@ -4,7 +4,7 @@
     <%= form_with model: @user, url: profile_path, method: :put do |f| %>
       <div class="mb-8 flex flex-col">
         <%= f.label :profile_image, "プロフィール画像", class: "neon-logo-off text-2xl" %>
-        <%= f.file_field :profile_image, accept: 'image/jpg, image/jpeg,image/png, image/gif', class: 'file-field order-2' %>
+        <%= f.file_field :profile_image, accept: 'image/jpg, image/jpeg, image/png, image/gif', class: 'file-field order-2' %>
         <div class="w-20 h-20 rounded-full overflow-hidden flex items-center justify-center max-lg:w-16 max-lg:h-16 lg:mt-4 max-lg:mt-2 mb-4 order-1">
           <%= image_tag current_user.profile_image_url, class: "object-cover w-full h-full"%> 
         </div>
