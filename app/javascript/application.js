@@ -12,6 +12,16 @@ document.addEventListener('turbo:load', () => {
         addHoverListeners(neonText); // hoverリスナ
     });
 
+    const noAlbumsMessage = document.getElementById('no-albums-message');
+    
+    if (noAlbumsMessage) {
+        const searchButton = document.querySelector('.search-button');
+        if (searchButton) {
+            setTimeout(() => {
+                searchButton.click(); // サーチボタンをクリックする動作を発火
+            }, 1); //
+        }
+    }
 
     // メニューボタンに関する処理
     document.querySelectorAll('.menu-button, .search-button').forEach(button => {
