@@ -5798,6 +5798,15 @@
     neonTexts.forEach((neonText) => {
       addHoverListeners(neonText);
     });
+    const noAlbumsMessage = document.getElementById("no-albums-message");
+    if (noAlbumsMessage) {
+      const searchButton = document.querySelector(".search-button");
+      if (searchButton) {
+        setTimeout(() => {
+          searchButton.click();
+        }, 1);
+      }
+    }
     document.querySelectorAll(".menu-button, .search-button").forEach((button) => {
       const menu = button.classList.contains("menu-button") ? document.querySelector(".home-menu") : document.querySelector(".search-menu");
       button.addEventListener("click", (e) => {
