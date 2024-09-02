@@ -72,7 +72,11 @@ class AlbumsController < ApplicationController
         @user_album = current_user.user_albums.new(album: album_record)
         if @user_album.save
           current_user.update(like_music: current_user.user_albums.map { |ua| "#{ua.album.artist_name}の#{ua.album.album_name} (ID: #{ua.album.id})" }.join(", "))
-          redirect_to albums_path(album: album_param), success: "アルバムを保存しました。"
+          if current_user.user_albums.count == 9
+            redirect_to albums_path, success: "アルバムを保存しました。"
+          else
+            redirect_to albums_path(album: album_param), success: "アルバムを保存しました。"
+          end
         else
           flash[:danger] = "アルバムの保存に失敗しました。"
           redirect_to albums_path(album: album_param)
