@@ -13,8 +13,8 @@
 <% end %>
 <div class="flex max-lg:justify-center h-screen lg:justify-between lg:p-4 ">
 <% if @user_albums.present? && current_user %>
-  <div class="flex max-lg:flex-col justify-center lg:fixed p-2 lg:mt-6">
-    <div class="grid grid-cols-3">
+  <div class="flex max-lg:flex-col lg:fixed p-2 lg:mt-6 <%= @user_albums.count == 9 ? '' : 'max-lg:mt-16'%>">
+    <div class="grid grid-cols-3 max-lg:order-2">
       <% @user_albums.each do |user_album| %>
         <div class="flex max-lg:flex-col max-lg:relative">
           <div class="flex  item-center lg:mb-24  max-lg:flex-col">
@@ -43,7 +43,7 @@
       <% end %>
     </div>
     <% if current_user.user_albums.count == 9 %>
-      <div class="lg:fixed bottom-2 left-1/2 items-center max-lg:flex justify-center max-lg:mt-4">
+      <div class="lg:fixed bottom-2 left-1/2 items-center max-lg:flex justify-center max-lg:order-1 max-lg:mb-4 max-lg:mt-8">
         <%= link_to share_album_path(@user_albums), class: "text-xl neon-icon-on flex", target: "_blank", rel: "noopener noreferrer" do %>
           <p>＃私を構成する９枚を</p>
           <svg width="18" viewBox="0 0 30 31" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
