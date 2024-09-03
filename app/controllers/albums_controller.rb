@@ -152,7 +152,8 @@ class AlbumsController < ApplicationController
   
     # Twitterシェア用のURL生成
     app_url = "https://metronote.jp/other_users/#{current_user.id}?time=#{current_time}"
-    x_url = "https://x.com/intent/tweet?url=#{CGI.escape(app_url)}"
+    default_text = "#私を構成する9枚"
+    x_url = "https://x.com/intent/tweet?url=#{CGI.escape(app_url)}&text=#{CGI.escape(default_text)}"
   
     redirect_to x_url, allow_other_host: true
   end
