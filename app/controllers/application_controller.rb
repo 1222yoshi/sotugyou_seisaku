@@ -23,6 +23,8 @@ class ApplicationController < ActionController::Base
         image: "https://metronote.jp/assets/metro-logo.png"
       },
       twitter: {
+        site_name: '',
+        title: '',
         card: 'summary_large_image',
         image: "https://metronote.jp/assets/metro-logo.png"
       }
