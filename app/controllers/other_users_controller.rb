@@ -165,6 +165,7 @@ class OtherUsersController < ApplicationController
 
     current_time = params[:time]
     set_meta_tags   twitter: {
+                    title: "",
                     card: "summary_large_image",
                     url: "https://metronote.jp/other_users/#{@user.id}?time=#{current_time}",
                     image:  "https://#{ENV['AWS_BUCKET_NAME']}.s3.us-east-1.amazonaws.com/album_grid_#{@user.id}_#{current_time}.png"
