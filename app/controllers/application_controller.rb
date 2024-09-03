@@ -12,8 +12,8 @@ class ApplicationController < ActionController::Base
 
   def prepare_meta_tags(options = {})
     defaults = {
-      site: "",
-      title: "",
+      site: "MeTRO NOTE",
+      title: "MeTRO NOTE",
       description: "AIを使ったバンドメンバーマッチングアプリ",
       og: {
         site_name: :site,
@@ -23,8 +23,6 @@ class ApplicationController < ActionController::Base
         image: "https://metronote.jp/assets/metro-logo.png"
       },
       twitter: {
-        site_name: '',
-        title: '',
         card: 'summary_large_image',
         image: "https://metronote.jp/assets/metro-logo.png"
       }
