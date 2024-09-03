@@ -97,7 +97,7 @@ class AlbumsController < ApplicationController
     require 'open-uri'
     require 'stringio'
     # 画像全体のサイズ
-    grid_size = 418  # グリッド全体のサイズ
+    grid_size = 372  # グリッド全体のサイズ
     cell_size = grid_size / 3  # 各セルのサイズ
   
     background_path = Rails.root.join('public', 'metro-logo.png')
@@ -110,8 +110,10 @@ class AlbumsController < ApplicationController
         artwork = MiniMagick::Image.read(image.read)
         if artwork.height > artwork.width
           artwork.resize "#{cell_size}x" # 高さに合わせてリサイズ
+          artwork.crop "#{cell_size}x#{cell_size}+0+#{(artwork.height - cell_size) / 2}"
         elsif artwork.height < artwork.width
           artwork.resize "x#{cell_size}" # 幅に合わせてリサイズ
+          artwork.crop "#{cell_size}x#{cell_size}+#{(artwork.width - cell_size) / 2}+0"
         else
           artwork.resize "#{cell_size}x#{cell_size}"
         end
@@ -119,8 +121,8 @@ class AlbumsController < ApplicationController
         resized_width = artwork.width
         resized_height = artwork.height
         # グリッド上の位置を計算
-        x_position = (index % 3) * cell_size + (cell_size - resized_width) / 2 + 191 # 余白を考慮して位置を調整
-        y_position = (index / 3) * cell_size + (cell_size - resized_height) / 2
+        x_position = (index % 3) * cell_size + (cell_size - resized_width) / 2 + 214 # 余白を考慮して位置を調整
+        y_position = (index / 3) * cell_size + (cell_size - resized_height) / 2 + 23
   
         # アートワークをキャンバスに合成
         canvas = canvas.composite(artwork) do |c|
