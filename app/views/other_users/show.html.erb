@@ -118,8 +118,8 @@
           <% end %>
           <div class="w-48 mr-2 flex flex-col justify-center relative max-lg:w-24">
             <div class="text-center">
-              <h3 class="mb-1 max-lg:text-xs  max-lg:text-ellipsis max-lg:line-clamp-2"><%= user_album.album.album_name %></h3>
-              <p class="max-lg:text-xs  max-lg:text-ellipsis max-lg:line-clamp-1"><%= user_album.album.artist_name %></p>
+              <h3 class="mb-1 max-lg:text-xs text-ellipsis line-clamp-2"><%= user_album.album.album_name %></h3>
+              <p class="max-lg:text-xs text-ellipsis line-clamp-1"><%= user_album.album.artist_name %></p>
               <% if current_user && current_user.user_albums.present? && user_album.album_id == @user.match_album %>
                 <div class="neon-text-on-no-link">AIからあなたへ</div>
               <% end %>
