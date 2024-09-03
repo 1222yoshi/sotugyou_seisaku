@@ -54,6 +54,8 @@
       </div>
     <% end %>
   </div>
+<% elsif params[:album].present? %>
+  <h1 class="neon-text-on-no-link text-2xl p-2 mt-4 fixed right-1/2 max-lg:invisible">好きな音楽を見つけて＃私を構成する９枚を作る  →</h1>
 <% else %>
   <h1 class="neon-text-on-no-link text-2xl p-2 mt-4 fixed right-1/2 max-lg:invisible" id="no-albums-message">好きな音楽を見つけて＃私を構成する９枚を作る  →</h1>
 <% end %>
