@@ -38,9 +38,9 @@ class OtherUsersController < ApplicationController
         content += "9枚の平均基準同士のマッチというより、一枚一枚総当たりの加点方式のような基準で点数をつけてください。（同じような傾向だったら1枚しかないユーザーより、9枚あるユーザーの方が有利、なので減点はしないでください。）同じアーティストの組み合わせでユーザーごとに点数のばらつきが出ないように採点基準の一貫性を強く持ってください。\n"
         content += "私の音楽性に近いアルバムの条件: 私の音楽性に近いアルバムのidはbest_album_idとして、もし私と他のユーザーが全く同じidのアルバムを選んでいたら、そのアルバムは絶対に選ばないでください、アルバムが一枚でもある限りはマッチ度が1だったとしても、最大9枚から私と全く同じ音楽以外で一番共通点のある一枚を選んで絶対にidを返してください。\n"
         content += "【音楽:】の後に「'アーティスト名'の'アルバム名'（ID: album_id）」の形が存在しないユーザーはmatch_score、best_album_idともに0を返してください。\n"
+        content += "私の好きな音楽: #{current_user_likes}\n"
+        content += "他のユーザーの好きな音楽:\n"
         other_users_likes.each do |user|
-          content += "私の好きな音楽: #{current_user_likes}\n"
-          content += "他のユーザーの好きな音楽:\n"
           content += "ユーザーID: #{user[:id]}, 音楽: #{user[:likes]}\n"
         end
         
