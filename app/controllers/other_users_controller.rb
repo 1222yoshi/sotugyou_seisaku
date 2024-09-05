@@ -69,7 +69,7 @@ class OtherUsersController < ApplicationController
             end
           end
         rescue Faraday::TooManyRequestsError => e
-          flash.now[:danger] = "マッチング修正中"
+          flash.now[:danger] = "マッチング修正中。"
         rescue JSON::ParserError => each
           flash.now[:danger] = "AIが予期せぬ返答をしました。"
         rescue Faraday::ServerError => e
@@ -77,21 +77,12 @@ class OtherUsersController < ApplicationController
         end
       end
 
-      if Match.exists?(user_id: current_user.id)
-        @other_users = @q.result(distinct: true)
-                      .joins("LEFT JOIN matches ON matches.other_user_id = users.id")
-                      .where(matches: { user_id: current_user.id })
-                      .select("users.*, matches.score as match_score, matches.match_album")
-                      .where.not(id: current_user.id)
-                      .order('match_score DESC')
-      else
-        @other_users = @q.result(distinct: true)
-                         .left_joins(:user_albums)
-                         .select('users.*, COUNT(user_albums.id) as albums_count')
-                         .group('users.id')
-                         .where.not(id: current_user.id)
-                         .order('albums_count DESC')
-      end
+      @other_users = @q.result(distinct: true)
+                    .joins("LEFT JOIN matches ON matches.other_user_id = users.id")
+                    .where(matches: { user_id: current_user.id })
+                    .select("users.*, matches.score as match_score, matches.match_album")
+                    .where.not(id: current_user.id)
+                    .order('match_score DESC')
 
     elsif current_user
       @other_users = @q.result(distinct: true)
