@@ -27,18 +27,20 @@ class OtherUsersController < ApplicationController
         current_user_likes = current_user.like_music
         other_users_likes = recent_users.map { |user| { id: user.id, likes: user.like_music } }
 
-        content = "私の好きな音楽を最大9つの「'アーティスト名'の'アルバム名'（ID: album_id）」、他のユーザーの好きな音楽を最大9つの「ユーザーID: user_id, 音楽: 'アーティスト名'の'アルバム名'（ID: album_id）」という形で送ります。\n"
+        content = "この文章を読んだ時、あなたは過去全ての私との会話の記憶の忘れて、以下の指示通りに一から作業してください。\m"
+        content += "私の好きな音楽を最大9つの「'アーティスト名'の'アルバム名'（ID: album_id）」、他のユーザーの好きな音楽を最大9つの「ユーザーID: user_id, 音楽: 'アーティスト名'の'アルバム名'（ID: album_id）」という形で送ります。\n"
         content += "その情報から私と他のユーザーとのマッチ度とその相手のユーザーの最大9枚のアルバムの中で一番私の音楽性に近いアルバムのidを一つ、以下の条件をよく読んで、【出力形式:】より後に書いてあるの配列の形で返してください。それ以外の発言は絶対にしないでください。\n"
         content += "マッチ度の条件:\n"
         content += "マッチ度はmatch_scoreとして後述する条件を除いて絶対に1から100の範囲で返してください。\n"
-        content += "私と他のユーザーで一つでも「音楽: 'アーティスト名'の'アルバム名'」が完全一致したら無条件で100点をあたえてください、私と他のユーザーで一つ「音楽: 'アーティスト名'」が一致したら80点加点、二つ以上で無条件で100点をあたえてください。\m"
+        content += "まずお互いのアルバムを9枚ずつ最後まで見て、私と他のユーザーで一つでも「音楽: 'アーティスト名'の'アルバム名'」まで一致したら無条件で100をあたえ、match_scoreの計算を終了してください。。\n"
+        content += "その後、私と他のユーザーで一つ「音楽: 'アーティスト名'」が一致したら80加点、二つ以上で無条件で100をあたえ、match_scoreの計算を終了しててください。\m"
         content += "それ以外の場合でもビートルズとオアシスのように違うアーティストでも音楽性や界隈、ルーツが近ければそれに準じた点数をつけてください\n"
-        content += "9枚の平均基準同士のマッチというより、一枚一枚総当たりの加点方式のような基準で点数をつけてください。（同じような傾向だったら1枚しかないユーザーより、9枚あるユーザーの方が有利）同じアーティストの組み合わせでユーザーごとに点数のばらつきが出ないように採点基準の一貫性を強く持ってください。\n"
+        content += "9枚の平均基準同士のマッチというより、一枚一枚総当たりの加点方式のような基準で点数をつけてください。（同じような傾向だったら1枚しかないユーザーより、9枚あるユーザーの方が有利、なので減点はしないでください。）同じアーティストの組み合わせでユーザーごとに点数のばらつきが出ないように採点基準の一貫性を強く持ってください。\n"
         content += "私の音楽性に近いアルバムの条件: 私の音楽性に近いアルバムのidはbest_album_idとして、もし私と他のユーザーが全く同じidのアルバムを選んでいたら、そのアルバムは絶対に選ばないでください、アルバムが一枚でもある限りはマッチ度が1だったとしても、最大9枚から私と全く同じ音楽以外で一番共通点のある一枚を選んで絶対にidを返してください。\n"
         content += "【音楽:】の後に「'アーティスト名'の'アルバム名'（ID: album_id）」の形が存在しないユーザーはmatch_score、best_album_idともに0を返してください。\n"
-        content += "私の好きな音楽: #{current_user_likes}\n"
-        content += "他のユーザーの好きな音楽:\n"
         other_users_likes.each do |user|
+          content += "私の好きな音楽: #{current_user_likes}\n"
+          content += "他のユーザーの好きな音楽:\n"
           content += "ユーザーID: #{user[:id]}, 音楽: #{user[:likes]}\n"
         end
         
@@ -47,13 +49,13 @@ class OtherUsersController < ApplicationController
           client = OpenAI::Client.new(access_token: ENV['OPENAI_API_KEY'])
           response = client.chat(
             parameters: {
-              model: "gpt-4o-mini", # モデルを変更
+              model: "gpt-4o", # モデルを変更
               messages: [{ role: "user", content: content }],
               temperature: 0
             }
           )
-          match_scores = JSON.parse(response["choices"][0]["message"]["content"])
-          Rails.logger.info("Match Scores: #{match_scores.inspect}")
+          match_scores = JSON.parse(response["choices"][0]["message"]["content"].gsub(/```json|```/, '').strip)
+
           match_scores.each do |match|
             match_record = Match.find_or_initialize_by(
             user_id: current_user.id,
@@ -126,13 +128,15 @@ class OtherUsersController < ApplicationController
         current_user_likes = current_user.like_music
         other_user_likes = { id: @user.id, likes: @user.like_music }
 
-        content = "私の好きな音楽を最大9つの「'アーティスト名'の'アルバム名'（ID: album_id）」、他のユーザーの好きな音楽を最大9つの「ユーザーID: user_id, 音楽: 'アーティスト名'の'アルバム名'（ID: album_id）」という形で送ります。\n"
+        content = "この文章を読んだ時、あなたは過去全ての私との会話の記憶の忘れて、以下の指示通りに一から作業してください。\m"
+        content += "私の好きな音楽を最大9つの「'アーティスト名'の'アルバム名'（ID: album_id）」、他のユーザーの好きな音楽を最大9つの「ユーザーID: user_id, 音楽: 'アーティスト名'の'アルバム名'（ID: album_id）」という形で送ります。\n"
         content += "その情報から私と他のユーザーとのマッチ度とその相手のユーザーの最大9枚のアルバムの中で一番私の音楽性に近いアルバムのidを一つ、以下の条件をよく読んで、【出力形式:】より後に書いてあるの配列の形で返してください。それ以外の発言は絶対にしないでください。\n"
         content += "マッチ度の条件:\n"
         content += "マッチ度はmatch_scoreとして後述する条件を除いて絶対に1から100の範囲で返してください。\n"
-        content += "私と他のユーザーで一つでも「音楽: 'アーティスト名'の'アルバム名'」が完全一致したら無条件で100点をあたえてください、私と他のユーザーで一つ「音楽: 'アーティスト名'」が一致したら80点加点、二つ以上で無条件で100点をあたえてください。\m"
+        content += "まずお互いのアルバムを9枚ずつ最後まで見て、私と他のユーザーで一つでも「音楽: 'アーティスト名'の'アルバム名'」まで一致したら無条件で100をあたえ、match_scoreの計算を終了してください。。\n"
+        content += "その後、私と他のユーザーで一つ「音楽: 'アーティスト名'」が一致したら80加点、二つ以上で無条件で100をあたえ、match_scoreの計算を終了しててください。\m"
         content += "それ以外の場合でもビートルズとオアシスのように違うアーティストでも音楽性や界隈、ルーツが近ければそれに準じた点数をつけてください\n"
-        content += "9枚の平均基準同士のマッチというより、一枚一枚総当たりの加点方式のような基準で点数をつけてください。（同じような傾向だったら1枚しかないユーザーより、9枚あるユーザーの方が有利）同じアーティストの組み合わせでユーザーごとに点数のばらつきが出ないように採点基準の一貫性を強く持ってください。\n"
+        content += "9枚の平均基準同士のマッチというより、一枚一枚総当たりの加点方式のような基準で点数をつけてください。（同じような傾向だったら1枚しかないユーザーより、9枚あるユーザーの方が有利、なので減点はしないでください。）同じアーティストの組み合わせでユーザーごとに点数のばらつきが出ないように採点基準の一貫性を強く持ってください。\n"
         content += "私の音楽性に近いアルバムの条件: 私の音楽性に近いアルバムのidはbest_album_idとして、もし私と他のユーザーが全く同じidのアルバムを選んでいたら、そのアルバムは絶対に選ばないでください、アルバムが一枚でもある限りはマッチ度が1だったとしても、最大9枚から私と全く同じ音楽以外で一番共通点のある一枚を選んで絶対にidを返してください。\n"
         content += "【音楽:】の後に「'アーティスト名'の'アルバム名'（ID: album_id）」の形が存在しないユーザーはmatch_score、best_album_idともに0を返してください。\n"
         content += "私の好きな音楽: #{current_user_likes}\n"
@@ -144,12 +148,12 @@ class OtherUsersController < ApplicationController
           client = OpenAI::Client.new(access_token: ENV['OPENAI_API_KEY'])
           response = client.chat(
             parameters: {
-              model: "gpt-4o-mini", # モデルを変更
+              model: "gpt-4o", # モデルを変更
               messages: [{ role: "user", content: content }],
               temperature: 0
             }
           )
-          match_scores = JSON.parse(response["choices"][0]["message"]["content"])
+          match_scores = JSON.parse(response["choices"][0]["message"]["content"].gsub(/```json|```/, '').strip)
 
           match_record = Match.find_or_initialize_by(
             user_id: current_user.id,
