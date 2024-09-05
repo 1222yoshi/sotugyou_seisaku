@@ -97,8 +97,7 @@ class User < ApplicationRecord
   def normalize_custom_link
     if custom_link.present?
       # https://の部分を取り除く
-      normalized_link = custom_link.gsub(/https?:\/\//, '')
-      self.custom_link = normalized_link.split('/').first
+      self.custom_link = custom_link.gsub(/https?:\/\//, '')
     end
   end
 
