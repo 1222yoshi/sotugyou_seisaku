@@ -27,7 +27,7 @@ class OtherUsersController < ApplicationController
         current_user_likes = current_user.like_music
         other_users_likes = recent_users.map { |user| { id: user.id, likes: user.like_music } }
 
-        content = "この文章を読んだ時、あなたは過去全ての私との会話の記憶の忘れて、以下の指示通りに一から作業してください。\m"
+        content = "この文章を読んだ時、あなたは過去全ての私との会話の記憶を忘れて、以下の指示通りに一から作業してください。\m"
         content += "私の好きな音楽を最大9つの「'アーティスト名'の'アルバム名'（ID: album_id）」、他のユーザーの好きな音楽を最大9つの「ユーザーID: user_id, 音楽: 'アーティスト名'の'アルバム名'（ID: album_id）」という形で送ります。\n"
         content += "その情報から私と他のユーザーとのマッチ度とその相手のユーザーの最大9枚のアルバムの中で一番私の音楽性に近いアルバムのidを一つ、以下の条件をよく読んで、【出力形式:】より後に書いてあるの配列の形で返してください。それ以外の発言は絶対にしないでください。\n"
         content += "マッチ度の条件:\n"
@@ -69,7 +69,7 @@ class OtherUsersController < ApplicationController
             end
           end
         rescue Faraday::TooManyRequestsError => e
-          flash.now[:danger] = "アクセスが集中しています。"
+          flash.now[:danger] = "マッチング修正中。"
         rescue JSON::ParserError => each
           flash.now[:danger] = "AIが予期せぬ返答をしました。"
         rescue Faraday::ServerError => e
@@ -128,7 +128,7 @@ class OtherUsersController < ApplicationController
         current_user_likes = current_user.like_music
         other_user_likes = { id: @user.id, likes: @user.like_music }
 
-        content = "この文章を読んだ時、あなたは過去全ての私との会話の記憶の忘れて、以下の指示通りに一から作業してください。\m"
+        content = "この文章を読んだ時、あなたは過去全ての私との会話の記憶を忘れて、以下の指示通りに一から作業してください。\m"
         content += "私の好きな音楽を最大9つの「'アーティスト名'の'アルバム名'（ID: album_id）」、他のユーザーの好きな音楽を最大9つの「ユーザーID: user_id, 音楽: 'アーティスト名'の'アルバム名'（ID: album_id）」という形で送ります。\n"
         content += "その情報から私と他のユーザーとのマッチ度とその相手のユーザーの最大9枚のアルバムの中で一番私の音楽性に近いアルバムのidを一つ、以下の条件をよく読んで、【出力形式:】より後に書いてあるの配列の形で返してください。それ以外の発言は絶対にしないでください。\n"
         content += "マッチ度の条件:\n"
@@ -166,7 +166,7 @@ class OtherUsersController < ApplicationController
             flash.now[:success] = "マッチ情報を更新しました。"
           end
         rescue Faraday::TooManyRequestsError => e
-          flash.now[:danger] = "アクセスが集中しています。"
+          flash.now[:danger] = "マッチング修正中"
         rescue JSON::ParserError => each
           flash.now[:danger] = "AIが予期せぬ返答をしました。"
         rescue Faraday::ServerError => e
