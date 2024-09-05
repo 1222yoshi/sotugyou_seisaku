@@ -51,7 +51,7 @@
       </svg>
       </div>
       <%= link_to "https://#{@user.custom_link}", class: "neon-text-on", target: "_blank", rel: "noopener noreferrer" do %> 
-        <%= @user.custom_link %>
+        <%= @user.custom_link.split('/').first %>
       <% end %>
     </div>
     <div class="flex items-center">
