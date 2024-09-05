@@ -55,7 +55,7 @@
       </svg>
       </div>
       <%= link_to "https://#{current_user.custom_link}", class: "neon-text-on", target: "_blank", rel: "noopener noreferrer" do %> 
-        <%= current_user.custom_link %>
+        <%= current_user.custom_link.split('/').first %>
       <% end %>
     </div>
     <div class="show-border mt-4 text-center border-blue">
