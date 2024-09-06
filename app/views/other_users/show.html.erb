@@ -58,15 +58,15 @@
       <span class="text-2xl">AIマッチ：</span>
       <div class="text-3xl">
         <% if current_user && current_user.user_albums.present? && @user.match_score.present? %>
-          <% if @user.match_score >= 90 %>
+          <% if @user.match_score >= 91 %>
             <div class="s-neon">S</div>
-          <% elsif @user.match_score >=70 && @user.match_score < 90 %>
+          <% elsif @user.match_score >=71 && @user.match_score < 91 %>
             <div class="a-neon">A</div>
-          <% elsif @user.match_score >=50 && @user.match_score < 70 %>
+          <% elsif @user.match_score >=51 && @user.match_score < 71 %>
             <div class="b-neon">B</div>
-          <% elsif @user.match_score >=30 && @user.match_score < 50 %>
+          <% elsif @user.match_score >=31 && @user.match_score < 51 %>
             <div class="c-neon">C</div>
-          <% elsif @user.match_score >=10 && @user.match_score < 30 %>
+          <% elsif @user.match_score >=11 && @user.match_score < 31 %>
             <div class="d-neon">D</div>
           <% else %>
             E
