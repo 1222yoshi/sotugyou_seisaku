@@ -27,26 +27,34 @@ class OtherUsersController < ApplicationController
         current_user_likes = current_user.like_music
         other_users_likes = recent_users.map { |user| { id: user.id, likes: user.like_music } }
         user_count = other_users_likes.count
+        my_albums_count = current_user.user_albums.count
 
-        content = "この文章を読んだ時、あなたは過去全ての私との会話の記憶を忘れて、以下の指示通りに一から作業してください。\m"
-        content += "私の好きなアルバムは#{current_user_likes}です。最大9つあったと思いますが最後まで使うので完全に記憶してください。また、それらから私の音楽性を把握してください。\n"
-        content += "これから他のユーザー#{user_count}人分の好きなアルバムを1人につき最大9つ、「ユーザーID: user_id, 音楽: 'アーティスト名'の'アルバム名'（ID: album_id）」という形で送ります。\n"
-        content += "その情報から私と他のユーザーとのマッチ度とその相手のユーザーの最大9枚のアルバムの中で一番私の音楽性に近いアルバムのidを一つ、以下の条件をよく読んで、【出力形式:】より後に書いてあるの配列の形で返してください。それ以外の発言は絶対にしないでください。\n"
-        content += "マッチ度の条件:\n"
-        content += "マッチ度はmatch_scoreとして後述する条件を除いて絶対に1から100の範囲で返してください。\n"
-        content += "まずお互いのアルバムを9枚ずつ最後まで見て、私と他のユーザーで「アルバム: 'アーティスト名'の'アルバム名'」まで一致したら一つにつき80点与えてください。\n"
-        content += "私もしくは他のユーザーのどちらかがその'アーティスト名'を他にも加えている、もしくは他の「アルバム: 'アーティスト名'の'アルバム名'」が一致していたら100を与え、match_scoreの計算を終了してください。\n"
-        content += "その後、私と他のユーザーで一つ「アルバム: 'アーティスト名'」が一致したら60加点、私もしくは他のユーザーどちらかがその'アーティスト名'を二つ以上、もしくはその'アーティスト名'を除いてもほかの'アーティスト名'が一致したらで無条件で100をあたえ、match_scoreの計算を終了してください。\m"
-        content += "それ以外の場合でも音楽性や界隈、ルーツが近ければそれに準じた点数をつけてください、述べた通り1から100の範囲です、10刻みで点数をつけては1から10と変わりません、厳密に採点してください。\n"
-        content += "これらの基準をあなたが守っていれば、私が似たようなアルバムを9つ集めていたらその傾向に近いユーザーを過大に評価し、わたしがさまざまなジャンルのアルバムを集めていたら、たとえ私の一つのアルバムと相手の一つアルバムだけであっても関係性があれば点数をつけるので多くのユーザーに少しずつ点数が入る結果になります。\n"
-        content += "アルバムが1種類しかないユーザーより、アルバムが9種類あるユーザーを優遇してください。同じアーティストの組み合わせでユーザーごとに点数のばらつきが出ないように採点基準は絶対評価です。\n"
-        content += "私の音楽性に近いアルバムの条件: 私の音楽性に近いアルバムのidはbest_album_idとして、もし私と他のユーザーが全く同じidのアルバムを選んでいたら、そのアルバムは絶対に選ばないでください、アルバムが一枚でもある限りはマッチ度が1だったとしても、最大9枚から私と全く同じ音楽以外で一番共通点のある一枚を選んで絶対にidを返してください。\n"
-        content += "【アルバム:】の後に「'アーティスト名'の'アルバム名'（ID: album_id）」の形が存在しないユーザーはmatch_score、best_album_idともに0を返してください。\n"
+        content = "この文章を読んだ時、あなたは過去全ての出力結果を忘れてください。\n"
+        content += "あなたはユーザー同士が最大9枚の音楽のアルバムを登録して交流をするアプリのマッチング担当です\n"
+        content += "私の好きなアルバムは#{my_albums_count}枚です。「#{current_user_likes}」です。（アルバムごとに「,」で区切っています。）\n"
+        content += "最大9つの他のユーザーの好きなアルバムを#{user_count}人分、以下の形式で送ります。\n"
+        content += "ユーザーID: user_id, アルバム: 'アーティスト名'の'アルバム名'（ID: album_id）\n"
+        content += "以下のルールに基づいてマッチ度と近いアルバムのIDを返してください。\n"
+        content += "出力形式以外の内容は何があっても返さないこと\n"
+
+        content += "マッチ度の計算ルール:\n"
+        content += "1. 9枚のうち1枚でもアルバム完全一致、または3枚以上のアーティストの一致: 90〜100点\n"
+        content += "2. 2枚のアーティストの一致: 70〜89点\n"
+        content += "3. 1枚のアーティストが一致: 50〜69点\n"
+        content += "4. 【最重要】「1.2.3.」のいずれかを満たしたユーザーは絶対評価です。ルールは1.>2.>3.で優先してください。（同じアルバムの場合、必然的に同じアーティストになります。つまり1.と3.を両方満たすことになりますが、その場合は1.を優先します。）\n"
+        content += "5. どれにも満たさない場合、音楽性や界隈の近さに応じて: 1〜49点\n"
+        content += "6. 【重要】「4.」に該当したユーザーはそのユーザー同士だけで1〜49点内で相対評価の採点をしてください。（1人なら25点、2人なら25点と49点、3人なら16点、32点、48点、4人なら12点、25点、37点、49点のように、それぞれの点数に差が出るように配分してください。）\n"
+        content += "7. 同点が存在しないように全体の音楽性などの近さから点数帯のレンジ内で調整するように。\n"
+        content += "8. アルバムの数が多いユーザーを優遇する。これは微調整程度でお願いします。\n"
+
+        content += "私の音楽性に近いアルバムの条件:\n"
+        content += "もし私と他のユーザーが全く同じIDのアルバムを選んでいたら、そのアルバムは選ばないこと。\n"
+        content += "「アルバム:」が存在しないユーザーは、match_scoreとbest_album_idは0。\n"
         content += "他のユーザーの好きなアルバム:\n"
         other_users_likes.each do |user|
           content += "ユーザーID: #{user[:id]}, アルバム: #{user[:likes]}\n"
         end
-        
+        Rails.logger.debug(content)
         content += '出力形式: [ { "other_user_id": user_id1, "match_score": match_score1, "best_album_id": album_id1}, { "other_user_id": user_id2, "match_score": match_score2, "best_album_id": album_id2}, ... ]'
         begin
           client = OpenAI::Client.new(access_token: ENV['OPENAI_API_KEY'])
@@ -116,39 +124,57 @@ class OtherUsersController < ApplicationController
   end
 
   def show
-    @user = User.find(params[:id])
     if current_user && current_user.user_albums.present? && current_user != @user
-      last_updated_time = Match.where(user_id: current_user.id, other_user_id: @user.id)
+      other_users = User.where.not(id: current_user.id)
+
+      last_updated_time = Match.where(user_id: current_user.id, other_user_id: other_users.pluck(:id))
+                               .group(:other_user_id)
                                .maximum(:updated_at)
 
       current_user_updated_time = UserAlbum.where(user_id: current_user.id)
                                            .maximum(:updated_at)
-
-      other_user_updated_times = UserAlbum.where(user_id: @user.id)
+                                           
+      other_user_updated_times = UserAlbum.where(user_id: other_users.pluck(:id))
+                                          .group(:user_id)
                                           .maximum(:updated_at)
 
-      if last_updated_time.nil? || (other_user_updated_times.present? && other_user_updated_times > last_updated_time) || current_user_updated_time > last_updated_time
+      recent_users = other_users.select do |user|
+        last_updated_time[user.id].nil? || (other_user_updated_times[user.id].present? && other_user_updated_times[user.id] > last_updated_time[user.id]) || current_user_updated_time > last_updated_time[user.id] 
+      end
+    
+      if recent_users.any?
         current_user_likes = current_user.like_music
-        other_user_likes = { id: @user.id, likes: @user.like_music }
+        other_users_likes = recent_users.map { |user| { id: user.id, likes: user.like_music } }
+        user_count = other_users_likes.count
+        my_albums_count = current_user.user_albums.count
 
-        content = "この文章を読んだ時、あなたは過去全ての私との会話の記憶を忘れて、以下の指示通りに一から作業してください。\m"
-        content += "私の好きなアルバムは#{current_user_likes}です。最大9つあったと思いますが最後まで使うので完全に記憶してください。また、それらから私の音楽性を把握してください。\n"
-        content += "これから他のユーザー#{user_count}人分の好きなアルバムを1人につき最大9つ、「ユーザーID: user_id, 音楽: 'アーティスト名'の'アルバム名'（ID: album_id）」という形で送ります。\n"
-        content += "その情報から私と他のユーザーとのマッチ度とその相手のユーザーの最大9枚のアルバムの中で一番私の音楽性に近いアルバムのidを一つ、以下の条件をよく読んで、【出力形式:】より後に書いてあるの配列の形で返してください。それ以外の発言は絶対にしないでください。\n"
-        content += "マッチ度の条件:\n"
-        content += "マッチ度はmatch_scoreとして後述する条件を除いて絶対に1から100の範囲で返してください。\n"
-        content += "まずお互いのアルバムを9枚ずつ最後まで見て、私と他のユーザーで「アルバム: 'アーティスト名'の'アルバム名'」まで一致したら一つにつき80点与えてください。\n"
-        content += "私もしくは他のユーザーのどちらかがその'アーティスト名'を他にも加えている、もしくは他の「アルバム: 'アーティスト名'の'アルバム名'」が一致していたら100を与え、match_scoreの計算を終了してください。\n"
-        content += "その後、私と他のユーザーで一つ「アルバム: 'アーティスト名'」が一致したら60加点、私もしくは他のユーザーどちらかがその'アーティスト名'を二つ以上、もしくはその'アーティスト名'を除いてもほかの'アーティスト名'が一致したらで無条件で100をあたえ、match_scoreの計算を終了してください。\m"
-        content += "それ以外の場合でも音楽性や界隈、ルーツが近ければそれに準じた点数をつけてください、述べた通り1から100の範囲です、10刻みで点数をつけては1から10と変わりません、厳密に採点してください。\n"
-        content += "これらの基準をあなたが守っていれば、私が似たようなアルバムを9つ集めていたらその傾向に近いユーザーを過大に評価し、わたしがさまざまなジャンルのアルバムを集めていたら、たとえ私の一つのアルバムと相手の一つアルバムだけであっても関係性があれば点数をつけるので多くのユーザーに少しずつ点数が入る結果になります。\n"
-        content += "アルバムが1種類しかないユーザーより、アルバムが9種類あるユーザーを優遇してください。同じアーティストの組み合わせでユーザーごとに点数のばらつきが出ないように採点基準は絶対評価です。\n"
-        content += "私の音楽性に近いアルバムの条件: 私の音楽性に近いアルバムのidはbest_album_idとして、もし私と他のユーザーが全く同じidのアルバムを選んでいたら、そのアルバムは絶対に選ばないでください、アルバムが一枚でもある限りはマッチ度が1だったとしても、最大9枚から私と全く同じ音楽以外で一番共通点のある一枚を選んで絶対にidを返してください。\n"
-        content += "【アルバム:】の後に「'アーティスト名'の'アルバム名'（ID: album_id）」の形が存在しないユーザーはmatch_score、best_album_idともに0を返してください。\n"
+        content = "この文章を読んだ時、あなたは過去全ての出力結果を忘れてください。\n"
+        content += "あなたはユーザー同士が最大9枚の音楽のアルバムを登録して交流をするアプリのマッチング担当です\n"
+        content += "私の好きなアルバムは#{my_albums_count}枚です。「#{current_user_likes}」です。（アルバムごとに「,」で区切っています。）\n"
+        content += "最大9つの他のユーザーの好きなアルバムを#{user_count}人分、以下の形式で送ります。\n"
+        content += "ユーザーID: user_id, アルバム: 'アーティスト名'の'アルバム名'（ID: album_id）\n"
+        content += "以下のルールに基づいてマッチ度と近いアルバムのIDを返してください。\n"
+        content += "出力形式以外の内容は何があっても返さないこと\n"
+
+        content += "マッチ度の計算ルール:\n"
+        content += "1. 9枚のうち1枚でもアルバム完全一致、または3枚以上のアーティストの一致: 90〜100点\n"
+        content += "2. 2枚のアーティストの一致: 70〜89点\n"
+        content += "3. 1枚のアーティストが一致: 50〜69点\n"
+        content += "4. 【最重要】「1.2.3.」のいずれかを満たしたユーザーは絶対評価です。ルールは1.>2.>3.で優先してください。（同じアルバムの場合、必然的に同じアーティストになります。つまり1.と3.を両方満たすことになりますが、その場合は1.を優先します。）\n"
+        content += "5. どれにも満たさない場合、音楽性や界隈の近さに応じて: 1〜49点\n"
+        content += "6. 【重要】「4.」に該当したユーザーはそのユーザー同士だけで1〜49点内で相対評価の採点をしてください。（1人なら25点、2人なら25点と49点、3人なら16点、32点、48点、4人なら12点、25点、37点、49点のように、それぞれの点数に差が出るように配分してください。）\n"
+        content += "7. 同点が存在しないように全体の音楽性などの近さから点数帯のレンジ内で調整するように。\n"
+        content += "8. アルバムの数が多いユーザーを優遇する。これは微調整程度でお願いします。\n"
+
+        content += "私の音楽性に近いアルバムの条件:\n"
+        content += "もし私と他のユーザーが全く同じIDのアルバムを選んでいたら、そのアルバムは選ばないこと。\n"
+        content += "「アルバム:」が存在しないユーザーは、match_scoreとbest_album_idは0。\n"
         content += "他のユーザーの好きなアルバム:\n"
-        content += "ユーザーID: #{other_user_likes[:id]}, アルバム: #{other_user_likes[:likes]}\n"
-        content += '出力形式: [ { "other_user_id": user_id, "match_score": match_score, "best_album_id": album_id} ]'
-
+        other_users_likes.each do |user|
+          content += "ユーザーID: #{user[:id]}, アルバム: #{user[:likes]}\n"
+        end
+        Rails.logger.debug(content)
+        content += '出力形式: [ { "other_user_id": user_id1, "match_score": match_score1, "best_album_id": album_id1}, { "other_user_id": user_id2, "match_score": match_score2, "best_album_id": album_id2}, ... ]'
         begin
           client = OpenAI::Client.new(access_token: ENV['OPENAI_API_KEY'])
           response = client.chat(
@@ -160,15 +186,17 @@ class OtherUsersController < ApplicationController
           )
           match_scores = JSON.parse(response["choices"][0]["message"]["content"].gsub(/```json|```/, '').strip)
 
-          match_record = Match.find_or_initialize_by(
+          match_scores.each do |match|
+            match_record = Match.find_or_initialize_by(
             user_id: current_user.id,
-            other_user_id: match_scores[0]["other_user_id"]
+            other_user_id: match["other_user_id"]
           )
-          match_record.score = match_scores[0]["match_score"]
-          match_record.match_album = match_scores[0]["best_album_id"]
-          if match_record.save
-            match_record.touch
-            flash.now[:success] = "マッチ情報を更新しました。"
+            match_record.score = match["match_score"]
+            match_record.match_album = match["best_album_id"]
+            if match_record.save
+              match_record.touch
+              flash.now[:success] = "マッチ情報を更新しました。"
+            end
           end
         rescue Faraday::TooManyRequestsError => e
           flash.now[:danger] = "AI使用制限中"
