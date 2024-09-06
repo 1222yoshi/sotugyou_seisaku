@@ -209,6 +209,8 @@ class OtherUsersController < ApplicationController
       @user = User.joins("LEFT JOIN matches ON matches.other_user_id = users.id AND matches.user_id = #{current_user.id}")
                   .select("users.*, matches.score as match_score, matches.match_album")
                   .find(params[:id])
+    else
+      @user = User.find(params[:id])
     end
 
     if current_user == @user
