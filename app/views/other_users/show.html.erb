@@ -122,9 +122,6 @@
             <div class="text-center">
               <h3 class="mb-1 max-lg:text-xs text-ellipsis line-clamp-2"><%= user_album.album.album_name %></h3>
               <p class="max-lg:text-xs text-ellipsis line-clamp-1"><%= user_album.album.artist_name %></p>
-              <% if current_user && current_user.user_albums.present? && user_album.album_id == @user.match_album %>
-                <div class="neon-text-on-no-link">AIからあなたへ</div>
-              <% end %>
             </div>
           </div>
         </div>
