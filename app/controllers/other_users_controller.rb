@@ -20,7 +20,7 @@ class OtherUsersController < ApplicationController
       new_user_created_times = User.maximum(:created_at)      
 
       if last_updated_time.nil? || current_user_updated_time > last_updated_time || (other_user_updated_times.present? && other_user_updated_times) > last_updated_time || (new_user_created_times.present? && new_user_created_times > last_updated_time)
-        like_artist_names = current_user.user_albums.includes(:album).map.map(&:album).map(&:artist_name).uniq
+        like_artist_names = current_user.user_albums.includes(:album).map(&:album).map(&:artist_name).uniq
         like_users = other_users.select do |user|
           user.user_albums.includes(:album).any? { |ua| like_artist_names.include?(ua.album.artist_name) }
         end
@@ -30,14 +30,12 @@ class OtherUsersController < ApplicationController
         like_users.each do |like_user|
           like_user_albums = like_user.user_albums.includes(:album)
 
-          current_user.user_albums.each do |user_album|
-            album = user_album.album
-
-            if like_user_albums.any? { |ua| ua.album.album_name == album.album_name }
-             scores[like_user.id] += 10000
-            else
-              if like_user_albums.any? { |ua| ua.album.artist_name == album.artist_name }
-              scores[like_user.id] += 1000
+          like_user_albums.each do |like_user_album|
+            current_user.user_albums.each do |user_album|
+              if like_user_album.album.album_name == user_album.album.album_name
+                scores[like_user.id] += 10000
+              elsif like_user_album.album.artist_name == user_album.album.artist_name
+                scores[like_user.id] += 1000
               end
             end
           end
@@ -47,23 +45,25 @@ class OtherUsersController < ApplicationController
           user.user_albums.includes(:album).map(&:album).map(&:artist_name)
         end.uniq - like_artist_names
 
-        like_users.each do |like_user|
-          like_user_albums = like_user.user_albums.includes(:album)
-
-          extra_users = other_users.select do |extra_user|
-            extra_user.id != like_user.id && extra_user.user_albums.any? do |ua|
-              unknown_artist_names.include?(ua.album.artist_name)
+        unknown_artist_names.each do |artist_name|
+          total_user_count = UserAlbum.joins(:album).where(albums: { artist_name: artist_name }).distinct.count(:user_id)
+          like_user_count = UserAlbum.joins(:album).where(albums: { artist_name: artist_name }).where(user_id: like_users.map(&:id)).distinct.count(:user_id)
+          next if total_user_count == 1
+          if like_user_count == 1
+            other_users_with_artist = UserAlbum.joins(:album).where(albums: { artist_name: artist_name }).where.not(user_id: like_users.map(&:id))
+            other_users_with_artist.each do |ua|
+              scores[ua.user_id] += 100
             end
-          end
-
-          extra_users.each do |extra_user|
-            extra_user_albums = extra_user.user_albums.includes(:album)
-            scores[extra_user.id] += 100 * extra_user_albums.count { |ua| unknown_artist_names.include?(ua.album.artist_name) }
+          else
+            total_users_with_artist = UserAlbum.joins(:album).where(albums: { artist_name: artist_name })
+            total_users_with_artist.each do |ua|
+              scores[ua.user_id] += 100
+            end
           end
         end
 
         ruby_match = scores.map do |user_id, match_score|
-          { "other_user_id" => user_id, "match_score" => match_score, "best_album_id" => 0 }
+          { "other_user_id" => user_id, "match_score" => match_score }
         end
 
         current_user_likes = current_user.like_music
@@ -73,26 +73,23 @@ class OtherUsersController < ApplicationController
         user_count = other_users_likes.count
         my_albums_count = current_user.user_albums.count
 
-        content = "この文章を読んだ時、あなたは過去全ての出力結果を忘れてください。\n"
+        content = "あなたは過去全ての出力結果を忘れてください。\n"
         content += "あなたはユーザー同士が最大9枚の音楽のアルバムを登録して交流をするアプリのマッチング担当です\n"
         content += "私の好きなアルバムは#{my_albums_count}枚あり、「#{current_user_likes}」です。（アルバムごとに「,」で区切っています。）\n"
         content += "最大9つの他のユーザーの好きなアルバムを#{user_count}人分、以下の形式で送ります。\n"
-        content += "ユーザーID: user_id, アルバム: 'アーティスト名'の'アルバム名'（ID: album_id）\n"
-        content += "以下のルールに基づいてマッチ度と私の音楽性に近いアルバムのIDを返してください。\n"
-        content += "出力形式以外の内容は何があっても返さないこと\n"
-        content += "アルバムの多いユーザーを優遇する。（1枚の時-8点）\n"
-
-        content += "マッチ度の条件\n"
-        content += "採点基準は相対評価です、1〜99の間で分布が均等になるように音楽性や界隈の類似度から以下のように点数をつけてください。\n"
-        content += "対象者が1人なら必ず50点、2人なら必ず1人は1点、もう1人は99点、同様に3人なら[1点,50点,99点]、4人なら[1点,33点,66点,99点]、5人なら[1点,25点,50点,75点,99点]、この規則性です。\n"
-
-        content += "「アルバム:」が存在しないユーザーは、match_scoreとbest_album_idは0。\n"
+        content += "ユーザーID: user_id, アルバム: 'アーティスト名'の'アルバム名'\n"
+        content += "以下のルールに基づいてマッチ度を返してください。\n"
+        content += "「アルバム:」が存在しないユーザーは0点を返す、以下の条件には含まない。\n"
+        content += "採点基準は相対評価です、アルバム全体の類似を（ジャンル>国>年代）の基準で評価し、以下のように1〜99の間で分布が均等になるように点数をつけてください。\n"
+        content += "対象者が1人なら必ず50点、2人なら必ず1人は1点、もう1人は99点、同様に3人なら[1点,50点,99点]、4人なら[1点,33点,66点,99点]、5人なら[1点,25点,50点,75点,99点]、この規則性。\n"
+        content += "アルバムの多いユーザーを優遇する。\n"
         content += "他のユーザーの好きなアルバム:\n"
         other_users_likes.each do |user|
           content += "ユーザーID: #{user[:id]}, アルバム: #{user[:likes]}\n"
         end
         Rails.logger.debug(content)
-        content += '出力形式: [ { "other_user_id": user_id1, "match_score": match_score1, "best_album_id": album_id1}, { "other_user_id": user_id2, "match_score": match_score2, "best_album_id": album_id2}, ... ]'
+        content += '出力形式: [ { "other_user_id": user_id1, "match_score": match_score1}, { "other_user_id": user_id2, "match_score": match_score2}, ... ]'
+        content += "出力形式以外の内容は何があっても返さないこと\n"
         begin
           client = OpenAI::Client.new(access_token: ENV['OPENAI_API_KEY'])
           response = client.chat(
@@ -111,7 +108,6 @@ class OtherUsersController < ApplicationController
             other_user_id: match["other_user_id"]
           )
             match_record.score = match["match_score"]
-            match_record.match_album = match["best_album_id"]
             if match_record.save
               match_record.touch
               flash.now[:success] = "マッチ情報を更新しました。"
@@ -129,7 +125,7 @@ class OtherUsersController < ApplicationController
       @other_users = @q.result(distinct: true)
                     .joins("LEFT JOIN matches ON matches.other_user_id = users.id")
                     .where(matches: { user_id: current_user.id })
-                    .select("users.*, matches.score as match_score, matches.match_album")
+                    .select("users.*, matches.score as match_score")
                     .where.not(id: current_user.id)
                     .order('match_score DESC')
 
@@ -178,7 +174,7 @@ class OtherUsersController < ApplicationController
       new_user_created_times = User.maximum(:created_at)      
 
       if last_updated_time.nil? || current_user_updated_time > last_updated_time || (other_user_updated_times.present? && other_user_updated_times) > last_updated_time || (new_user_created_times.present? && new_user_created_times > last_updated_time)
-        like_artist_names = current_user.user_albums.includes(:album).map.map(&:album).map(&:artist_name).uniq
+        like_artist_names = current_user.user_albums.includes(:album).map(&:album).map(&:artist_name).uniq
         like_users = other_users.select do |user|
           user.user_albums.includes(:album).any? { |ua| like_artist_names.include?(ua.album.artist_name) }
         end
@@ -188,14 +184,12 @@ class OtherUsersController < ApplicationController
         like_users.each do |like_user|
           like_user_albums = like_user.user_albums.includes(:album)
 
-          current_user.user_albums.each do |user_album|
-            album = user_album.album
-
-            if like_user_albums.any? { |ua| ua.album.album_name == album.album_name }
-             scores[like_user.id] += 10000
-            else
-              if like_user_albums.any? { |ua| ua.album.artist_name == album.artist_name }
-              scores[like_user.id] += 1000
+          like_user_albums.each do |like_user_album|
+            current_user.user_albums.each do |user_album|
+              if like_user_album.album.album_name == user_album.album.album_name
+                scores[like_user.id] += 10000
+              elsif like_user_album.album.artist_name == user_album.album.artist_name
+                scores[like_user.id] += 1000
               end
             end
           end
@@ -205,23 +199,25 @@ class OtherUsersController < ApplicationController
           user.user_albums.includes(:album).map(&:album).map(&:artist_name)
         end.uniq - like_artist_names
 
-        like_users.each do |like_user|
-          like_user_albums = like_user.user_albums.includes(:album)
-
-          extra_users = other_users.select do |extra_user|
-            extra_user.id != like_user.id && extra_user.user_albums.any? do |ua|
-              unknown_artist_names.include?(ua.album.artist_name)
+        unknown_artist_names.each do |artist_name|
+          total_user_count = UserAlbum.joins(:album).where(albums: { artist_name: artist_name }).distinct.count(:user_id)
+          like_user_count = UserAlbum.joins(:album).where(albums: { artist_name: artist_name }).where(user_id: like_users.map(&:id)).distinct.count(:user_id)
+          next if total_user_count == 1
+          if like_user_count == 1
+            other_users_with_artist = UserAlbum.joins(:album).where(albums: { artist_name: artist_name }).where.not(user_id: like_users.map(&:id))
+            other_users_with_artist.each do |ua|
+              scores[ua.user_id] += 100
             end
-          end
-
-          extra_users.each do |extra_user|
-            extra_user_albums = extra_user.user_albums.includes(:album)
-            scores[extra_user.id] += 100 * extra_user_albums.count { |ua| unknown_artist_names.include?(ua.album.artist_name) }
+          else
+            total_users_with_artist = UserAlbum.joins(:album).where(albums: { artist_name: artist_name })
+            total_users_with_artist.each do |ua|
+              scores[ua.user_id] += 100
+            end
           end
         end
 
         ruby_match = scores.map do |user_id, match_score|
-          { "other_user_id" => user_id, "match_score" => match_score, "best_album_id" => 0 }
+          { "other_user_id" => user_id, "match_score" => match_score }
         end
 
         current_user_likes = current_user.like_music
@@ -231,26 +227,23 @@ class OtherUsersController < ApplicationController
         user_count = other_users_likes.count
         my_albums_count = current_user.user_albums.count
 
-        content = "この文章を読んだ時、あなたは過去全ての出力結果を忘れてください。\n"
+        content = "あなたは過去全ての出力結果を忘れてください。\n"
         content += "あなたはユーザー同士が最大9枚の音楽のアルバムを登録して交流をするアプリのマッチング担当です\n"
         content += "私の好きなアルバムは#{my_albums_count}枚あり、「#{current_user_likes}」です。（アルバムごとに「,」で区切っています。）\n"
         content += "最大9つの他のユーザーの好きなアルバムを#{user_count}人分、以下の形式で送ります。\n"
-        content += "ユーザーID: user_id, アルバム: 'アーティスト名'の'アルバム名'（ID: album_id）\n"
-        content += "以下のルールに基づいてマッチ度と私の音楽性に近いアルバムのIDを返してください。\n"
-        content += "出力形式以外の内容は何があっても返さないこと\n"
-        content += "アルバムの多いユーザーを優遇する。（1枚の時-8点）\n"
-
-        content += "マッチ度の条件\n"
-        content += "採点基準は相対評価です、1〜99の間で分布が均等になるように音楽性や界隈の類似度から以下のように点数をつけてください。\n"
-        content += "対象者が1人なら必ず50点、2人なら必ず1人は1点、もう1人は99点、同様に3人なら[1点,50点,99点]、4人なら[1点,33点,66点,99点]、5人なら[1点,25点,50点,75点,99点]、この規則性です。\n"
-
-        content += "「アルバム:」が存在しないユーザーは、match_scoreとbest_album_idは0。\n"
+        content += "ユーザーID: user_id, アルバム: 'アーティスト名'の'アルバム名'\n"
+        content += "以下のルールに基づいてマッチ度を返してください。\n"
+        content += "「アルバム:」が存在しないユーザーは0点を返す、以下の条件には含まない。\n"
+        content += "採点基準は相対評価です、アルバム全体の類似を（ジャンル>国>年代）の基準で評価し、以下のように1〜99の間で分布が均等になるように点数をつけてください。\n"
+        content += "対象者が1人なら必ず50点、2人なら必ず1人は1点、もう1人は99点、同様に3人なら[1点,50点,99点]、4人なら[1点,33点,66点,99点]、5人なら[1点,25点,50点,75点,99点]、この規則性。\n"
+        content += "アルバムの多いユーザーを優遇する。\n"
         content += "他のユーザーの好きなアルバム:\n"
         other_users_likes.each do |user|
           content += "ユーザーID: #{user[:id]}, アルバム: #{user[:likes]}\n"
         end
         Rails.logger.debug(content)
-        content += '出力形式: [ { "other_user_id": user_id1, "match_score": match_score1, "best_album_id": album_id1}, { "other_user_id": user_id2, "match_score": match_score2, "best_album_id": album_id2}, ... ]'
+        content += '出力形式: [ { "other_user_id": user_id1, "match_score": match_score1}, { "other_user_id": user_id2, "match_score": match_score2}, ... ]'
+        content += "出力形式以外の内容は何があっても返さないこと\n"
         begin
           client = OpenAI::Client.new(access_token: ENV['OPENAI_API_KEY'])
           response = client.chat(
@@ -269,7 +262,6 @@ class OtherUsersController < ApplicationController
             other_user_id: match["other_user_id"]
           )
             match_record.score = match["match_score"]
-            match_record.match_album = match["best_album_id"]
             if match_record.save
               match_record.touch
               flash.now[:success] = "マッチ情報を更新しました。"
@@ -284,7 +276,7 @@ class OtherUsersController < ApplicationController
         end
       end
       @user = User.joins("LEFT JOIN matches ON matches.other_user_id = users.id AND matches.user_id = #{current_user.id}")
-                  .select("users.*, matches.score as match_score, matches.match_album")
+                  .select("users.*, matches.score as match_score")
                   .find(params[:id])
     end
 

@@ -71,7 +71,7 @@ class AlbumsController < ApplicationController
       else
         @user_album = current_user.user_albums.new(album: album_record)
         if @user_album.save
-          current_user.update(like_music: current_user.user_albums.map { |ua| "#{ua.album.artist_name}の#{ua.album.album_name} (ID: #{ua.album.id})" }.join(", "))
+          current_user.update(like_music: current_user.user_albums.map { |ua| "#{ua.album.artist_name}の#{ua.album.album_name}" }.join(", "))
           if current_user.user_albums.count == 9
             redirect_to albums_path, success: "アルバムを保存しました。"
           else
@@ -162,7 +162,7 @@ class AlbumsController < ApplicationController
     album_param = session[:album_search]
     user_album = current_user.user_albums.find_by(album_id: params[:id])
     user_album.destroy
-    current_user.update(like_music: current_user.user_albums.map { |ua| "#{ua.album.artist_name}の#{ua.album.album_name} (ID: #{ua.album.id})" }.join(", "))
+    current_user.update(like_music: current_user.user_albums.map { |ua| "#{ua.album.artist_name}の#{ua.album.album_name}" }.join(", "))
     flash[:danger] = "アルバムを削除しました。"
     redirect_to albums_path(album: album_param)
   end
