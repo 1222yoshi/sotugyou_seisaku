@@ -62,6 +62,13 @@ class OtherUsersController < ApplicationController
           end
         end
 
+        user_album_counts = UserAlbum.group(:user_id).count
+        user_album_counts.each do |user_id, count|
+          if scores.key?(user_id)
+            scores[user_id] += count
+          end
+        end
+        
         ruby_match = scores.map do |user_id, match_score|
           { "other_user_id" => user_id, "match_score" => match_score }
         end
@@ -213,6 +220,13 @@ class OtherUsersController < ApplicationController
             total_users_with_artist.each do |ua|
               scores[ua.user_id] += 100
             end
+          end
+        end
+
+        user_album_counts = UserAlbum.group(:user_id).count
+        user_album_counts.each do |user_id, count|
+          if scores.key?(user_id)
+            scores[user_id] += count
           end
         end
 
