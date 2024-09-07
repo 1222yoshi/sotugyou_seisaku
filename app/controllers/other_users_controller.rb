@@ -73,26 +73,36 @@ class OtherUsersController < ApplicationController
           { "other_user_id" => user_id, "match_score" => match_score }
         end
 
-        current_user_likes = current_user.like_music
+        current_user_oldest_album_id = current_user.user_albums.order(:created_at).first&.album_id
+        current_user_oldest_album = Album.find_by(id: current_user_oldest_album_id)
+        current_user_likes = current_user_oldest_album&.artist_name 
+
         ruby_users = scores.map { |user_id, _| user_id }
         no_ruby_users = other_users.reject { |user| ruby_users.include?(user.id) }
-        other_users_likes = no_ruby_users.map { |user| { id: user.id, likes: user.like_music } }
+        other_users_likes = no_ruby_users.map do |user|
+          oldest_album_id = user.user_albums.order(:created_at).first&.album_id
+          oldest_album = Album.find_by(id: oldest_album_id)
+        
+          {
+            id: user.id,
+            likes: oldest_album&.artist_name
+          }
+        end
+
         user_count = other_users_likes.count
-        my_albums_count = current_user.user_albums.count
 
         content = "あなたは過去全ての出力結果を忘れてください。\n"
-        content += "あなたはユーザー同士が最大9枚の音楽のアルバムを登録して交流をするアプリのマッチング担当です\n"
-        content += "私の好きなアルバムは#{my_albums_count}枚あり、「#{current_user_likes}」です。（アルバムごとに「,」で区切っています。）\n"
-        content += "最大9つの他のユーザーの好きなアルバムを#{user_count}人分、以下の形式で送ります。\n"
-        content += "ユーザーID: user_id, アルバム: 'アーティスト名'の'アルバム名'\n"
+        content += "あなたはユーザー同士が音楽のアーティストを登録して交流をするアプリのマッチング担当です\n"
+        content += "私の好きなアーティストは「#{current_user_likes}」です。\n"
+        content += "#{user_count}人分の、他のユーザーの好きなアーティストを以下の形式で送ります。\n"
+        content += "ユーザーID: user_id, アーティスト: 'アーティスト名'\n"
         content += "以下のルールに基づいてマッチ度を返してください。\n"
-        content += "「アルバム:」が存在しないユーザーは0点を返す、以下の条件には含まない。\n"
-        content += "採点基準は相対評価です、アルバム全体の類似を（ジャンル>国>年代）の基準で評価し、以下のように1〜99の間で分布が均等になるように点数をつけてください。\n"
+        content += "「アーティスト:」が存在しないユーザーは0点を返す、以下の条件には含まない。\n"
+        content += "採点基準は相対評価です、アーティストの類似を（ジャンル>国>年代）の基準で評価し、以下のように1〜99の間で分布が均等になるように点数をつけてください。\n"
         content += "対象者が1人なら必ず50点、2人なら必ず1人は1点、もう1人は99点、同様に3人なら[1点,50点,99点]、4人なら[1点,33点,66点,99点]、5人なら[1点,25点,50点,75点,99点]、この規則性。\n"
-        content += "アルバムの多いユーザーを優遇する。\n"
-        content += "他のユーザーの好きなアルバム:\n"
+        content += "他のユーザーの好きなアーティスト:\n"
         other_users_likes.each do |user|
-          content += "ユーザーID: #{user[:id]}, アルバム: #{user[:likes]}\n"
+          content += "ユーザーID: #{user[:id]}, アーティスト: #{user[:likes]}\n"
         end
         Rails.logger.debug(content)
         content += '出力形式: [ { "other_user_id": user_id1, "match_score": match_score1}, { "other_user_id": user_id2, "match_score": match_score2}, ... ]'
@@ -234,26 +244,36 @@ class OtherUsersController < ApplicationController
           { "other_user_id" => user_id, "match_score" => match_score }
         end
 
-        current_user_likes = current_user.like_music
+        current_user_oldest_album_id = current_user.user_albums.order(:created_at).first&.album_id
+        current_user_oldest_album = Album.find_by(id: current_user_oldest_album_id)
+        current_user_likes = current_user_oldest_album&.artist_name 
+
         ruby_users = scores.map { |user_id, _| user_id }
         no_ruby_users = other_users.reject { |user| ruby_users.include?(user.id) }
-        other_users_likes = no_ruby_users.map { |user| { id: user.id, likes: user.like_music } }
+        other_users_likes = no_ruby_users.map do |user|
+          oldest_album_id = user.user_albums.order(:created_at).first&.album_id
+          oldest_album = Album.find_by(id: oldest_album_id)
+        
+          {
+            id: user.id,
+            likes: oldest_album&.artist_name
+          }
+        end
+
         user_count = other_users_likes.count
-        my_albums_count = current_user.user_albums.count
 
         content = "あなたは過去全ての出力結果を忘れてください。\n"
-        content += "あなたはユーザー同士が最大9枚の音楽のアルバムを登録して交流をするアプリのマッチング担当です\n"
-        content += "私の好きなアルバムは#{my_albums_count}枚あり、「#{current_user_likes}」です。（アルバムごとに「,」で区切っています。）\n"
-        content += "最大9つの他のユーザーの好きなアルバムを#{user_count}人分、以下の形式で送ります。\n"
-        content += "ユーザーID: user_id, アルバム: 'アーティスト名'の'アルバム名'\n"
+        content += "あなたはユーザー同士が音楽のアーティストを登録して交流をするアプリのマッチング担当です\n"
+        content += "私の好きなアーティストは「#{current_user_likes}」です。\n"
+        content += "#{user_count}人分の、他のユーザーの好きなアーティストを以下の形式で送ります。\n"
+        content += "ユーザーID: user_id, アーティスト: 'アーティスト名'\n"
         content += "以下のルールに基づいてマッチ度を返してください。\n"
-        content += "「アルバム:」が存在しないユーザーは0点を返す、以下の条件には含まない。\n"
-        content += "採点基準は相対評価です、アルバム全体の類似を（ジャンル>国>年代）の基準で評価し、以下のように1〜99の間で分布が均等になるように点数をつけてください。\n"
+        content += "「アーティスト:」が存在しないユーザーは0点を返す、以下の条件には含まない。\n"
+        content += "採点基準は相対評価です、アーティストの類似を（ジャンル>国>年代）の基準で評価し、以下のように1〜99の間で分布が均等になるように点数をつけてください。\n"
         content += "対象者が1人なら必ず50点、2人なら必ず1人は1点、もう1人は99点、同様に3人なら[1点,50点,99点]、4人なら[1点,33点,66点,99点]、5人なら[1点,25点,50点,75点,99点]、この規則性。\n"
-        content += "アルバムの多いユーザーを優遇する。\n"
-        content += "他のユーザーの好きなアルバム:\n"
+        content += "他のユーザーの好きなアーティスト:\n"
         other_users_likes.each do |user|
-          content += "ユーザーID: #{user[:id]}, アルバム: #{user[:likes]}\n"
+          content += "ユーザーID: #{user[:id]}, アーティスト: #{user[:likes]}\n"
         end
         Rails.logger.debug(content)
         content += '出力形式: [ { "other_user_id": user_id1, "match_score": match_score1}, { "other_user_id": user_id2, "match_score": match_score2}, ... ]'
