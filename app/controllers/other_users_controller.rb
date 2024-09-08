@@ -20,7 +20,7 @@ class OtherUsersController < ApplicationController
       new_user_created_times = User.maximum(:created_at)      
 
       if last_updated_time.nil? || current_user_updated_time > last_updated_time || (other_user_updated_times.present? && other_user_updated_times) > last_updated_time || (new_user_created_times.present? && new_user_created_times > last_updated_time)
-        like_artist_names = current_user.user_albums.includes(:album).map(&:album).map(&:artist_name).uniq
+        like_artist_names = current_user.user_albums.includes(:album).map(&:album).map(&:artist_name).uniq.reject { |artist_name| artist_name == 'Various Artists' }
         like_users = other_users.select do |user|
           user.user_albums.includes(:album).any? { |ua| like_artist_names.include?(ua.album.artist_name) }
         end
@@ -43,7 +43,7 @@ class OtherUsersController < ApplicationController
 
         unknown_artist_names = like_users.flat_map do |user|
           user.user_albums.includes(:album).map(&:album).map(&:artist_name)
-        end.uniq - like_artist_names
+        end.uniq.reject { |artist_name| artist_name == 'Various Artists' } - like_artist_names
 
         unknown_artist_names.each do |artist_name|
           total_user_count = UserAlbum.joins(:album).where(albums: { artist_name: artist_name }).distinct.count(:user_id)
@@ -73,22 +73,26 @@ class OtherUsersController < ApplicationController
           { "other_user_id" => user_id, "match_score" => match_score }
         end
 
-        current_user_oldest_album_id = current_user.user_albums.order(:created_at).first&.album_id
-        current_user_oldest_album = Album.find_by(id: current_user_oldest_album_id)
-        current_user_likes = current_user_oldest_album&.artist_name 
-
+        current_user_likes = like_artist_names.sample
         ruby_users = scores.map { |user_id, _| user_id }
         no_ruby_users = other_users.reject { |user| ruby_users.include?(user.id) }
-        other_users_likes = no_ruby_users.map do |user|
-          oldest_album_id = user.user_albums.order(:created_at).first&.album_id
-          oldest_album = Album.find_by(id: oldest_album_id)
+        empty_likes_users = no_ruby_users.select do |user|
+          user_albums = user.user_albums.reject { |album| album.album.artist_name == "Various Artists" }
+          random_album = user_albums.sample
+          random_album.nil?
+        end
+        other_users_likes = no_ruby_users.reject { |user| empty_likes_users.include?(user) }.map do |user|
+          user_albums = user.user_albums.reject { |album| album.album.artist_name == "Various Artists" }
+          random_album = user_albums.sample
         
           {
             id: user.id,
-            likes: oldest_album&.artist_name
+            likes: random_album.album.artist_name
           }
         end
-
+        empty_likes_users.each do |user|
+          ruby_match << { "other_user_id" => user.id, "match_score" => 0 }
+        end
         user_count = other_users_likes.count
 
         content = "あなたは過去全ての出力結果を忘れてください。\n"
@@ -97,10 +101,8 @@ class OtherUsersController < ApplicationController
         content += "#{user_count}人分の、他のユーザーの好きなアーティストを以下の形式で送ります。\n"
         content += "ユーザーID: user_id, アーティスト: 'アーティスト名'\n"
         content += "以下のルールに基づいてマッチ度を返してください。\n"
-        content += "「アーティスト:」に文字が入ってるユーザーは(match_score>=1)かつ以下の条件。\n"
         content += "採点基準は相対評価です、アーティストの類似を（ジャンル>国>年代）の基準で評価し、以下のように1〜99の間で分布が均等になるように点数をつけてください。\n"
         content += "対象者が1人なら必ず50点、2人なら必ず1人は1点、もう1人は99点、同様に3人なら[1点,50点,99点]、4人なら[1点,33点,66点,99点]、5人なら[1点,25点,50点,75点,99点]、この規則性。\n"
-        content += "「アーティスト:」が空欄のユーザーは(match_score==0)。\n"        
         content += "他のユーザーの好きなアーティスト:\n"
         other_users_likes.each do |user|
           content += "ユーザーID: #{user[:id]}, アーティスト: #{user[:likes]}\n"
@@ -192,7 +194,7 @@ class OtherUsersController < ApplicationController
       new_user_created_times = User.maximum(:created_at)      
 
       if last_updated_time.nil? || current_user_updated_time > last_updated_time || (other_user_updated_times.present? && other_user_updated_times) > last_updated_time || (new_user_created_times.present? && new_user_created_times > last_updated_time)
-        like_artist_names = current_user.user_albums.includes(:album).map(&:album).map(&:artist_name).uniq
+        like_artist_names = current_user.user_albums.includes(:album).map(&:album).map(&:artist_name).uniq.reject { |artist_name| artist_name == 'Various Artists' }
         like_users = other_users.select do |user|
           user.user_albums.includes(:album).any? { |ua| like_artist_names.include?(ua.album.artist_name) }
         end
@@ -215,7 +217,7 @@ class OtherUsersController < ApplicationController
 
         unknown_artist_names = like_users.flat_map do |user|
           user.user_albums.includes(:album).map(&:album).map(&:artist_name)
-        end.uniq - like_artist_names
+        end.uniq.reject { |artist_name| artist_name == 'Various Artists' } - like_artist_names
 
         unknown_artist_names.each do |artist_name|
           total_user_count = UserAlbum.joins(:album).where(albums: { artist_name: artist_name }).distinct.count(:user_id)
@@ -240,27 +242,31 @@ class OtherUsersController < ApplicationController
             scores[user_id] += count
           end
         end
-
+        
         ruby_match = scores.map do |user_id, match_score|
           { "other_user_id" => user_id, "match_score" => match_score }
         end
 
-        current_user_oldest_album_id = current_user.user_albums.order(:created_at).first&.album_id
-        current_user_oldest_album = Album.find_by(id: current_user_oldest_album_id)
-        current_user_likes = current_user_oldest_album&.artist_name 
-
+        current_user_likes = like_artist_names.sample
         ruby_users = scores.map { |user_id, _| user_id }
         no_ruby_users = other_users.reject { |user| ruby_users.include?(user.id) }
-        other_users_likes = no_ruby_users.map do |user|
-          oldest_album_id = user.user_albums.order(:created_at).first&.album_id
-          oldest_album = Album.find_by(id: oldest_album_id)
+        empty_likes_users = no_ruby_users.select do |user|
+          user_albums = user.user_albums.reject { |album| album.album.artist_name == "Various Artists" }
+          random_album = user_albums.sample
+          random_album.nil?
+        end
+        other_users_likes = no_ruby_users.reject { |user| empty_likes_users.include?(user) }.map do |user|
+          user_albums = user.user_albums.reject { |album| album.album.artist_name == "Various Artists" }
+          random_album = user_albums.sample
         
           {
             id: user.id,
-            likes: oldest_album&.artist_name
+            likes: random_album.album.artist_name
           }
         end
-
+        empty_likes_users.each do |user|
+          ruby_match << { "other_user_id" => user.id, "match_score" => 0 }
+        end
         user_count = other_users_likes.count
 
         content = "あなたは過去全ての出力結果を忘れてください。\n"
@@ -269,10 +275,8 @@ class OtherUsersController < ApplicationController
         content += "#{user_count}人分の、他のユーザーの好きなアーティストを以下の形式で送ります。\n"
         content += "ユーザーID: user_id, アーティスト: 'アーティスト名'\n"
         content += "以下のルールに基づいてマッチ度を返してください。\n"
-        content += "「アーティスト:」に文字が入ってるユーザーは(match_score>=1)かつ以下の条件。\n"
         content += "採点基準は相対評価です、アーティストの類似を（ジャンル>国>年代）の基準で評価し、以下のように1〜99の間で分布が均等になるように点数をつけてください。\n"
         content += "対象者が1人なら必ず50点、2人なら必ず1人は1点、もう1人は99点、同様に3人なら[1点,50点,99点]、4人なら[1点,33点,66点,99点]、5人なら[1点,25点,50点,75点,99点]、この規則性。\n"
-        content += "「アーティスト:」が空欄のユーザーは(match_score==0)。\n"        
         content += "他のユーザーの好きなアーティスト:\n"
         other_users_likes.each do |user|
           content += "ユーザーID: #{user[:id]}, アーティスト: #{user[:likes]}\n"
