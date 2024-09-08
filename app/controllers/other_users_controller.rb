@@ -97,10 +97,10 @@ class OtherUsersController < ApplicationController
         content += "#{user_count}人分の、他のユーザーの好きなアーティストを以下の形式で送ります。\n"
         content += "ユーザーID: user_id, アーティスト: 'アーティスト名'\n"
         content += "以下のルールに基づいてマッチ度を返してください。\n"
-        content += "「アーティスト:」に文字が入ってるユーザーは以下の条件。\n"
+        content += "「アーティスト:」に文字が入ってるユーザーは(match_score>=1)かつ以下の条件。\n"
         content += "採点基準は相対評価です、アーティストの類似を（ジャンル>国>年代）の基準で評価し、以下のように1〜99の間で分布が均等になるように点数をつけてください。\n"
         content += "対象者が1人なら必ず50点、2人なら必ず1人は1点、もう1人は99点、同様に3人なら[1点,50点,99点]、4人なら[1点,33点,66点,99点]、5人なら[1点,25点,50点,75点,99点]、この規則性。\n"
-        content += "「アーティスト:」が空欄のユーザーはmatch_score=0。\n"
+        content += "「アーティスト:」が空欄のユーザーは(match_score==0)。\n"        
         content += "他のユーザーの好きなアーティスト:\n"
         other_users_likes.each do |user|
           content += "ユーザーID: #{user[:id]}, アーティスト: #{user[:likes]}\n"
@@ -112,7 +112,7 @@ class OtherUsersController < ApplicationController
           client = OpenAI::Client.new(access_token: ENV['OPENAI_API_KEY'])
           response = client.chat(
             parameters: {
-              model: "gpt-4o-mini", # モデルを変更
+              model: "gpt-4o", # モデルを変更
               messages: [{ role: "user", content: content }],
               temperature: 0
             }
@@ -269,10 +269,10 @@ class OtherUsersController < ApplicationController
         content += "#{user_count}人分の、他のユーザーの好きなアーティストを以下の形式で送ります。\n"
         content += "ユーザーID: user_id, アーティスト: 'アーティスト名'\n"
         content += "以下のルールに基づいてマッチ度を返してください。\n"
-        content += "「アーティスト:」に文字が入ってるユーザーは以下の条件。\n"
+        content += "「アーティスト:」に文字が入ってるユーザーは(match_score>=1)かつ以下の条件。\n"
         content += "採点基準は相対評価です、アーティストの類似を（ジャンル>国>年代）の基準で評価し、以下のように1〜99の間で分布が均等になるように点数をつけてください。\n"
         content += "対象者が1人なら必ず50点、2人なら必ず1人は1点、もう1人は99点、同様に3人なら[1点,50点,99点]、4人なら[1点,33点,66点,99点]、5人なら[1点,25点,50点,75点,99点]、この規則性。\n"
-        content += "「アーティスト:」が空欄のユーザーはmatch_score=0。\n"        
+        content += "「アーティスト:」が空欄のユーザーは(match_score==0)。\n"        
         content += "他のユーザーの好きなアーティスト:\n"
         other_users_likes.each do |user|
           content += "ユーザーID: #{user[:id]}, アーティスト: #{user[:likes]}\n"
@@ -284,7 +284,7 @@ class OtherUsersController < ApplicationController
           client = OpenAI::Client.new(access_token: ENV['OPENAI_API_KEY'])
           response = client.chat(
             parameters: {
-              model: "gpt-4o-mini", # モデルを変更
+              model: "gpt-4o", # モデルを変更
               messages: [{ role: "user", content: content }],
               temperature: 0
             }
