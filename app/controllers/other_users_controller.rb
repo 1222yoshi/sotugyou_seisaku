@@ -73,7 +73,7 @@ class OtherUsersController < ApplicationController
           { "other_user_id" => user_id, "match_score" => match_score }
         end
 
-        current_user_likes = like_artist_names
+        current_user_likes = like_artist_names.sample
         ruby_users = scores.map { |user_id, _| user_id }
         no_ruby_users = other_users.reject { |user| ruby_users.include?(user.id) }
         empty_likes_users = no_ruby_users.select do |user|
@@ -246,7 +246,7 @@ class OtherUsersController < ApplicationController
           { "other_user_id" => user_id, "match_score" => match_score }
         end
 
-        current_user_likes = like_artist_names
+        current_user_likes = like_artist_names.sample
         ruby_users = scores.map { |user_id, _| user_id }
         no_ruby_users = other_users.reject { |user| ruby_users.include?(user.id) }
         empty_likes_users = no_ruby_users.select do |user|
