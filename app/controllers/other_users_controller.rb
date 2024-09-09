@@ -93,12 +93,12 @@ class OtherUsersController < ApplicationController
         end
         @user_count = other_users_likes.count
 
-        content = "あなたは過去全ての出力結果を忘れてください。\n"
+        content = "gptの持つ全ての音楽の情報を使って処理してください。\n"
         content += "私は「#{current_user_likes}」というアーティストが好きです。\n"
         content += "#{@user_count}人分の、他のユーザーのIDと好きなアーティスト名を送ります。\n"
         content += "以下のルールに基づいて私とのマッチ度をIDと一緒に返してください。\n"
-        content += "採点基準は相対評価で、アーティストの類似を（ジャンル>国>年代）の優先度で評価します。\n"
-        content += "得点は1〜#{@user_count}の範囲で均等に分布させます。最低点のユーザーは必ず1点、最高点のユーザーは必ず#{@user_count}点とし、必ず同じ点数のユーザーが存在しないようにしてください。\n"
+        content += "採点基準は相対評価で、音楽性の近いアーティストを評価して採点してください。\n"
+        content += "得点は1〜#{@user_count}の範囲で均等に分布させます。一番音楽性が遠いユーザーは必ず1点、一番音楽性の近いのユーザーは必ず#{@user_count}点とし、必ず同じ点数のユーザーが存在しないようにしてください。\n"
         content += "他のユーザーの好きなアーティスト:\n"
         other_users_likes.each do |user|
           content += "ユーザーID: #{user[:id]}, アーティスト: #{user[:likes]}\n"
@@ -264,12 +264,12 @@ class OtherUsersController < ApplicationController
         end
         @user_count = other_users_likes.count
 
-        content = "あなたは過去全ての出力結果を忘れてください。\n"
+        content = "gptの持つ全ての音楽の情報を使って処理してください。\n"
         content += "私は「#{current_user_likes}」というアーティストが好きです。\n"
         content += "#{@user_count}人分の、他のユーザーのIDと好きなアーティスト名を送ります。\n"
         content += "以下のルールに基づいて私とのマッチ度をIDと一緒に返してください。\n"
-        content += "採点基準は相対評価で、アーティストの類似を（ジャンル>国>年代）の優先度で評価します。\n"
-        content += "得点は1〜#{@user_count}の範囲で均等に分布させます。最低点のユーザーは必ず1点、最高点のユーザーは必ず#{@user_count}点とし、必ず同じ点数のユーザーが存在しないようにしてください。\n"
+        content += "採点基準は相対評価で、音楽性の近いアーティストを評価して採点してください。\n"
+        content += "得点は1〜#{@user_count}の範囲で均等に分布させます。一番音楽性が遠いユーザーは必ず1点、一番音楽性の近いのユーザーは必ず#{@user_count}点とし、必ず同じ点数のユーザーが存在しないようにしてください。\n"
         content += "他のユーザーの好きなアーティスト:\n"
         other_users_likes.each do |user|
           content += "ユーザーID: #{user[:id]}, アーティスト: #{user[:likes]}\n"
