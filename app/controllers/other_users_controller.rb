@@ -85,7 +85,7 @@ class OtherUsersController < ApplicationController
         
           {
             id: user.id,
-            likes: other_user_likes_albums.map { |album| album.album.artist_name }.uniq
+            likes: other_user_likes_albums.map { |album| album.album.artist_name }.sample
           }
         end
         empty_likes_users.each do |user|
@@ -258,7 +258,7 @@ class OtherUsersController < ApplicationController
         
           {
             id: user.id,
-            likes: other_user_likes_albums.map { |album| album.album.artist_name }.uniq
+            likes: other_user_likes_albums.map { |album| album.album.artist_name }.sample
           }
         end
         empty_likes_users.each do |user|
