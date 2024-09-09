@@ -4,7 +4,6 @@ class OtherUsersController < ApplicationController
 
   def index
     @q = User.ransack(params[:q])
-
     if current_user && current_user.user_albums.present?
       other_users = User.where.not(id: current_user.id)
 
@@ -31,11 +30,12 @@ class OtherUsersController < ApplicationController
           like_user_albums = like_user.user_albums.includes(:album)
 
           like_user_albums.each do |like_user_album|
+            next if  like_user_album.album.artist_name == 'Various Artists'
             current_user.user_albums.each do |user_album|
               if like_user_album.album.album_name == user_album.album.album_name
-                scores[like_user.id] += 10000
+                scores[like_user.id] += 100000
               elsif like_user_album.album.artist_name == user_album.album.artist_name
-                scores[like_user.id] += 1000
+                scores[like_user.id] += 10000
               end
             end
           end
@@ -52,12 +52,12 @@ class OtherUsersController < ApplicationController
           if like_user_count == 1
             other_users_with_artist = UserAlbum.joins(:album).where(albums: { artist_name: artist_name }).where.not(user_id: like_users.map(&:id))
             other_users_with_artist.each do |ua|
-              scores[ua.user_id] += 100
+              scores[ua.user_id] += 1000
             end
           else
             total_users_with_artist = UserAlbum.joins(:album).where(albums: { artist_name: artist_name })
             total_users_with_artist.each do |ua|
-              scores[ua.user_id] += 100
+              scores[ua.user_id] += 1000
             end
           end
         end
@@ -73,37 +73,34 @@ class OtherUsersController < ApplicationController
           { "other_user_id" => user_id, "match_score" => match_score }
         end
 
-        current_user_likes = like_artist_names.sample
+        current_user_likes = like_artist_names
         ruby_users = scores.map { |user_id, _| user_id }
         no_ruby_users = other_users.reject { |user| ruby_users.include?(user.id) }
         empty_likes_users = no_ruby_users.select do |user|
-          user_albums = user.user_albums.reject { |album| album.album.artist_name == "Various Artists" }
-          random_album = user_albums.sample
-          random_album.nil?
+          other_user_albums = user.user_albums.reject { |album| album.album.artist_name == "Various Artists" }
+          other_user_albums.empty?
         end
         other_users_likes = no_ruby_users.reject { |user| empty_likes_users.include?(user) }.map do |user|
-          user_albums = user.user_albums.reject { |album| album.album.artist_name == "Various Artists" }
-          random_album = user_albums.sample
+          other_user_likes_albums = user.user_albums.reject { |album| album.album.artist_name == "Various Artists" }
         
           {
             id: user.id,
-            likes: random_album.album.artist_name
+            likes: other_user_likes_albums.map { |album| album.album.artist_name }.uniq
           }
         end
         empty_likes_users.each do |user|
           ruby_match << { "other_user_id" => user.id, "match_score" => 0 }
         end
-        user_count = other_users_likes.count
+        @user_count = other_users_likes.count
 
         content = "あなたは過去全ての出力結果を忘れてください。\n"
         content += "あなたはユーザー同士が音楽のアーティストを登録して交流をするアプリのマッチング担当です\n"
         content += "私の好きなアーティストは「#{current_user_likes}」です。\n"
-        content += "#{user_count}人分の、他のユーザーの好きなアーティストを以下の形式で送ります。\n"
+        content += "#{@user_count}人分の、他のユーザーの好きなアーティストを以下の形式で送ります。\n"
         content += "ユーザーID: user_id, アーティスト: 'アーティスト名'\n"
         content += "以下のルールに基づいてマッチ度を返してください。\n"
         content += "採点基準は相対評価で、アーティストの類似を（ジャンル>国>年代）で評価します。\n"
-        content += "得点は1〜99の範囲で均等に分布させます。最低点のユーザーは必ず1点、最高点のユーザーは必ず99点です\n"
-        content += "つまり、1から99までの数字を#{user_count}回取り出した時、必ず1と99が出つつ、#{user_count}個の数字を全て足して、#{user_count}で割った時49になり、かつ全ての数字が異なる数字という条件です。また、#{user_count}を3で割った数だけそれぞれ、1から33、34から66、67から99に入れてください。"
+        content += "得点は1〜#{@user_count}の範囲で均等に分布させます。最低点のユーザーは必ず1点、最高点のユーザーは必ず#{@user_count}点とし、必ず同じ点数のユーザーが存在しないようにしてください。\n"
         content += "他のユーザーの好きなアーティスト:\n"
         other_users_likes.each do |user|
           content += "ユーザーID: #{user[:id]}, アーティスト: #{user[:likes]}\n"
@@ -142,7 +139,7 @@ class OtherUsersController < ApplicationController
           flash.now[:danger] = "再試行してください。"  
         end
       end
-
+      @user_count = Match.where(user_id: current_user.id, score: 0..999).maximum(:score)
       @other_users = @q.result(distinct: true)
                     .joins("LEFT JOIN matches ON matches.other_user_id = users.id")
                     .where(matches: { user_id: current_user.id })
@@ -206,11 +203,12 @@ class OtherUsersController < ApplicationController
           like_user_albums = like_user.user_albums.includes(:album)
 
           like_user_albums.each do |like_user_album|
+            next if  like_user_album.album.artist_name == 'Various Artists'
             current_user.user_albums.each do |user_album|
               if like_user_album.album.album_name == user_album.album.album_name
-                scores[like_user.id] += 10000
+                scores[like_user.id] += 100000
               elsif like_user_album.album.artist_name == user_album.album.artist_name
-                scores[like_user.id] += 1000
+                scores[like_user.id] += 10000
               end
             end
           end
@@ -227,12 +225,12 @@ class OtherUsersController < ApplicationController
           if like_user_count == 1
             other_users_with_artist = UserAlbum.joins(:album).where(albums: { artist_name: artist_name }).where.not(user_id: like_users.map(&:id))
             other_users_with_artist.each do |ua|
-              scores[ua.user_id] += 100
+              scores[ua.user_id] += 1000
             end
           else
             total_users_with_artist = UserAlbum.joins(:album).where(albums: { artist_name: artist_name })
             total_users_with_artist.each do |ua|
-              scores[ua.user_id] += 100
+              scores[ua.user_id] += 1000
             end
           end
         end
@@ -248,37 +246,34 @@ class OtherUsersController < ApplicationController
           { "other_user_id" => user_id, "match_score" => match_score }
         end
 
-        current_user_likes = like_artist_names.sample
+        current_user_likes = like_artist_names
         ruby_users = scores.map { |user_id, _| user_id }
         no_ruby_users = other_users.reject { |user| ruby_users.include?(user.id) }
         empty_likes_users = no_ruby_users.select do |user|
-          user_albums = user.user_albums.reject { |album| album.album.artist_name == "Various Artists" }
-          random_album = user_albums.sample
-          random_album.nil?
+          other_user_albums = user.user_albums.reject { |album| album.album.artist_name == "Various Artists" }
+          other_user_albums.empty?
         end
         other_users_likes = no_ruby_users.reject { |user| empty_likes_users.include?(user) }.map do |user|
-          user_albums = user.user_albums.reject { |album| album.album.artist_name == "Various Artists" }
-          random_album = user_albums.sample
+          other_user_likes_albums = user.user_albums.reject { |album| album.album.artist_name == "Various Artists" }
         
           {
             id: user.id,
-            likes: random_album.album.artist_name
+            likes: other_user_likes_albums.map { |album| album.album.artist_name }.uniq
           }
         end
         empty_likes_users.each do |user|
           ruby_match << { "other_user_id" => user.id, "match_score" => 0 }
         end
-        user_count = other_users_likes.count
+        @user_count = other_users_likes.count
 
         content = "あなたは過去全ての出力結果を忘れてください。\n"
         content += "あなたはユーザー同士が音楽のアーティストを登録して交流をするアプリのマッチング担当です\n"
         content += "私の好きなアーティストは「#{current_user_likes}」です。\n"
-        content += "#{user_count}人分の、他のユーザーの好きなアーティストを以下の形式で送ります。\n"
+        content += "#{@user_count}人分の、他のユーザーの好きなアーティストを以下の形式で送ります。\n"
         content += "ユーザーID: user_id, アーティスト: 'アーティスト名'\n"
         content += "以下のルールに基づいてマッチ度を返してください。\n"
         content += "採点基準は相対評価で、アーティストの類似を（ジャンル>国>年代）で評価します。\n"
-        content += "得点は1〜99の範囲で均等に分布させます。最低点のユーザーは必ず1点、最高点のユーザーは必ず99点です\n"
-        content += "つまり、1から99までの数字を#{user_count}回取り出した時、必ず1と99が出つつ、#{user_count}個の数字を全て足して、#{user_count}で割った時49になり、かつ全ての数字が異なる数字という条件です。また、#{user_count}を3で割った数だけそれぞれ、1から33、34から66、67から99に入れてください。"
+        content += "得点は1〜#{@user_count}の範囲で均等に分布させます。最低点のユーザーは必ず1点、最高点のユーザーは必ず#{@user_count}点とし、必ず同じ点数のユーザーが存在しないようにしてください。\n"
         content += "他のユーザーの好きなアーティスト:\n"
         other_users_likes.each do |user|
           content += "ユーザーID: #{user[:id]}, アーティスト: #{user[:likes]}\n"
@@ -317,6 +312,7 @@ class OtherUsersController < ApplicationController
           flash.now[:danger] = "再試行してください。"  
         end
       end
+      @user_count = Match.where(user_id: current_user.id, score: 0..999).maximum(:score)
       @user = User.joins("LEFT JOIN matches ON matches.other_user_id = users.id AND matches.user_id = #{current_user.id}")
                   .select("users.*, matches.score as match_score")
                   .find(params[:id])
