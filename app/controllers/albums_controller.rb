@@ -75,9 +75,9 @@ class AlbumsController < ApplicationController
           content = "gptの持つ全ての音楽の情報を使って処理してください。\n"
           content += "私は「#{like_artist_names}」というアーティストたちが好きです。\n"
           content += "与えられたアーティストのリストから、音楽の特徴やスタイルを分析し、ユーザーが好む音楽の傾向を要約して作成してください。具体的には、以下のポイントに注目して解析してほしいです。\n"
-          content += "1.時代背景 2.楽器とスタイル 3.リズムとビート 4.全体的なテーマ\n"
+          content += "1.文化的特徴 2.楽器的特徴 3.コード、リズム的特徴 4.歌詞的特徴\n"
           content += "これらの情報は、各ユーザーとの比較にそのまま使われます。よってあなたが読み取りやすい程度に要約して返してください。\n"
-          content += "出力形式は4つのポイントをそれぞれ50文字程度で端的に文章で送ってください。音楽的情報以外の発言はしないでください。"
+          content += "出力形式は3つのポイントをそれぞれ50文字程度で端的に文章で送ってください。音楽的情報以外の発言はしないでください。"
           begin
             client = OpenAI::Client.new(access_token: ENV['OPENAI_API_KEY'])
             response = client.chat(
@@ -197,6 +197,7 @@ class AlbumsController < ApplicationController
     user_album = current_user.user_albums.find_by(album_id: params[:id])
     user_album.destroy
     flash[:danger] = "アルバムを削除しました。"
+    current_user.update(like_music: nil)
     redirect_to albums_path(album: album_param)
   end
 end
