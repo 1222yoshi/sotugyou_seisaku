@@ -57,7 +57,7 @@
     <div class="flex items-center">
       <span class="text-2xl">AIマッチ：</span>
       <div class="text-3xl">
-        <% if current_user && current_user.user_albums.present? && @user.match_score.present? %>
+        <% if current_user && current_user.like_music.present? && @user.match_score.present? %>
           <% if @user.match_score >= 100000 %>
             <div class="s-neon">S</div>
           <% elsif @user.match_score >=10000 %>
