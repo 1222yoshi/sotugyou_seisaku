@@ -4,7 +4,7 @@ class OtherUsersController < ApplicationController
 
   def index
     @q = User.ransack(params[:q])
-    if current_user && current_user.user_albums.present?
+    if current_user && current_user.like_music.present?
       other_users = User.where.not(id: current_user.id)
 
       last_updated_time = Match.where(user_id: current_user.id)
@@ -73,19 +73,16 @@ class OtherUsersController < ApplicationController
           { "other_user_id" => user_id, "match_score" => match_score }
         end
 
-        current_user_likes = like_artist_names.sample
+        current_user_likes = current_user.like_music
         ruby_users = scores.map { |user_id, _| user_id }
         no_ruby_users = other_users.reject { |user| ruby_users.include?(user.id) }
         empty_likes_users = no_ruby_users.select do |user|
-          other_user_albums = user.user_albums.reject { |album| album.album.artist_name == "Various Artists" }
-          other_user_albums.empty?
+          user.like_music.nil?
         end
         other_users_likes = no_ruby_users.reject { |user| empty_likes_users.include?(user) }.map do |user|
-          other_user_likes_albums = user.user_albums.reject { |album| album.album.artist_name == "Various Artists" }
-        
           {
             id: user.id,
-            likes: other_user_likes_albums.map { |album| album.album.artist_name }.sample
+            likes: user.like_music
           }
         end
         empty_likes_users.each do |user|
@@ -93,15 +90,14 @@ class OtherUsersController < ApplicationController
         end
         @user_count = other_users_likes.count
 
-        content = "gptの持つ全ての音楽の情報を使って処理してください。\n"
-        content += "私は「#{current_user_likes}」というアーティストが好きです。\n"
-        content += "#{@user_count}人分の、他のユーザーのIDと好きなアーティスト名を送ります。\n"
+        content = "私の音楽性は「#{current_user_likes}」です。\n"
+        content += "#{@user_count}人分の、他のユーザーのIDと音楽性を送ります。\n"
         content += "以下のルールに基づいて私とのマッチ度をIDと一緒に返してください。\n"
         content += "採点基準は相対評価で、音楽性の近いアーティストを評価して採点してください。\n"
         content += "得点は1〜#{@user_count}の範囲で均等に分布させます。一番音楽性が遠いユーザーは必ず1点、一番音楽性の近いのユーザーは必ず#{@user_count}点とし、必ず同じ点数のユーザーが存在しないようにしてください。\n"
-        content += "他のユーザーの好きなアーティスト:\n"
+        content += "他のユーザーの音楽性:\n"
         other_users_likes.each do |user|
-          content += "ユーザーID: #{user[:id]}, アーティスト: #{user[:likes]}\n"
+          content += "ユーザーID: #{user[:id]}, 音楽性: #{user[:likes]}\n"
         end
         Rails.logger.debug(content)
         content += '出力形式: [ { "other_user_id": user_id1, "match_score": match_score1}, { "other_user_id": user_id2, "match_score": match_score2}, ... ]'
@@ -175,7 +171,38 @@ class OtherUsersController < ApplicationController
 
   def show
     @user = User.find(params[:id])
-    if current_user && current_user.user_albums.present? && current_user != @user
+    if @user.user_albums.count == 9 
+      like_artist_names = @user.user_albums.includes(:album).map(&:album).map(&:artist_name).uniq.reject { |artist_name| artist_name == 'Various Artists' }
+      content = "gptの持つ全ての音楽の情報を使って処理してください。\n"
+      content += "私は「#{like_artist_names}」というアーティストたちが好きです。\n"
+      content += "与えられたアーティストのリストから、音楽の特徴やスタイルを分析し、ユーザーが好む音楽の傾向を要約して作成してください。具体的には、以下のポイントに注目して解析してほしいです。\n"
+      content += "1.時代背景 2.楽器とスタイル 3.リズムとビート 4.全体的なテーマ\n"
+      content += "これらの情報は、各ユーザーとの比較にそのまま使われます。よってあなたが読み取りやすい程度に要約して返してください。\n"
+      content += "出力形式は4つのポイントをそれぞれ50文字程度で端的に文章で送ってください。音楽的情報以外の発言はしないでください。"
+      begin
+        client = OpenAI::Client.new(access_token: ENV['OPENAI_API_KEY'])
+        response = client.chat(
+          parameters: {
+            model: "gpt-4o-mini", # モデルを変更
+            messages: [{ role: "user", content: content }],
+            temperature: 0
+          }
+        )
+
+        user_music_text = response["choices"][0]["message"]["content"]
+        Rails.logger.debug(response)
+        @user.update(like_music: user_music_text)
+      rescue Faraday::TooManyRequestsError => e
+        flash.now[:danger] = "AI使用制限中"
+      rescue JSON::ParserError => each
+        flash.now[:danger] = "AIが予期せぬ返答をしました。"
+      rescue Faraday::ServerError => e
+        flash.now[:danger] = "再試行してください。"  
+      end
+    else      
+      @user.update(like_music: nil)
+    end
+    if current_user && current_user.like_music.present? && current_user != @user
       other_users = User.where.not(id: current_user.id)
 
       last_updated_time = Match.where(user_id: current_user.id)
@@ -244,19 +271,16 @@ class OtherUsersController < ApplicationController
           { "other_user_id" => user_id, "match_score" => match_score }
         end
 
-        current_user_likes = like_artist_names.sample
+        current_user_likes = current_user.like_music
         ruby_users = scores.map { |user_id, _| user_id }
         no_ruby_users = other_users.reject { |user| ruby_users.include?(user.id) }
         empty_likes_users = no_ruby_users.select do |user|
-          other_user_albums = user.user_albums.reject { |album| album.album.artist_name == "Various Artists" }
-          other_user_albums.empty?
+          user.like_music.nil?
         end
         other_users_likes = no_ruby_users.reject { |user| empty_likes_users.include?(user) }.map do |user|
-          other_user_likes_albums = user.user_albums.reject { |album| album.album.artist_name == "Various Artists" }
-        
           {
             id: user.id,
-            likes: other_user_likes_albums.map { |album| album.album.artist_name }.sample 
+            likes: user.like_music
           }
         end
         empty_likes_users.each do |user|
@@ -264,15 +288,14 @@ class OtherUsersController < ApplicationController
         end
         @user_count = other_users_likes.count
 
-        content = "gptの持つ全ての音楽の情報を使って処理してください。\n"
-        content += "私は「#{current_user_likes}」というアーティストが好きです。\n"
-        content += "#{@user_count}人分の、他のユーザーのIDと好きなアーティスト名を送ります。\n"
+        content = "私の音楽性は「#{current_user_likes}」です。\n"
+        content += "#{@user_count}人分の、他のユーザーのIDと音楽性を送ります。\n"
         content += "以下のルールに基づいて私とのマッチ度をIDと一緒に返してください。\n"
         content += "採点基準は相対評価で、音楽性の近いアーティストを評価して採点してください。\n"
         content += "得点は1〜#{@user_count}の範囲で均等に分布させます。一番音楽性が遠いユーザーは必ず1点、一番音楽性の近いのユーザーは必ず#{@user_count}点とし、必ず同じ点数のユーザーが存在しないようにしてください。\n"
-        content += "他のユーザーの好きなアーティスト:\n"
+        content += "他のユーザーの音楽性:\n"
         other_users_likes.each do |user|
-          content += "ユーザーID: #{user[:id]}, アーティスト: #{user[:likes]}\n"
+          content += "ユーザーID: #{user[:id]}, 音楽性: #{user[:likes]}\n"
         end
         Rails.logger.debug(content)
         content += '出力形式: [ { "other_user_id": user_id1, "match_score": match_score1}, { "other_user_id": user_id2, "match_score": match_score2}, ... ]'

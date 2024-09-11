@@ -70,16 +70,50 @@ class AlbumsController < ApplicationController
         redirect_to albums_path(album: album_param)
       else
         @user_album = current_user.user_albums.new(album: album_record)
-        if @user_album.save
-          current_user.update(like_music: current_user.user_albums.map { |ua| "#{ua.album.artist_name}の#{ua.album.album_name}" }.join(", "))
-          if current_user.user_albums.count == 9
-            redirect_to albums_path, success: "アルバムを保存しました。"
-          else
-            redirect_to albums_path(album: album_param), success: "アルバムを保存しました。"
+        if current_user.user_albums.count == 8 
+          like_artist_names = current_user.user_albums.includes(:album).map(&:album).map(&:artist_name).uniq.reject { |artist_name| artist_name == 'Various Artists' }
+          content = "gptの持つ全ての音楽の情報を使って処理してください。\n"
+          content += "私は「#{like_artist_names}」というアーティストたちが好きです。\n"
+          content += "与えられたアーティストのリストから、音楽の特徴やスタイルを分析し、ユーザーが好む音楽の傾向を要約して作成してください。具体的には、以下のポイントに注目して解析してほしいです。\n"
+          content += "1.時代背景 2.楽器とスタイル 3.リズムとビート 4.全体的なテーマ\n"
+          content += "これらの情報は、各ユーザーとの比較にそのまま使われます。よってあなたが読み取りやすい程度に要約して返してください。\n"
+          content += "出力形式は4つのポイントをそれぞれ50文字程度で端的に文章で送ってください。音楽的情報以外の発言はしないでください。"
+          begin
+            client = OpenAI::Client.new(access_token: ENV['OPENAI_API_KEY'])
+            response = client.chat(
+              parameters: {
+                model: "gpt-4o-mini", # モデルを変更
+                messages: [{ role: "user", content: content }],
+                temperature: 0
+              }
+            )
+
+            user_music_text = response["choices"][0]["message"]["content"]
+            Rails.logger.debug(response)
+            current_user.update(like_music: user_music_text)
+            if @user_album.save
+              redirect_to albums_path, success: "アルバムを保存しました。"
+              return
+            else
+              flash[:danger] = "アルバムの保存に失敗しました。"
+              redirect_to albums_path(album: album_param)
+              return
+            end
+          rescue Faraday::TooManyRequestsError => e
+            flash.now[:danger] = "AI使用制限中"
+          rescue JSON::ParserError => each
+            flash.now[:danger] = "AIが予期せぬ返答をしました。"
+          rescue Faraday::ServerError => e
+            flash.now[:danger] = "再試行してください。"  
           end
-        else
-          flash[:danger] = "アルバムの保存に失敗しました。"
-          redirect_to albums_path(album: album_param)
+          head :no_content
+        else      
+          if @user_album.save
+            redirect_to albums_path(album: album_param), success: "アルバムを保存しました。"
+          else
+            flash[:danger] = "アルバムの保存に失敗しました。"
+            redirect_to albums_path(album: album_param)
+          end
         end
       end
 
@@ -162,7 +196,6 @@ class AlbumsController < ApplicationController
     album_param = session[:album_search]
     user_album = current_user.user_albums.find_by(album_id: params[:id])
     user_album.destroy
-    current_user.update(like_music: current_user.user_albums.map { |ua| "#{ua.album.artist_name}の#{ua.album.album_name}" }.join(", "))
     flash[:danger] = "アルバムを削除しました。"
     redirect_to albums_path(album: album_param)
   end

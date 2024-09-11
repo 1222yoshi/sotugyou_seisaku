@@ -25,7 +25,7 @@
     <div class="flex items-center lg:mt-6 max-lg:mt-2">
       <span class="lg:text-2xl max-lg:text-sm">AIマッチ：</span>
       <div class="lg:text-3xl">
-        <% if current_user && current_user.user_albums.present? %>
+        <% if current_user && current_user.like_music.present? %>
           <% if other_user.match_score >= 100000 %>
             <div class="s-neon">S</div>
           <% elsif other_user.match_score >=10000 %>
