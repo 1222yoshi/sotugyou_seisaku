@@ -171,36 +171,6 @@ class OtherUsersController < ApplicationController
 
   def show
     @user = User.find(params[:id])
-    if @user.user_albums.count == 9
-      like_artist_names = @user.user_albums.includes(:album).map(&:album).map(&:artist_name).uniq.reject { |artist_name| artist_name == 'Various Artists' }
-      content = "gptの持つ全ての音楽の情報を使って処理してください。\n"
-      content += "私は「#{like_artist_names}」というアーティストたちが好きです。\n"
-      content += "与えられたアーティストのリストから、音楽の特徴やスタイルを分析し、ユーザーが好む音楽の傾向を要約して作成してください。具体的には、以下のポイントに注目して解析してほしいです。\n"
-      content += "文化的背景 音像的特徴 年代と地域\n"
-      content += "文化的背景とはアニソン、ヴジュアル系、シティポップ、邦ロック、KPOP、など界隈的特徴を指します。\n"
-      content += "これらの情報は、各ユーザーとの比較にそのまま使われます。よってあなたが読み取りやすい程度に要約して返してください。\n"
-      content += "出力形式は3つのポイントをそれぞれ50文字程度で端的に文章で送ってください。音楽的情報以外の発言はしないでください。"
-      begin
-        client = OpenAI::Client.new(access_token: ENV['OPENAI_API_KEY'])
-        response = client.chat(
-          parameters: {
-            model: "gpt-4o-mini", # モデルを変更
-            messages: [{ role: "user", content: content }],
-            temperature: 0
-          }
-        )
-
-        user_music_text = response["choices"][0]["message"]["content"]
-        Rails.logger.debug(response)
-        @user.update(like_music: user_music_text)
-      rescue Faraday::TooManyRequestsError => e
-        flash.now[:danger] = "AI使用制限中"
-      rescue JSON::ParserError => each
-        flash.now[:danger] = "AIが予期せぬ返答をしました。"
-      rescue Faraday::ServerError => e
-        flash.now[:danger] = "再試行してください。"  
-      end
-    end      
     if current_user && current_user.like_music.present? && current_user != @user
       other_users = User.where.not(id: current_user.id)
 

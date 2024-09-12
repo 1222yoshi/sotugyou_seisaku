@@ -17,7 +17,7 @@
     <div class="grid grid-cols-3 max-lg:order-2">
       <% @user_albums.each do |user_album| %>
         <div class="flex max-lg:flex-col max-lg:relative">
-          <div class="flex  item-center lg:mb-24  max-lg:flex-col">
+          <div class="flex  item-center lg:mb-12  max-lg:flex-col">
             <%= link_to album_path(user_album.album.itunes_album_id) do %>
               <div class="album w-32 h-32 overflow-hidden flex items-center justify-center max-lg:w-28 max-lg:h-28">
                 <%= image_tag user_album.album.artwork_url, class: "object-cover w-full h-full" %>
@@ -51,6 +51,12 @@
           </svg>
           <p>でシェア</p>
         <% end %>
+      </div>
+      <div class="lg:fixed bottom-2 max-lg:order-3 ai-comment max-lg:mt-4">
+        <div class="neon-text-on-no-link">AIコメント</div>
+        <div class="max-lg:text-sm">
+          <%= raw(current_user.like_music.gsub('。', '。<br>')) %>
+        </div>
       </div>
     <% end %>
   </div>
