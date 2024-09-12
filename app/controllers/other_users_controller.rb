@@ -93,7 +93,7 @@ class OtherUsersController < ApplicationController
         content = "私の音楽性は「#{current_user_likes}」です。\n"
         content += "#{@user_count}人分の、他のユーザーのIDと音楽性を送ります。\n"
         content += "以下のルールに基づいて私とのマッチ度をIDと一緒に返してください。\n"
-        content += "採点基準は相対評価で、音楽性の近いアーティストを評価して採点してください。\n"
+        content += "採点基準は相対評価で、音楽性（評価基準：文化的背景>音像的特徴>年代と地域）の近いアーティストを評価して採点してください。\n"
         content += "得点は1〜#{@user_count}の範囲で均等に分布させます。一番音楽性が遠いユーザーは必ず1点、一番音楽性の近いのユーザーは必ず#{@user_count}点とし、必ず同じ点数のユーザーが存在しないようにしてください。\n"
         content += "他のユーザーの音楽性:\n"
         other_users_likes.each do |user|
@@ -176,9 +176,10 @@ class OtherUsersController < ApplicationController
       content = "gptの持つ全ての音楽の情報を使って処理してください。\n"
       content += "私は「#{like_artist_names}」というアーティストたちが好きです。\n"
       content += "与えられたアーティストのリストから、音楽の特徴やスタイルを分析し、ユーザーが好む音楽の傾向を要約して作成してください。具体的には、以下のポイントに注目して解析してほしいです。\n"
-      content += "1.文化的特徴 2.楽器的特徴 3.年代、地域的特徴 4.コード、リズム的特徴 5.歌詞的特徴\n"
+      content += "文化的背景 音像的特徴 年代と地域\n"
+      content += "文化的背景とはアニソン、ヴジュアル系、シティポップ、邦ロック、KPOP、など界隈的特徴を指します。\n"
       content += "これらの情報は、各ユーザーとの比較にそのまま使われます。よってあなたが読み取りやすい程度に要約して返してください。\n"
-      content += "出力形式は5つのポイントをそれぞれ50文字程度で端的に文章で送ってください。音楽的情報以外の発言はしないでください。"
+      content += "出力形式は3つのポイントをそれぞれ50文字程度で端的に文章で送ってください。音楽的情報以外の発言はしないでください。"
       begin
         client = OpenAI::Client.new(access_token: ENV['OPENAI_API_KEY'])
         response = client.chat(
@@ -289,7 +290,7 @@ class OtherUsersController < ApplicationController
         content = "私の音楽性は「#{current_user_likes}」です。\n"
         content += "#{@user_count}人分の、他のユーザーのIDと音楽性を送ります。\n"
         content += "以下のルールに基づいて私とのマッチ度をIDと一緒に返してください。\n"
-        content += "採点基準は相対評価で、音楽性の近いアーティストを評価して採点してください。\n"
+        content += "採点基準は相対評価で、音楽性（評価基準：文化的背景>音像的特徴>年代と地域）の近いアーティストを評価して採点してください。\n"
         content += "得点は1〜#{@user_count}の範囲で均等に分布させます。一番音楽性が遠いユーザーは必ず1点、一番音楽性の近いのユーザーは必ず#{@user_count}点とし、必ず同じ点数のユーザーが存在しないようにしてください。\n"
         content += "他のユーザーの音楽性:\n"
         other_users_likes.each do |user|
