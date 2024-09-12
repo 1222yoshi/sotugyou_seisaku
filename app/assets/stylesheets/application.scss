@@ -754,3 +754,13 @@ input[type="file"]:focus {
   top: 384px;
   }
 }
+
+.ai-comment {
+  width: 650px;
+}
+
+@media (max-width: 1024px) { /* lgブレークポイント */
+  .ai-comment {
+  width: 336px;
+  }
+}
