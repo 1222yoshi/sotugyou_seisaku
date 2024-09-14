@@ -5876,6 +5876,22 @@
         }
       });
     });
+    document.addEventListener("turbo:visit", () => {
+      const loadElement = document.querySelector(".load");
+      loadElement.style.display = "block";
+    });
+    window.addEventListener("load", () => {
+      const loadElement = document.querySelector(".load");
+      loadElement.style.display = "none";
+    });
+    document.addEventListener("turbo:load", () => {
+      const loadElement = document.querySelector(".load");
+      loadElement.style.display = "none";
+    });
+    const inputFields = document.querySelectorAll(".input-field, .file-field, .select-field");
+    inputFields.forEach((field) => {
+      field.dataset.originalValue = field.value;
+    });
   });
   function startBlinkingForElements() {
     const blinkingElements = document.querySelectorAll(".blinking");
@@ -5924,7 +5940,21 @@
     if (event.target.matches(".input-field, .file-field, .select-field")) {
       const label = event.target.closest("div").querySelector("label");
       if (label) {
-        label.classList.add("neon-text-on-no-link");
+        if (event.target.value !== event.target.dataset.originalValue) {
+          label.classList.add("neon-text-on-no-link");
+        } else {
+          label.classList.remove("neon-text-on-no-link");
+        }
+      }
+    }
+  });
+  document.addEventListener("change", function(event) {
+    if (event.target.matches(".input-field, .file-field, .select-field")) {
+      const label = event.target.closest("div").querySelector("label");
+      if (label) {
+        if (event.target.value === event.target.dataset.originalValue) {
+          label.classList.remove("neon-text-on-no-link");
+        }
       }
     }
   });

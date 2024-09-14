@@ -14,7 +14,7 @@
  *= require_self
  */
 
-.flash {
+.message {
   cursor: pointer;
   background: transparent;
   border: 2px solid transparent;
@@ -28,7 +28,7 @@
 }
 
 @media (max-width: 1024px) { /* lgブレークポイント */
-  .flash {
+  .message {
     width: 350px; /* lgサイズ以下の幅 */
   }
 }
@@ -763,4 +763,16 @@ input[type="file"]:focus {
   .ai-comment {
   width: 336px;
   }
+}
+
+.load {
+  color: #884915;
+  border-color: #127292; 
+  animation: blue-field-glow 1s ease-in-out forwards, blue-field-color-change 1s ease-in-out forwards, orange-text-glow 1s ease-in-out forwards, orange-text-color-change 1s ease-in-out forwards;
+}
+
+.load.off {
+  color: #884915;
+  border-color: #127292; 
+  animation: none;
 }
