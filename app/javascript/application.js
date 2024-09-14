@@ -64,7 +64,6 @@ document.addEventListener('turbo:load', () => {
             button.classList.remove('no-animation'); // hover時にno-animationクラスを削除
         });
     });
-
     // フォームの入力フィールドに関する処理
     const inputs = document.querySelectorAll('.input-field');
     const submitButton = document.getElementById('submit-button');
@@ -112,6 +111,28 @@ document.addEventListener('turbo:load', () => {
           }
         });
       });
+
+      document.addEventListener('turbo:visit', () => {
+        const loadElement = document.querySelector('.load');
+        loadElement.style.display = 'block';
+    });
+    
+    window.addEventListener('load', () => {
+        const loadElement = document.querySelector('.load');
+        loadElement.style.display = 'none'; // 非表示にする
+    });
+    
+    document.addEventListener('turbo:load', () => {
+        const loadElement = document.querySelector('.load');
+        loadElement.style.display = 'none'; // ロード完了時に非表示にする
+    });
+
+      const inputFields = document.querySelectorAll('.input-field, .file-field, .select-field');
+    
+    inputFields.forEach(field => {
+        // 初期値をデータ属性に保存
+        field.dataset.originalValue = field.value;
+    });
 });
 
 // blinkingアニメーションを開始する関数
@@ -176,10 +197,27 @@ function closeMenu(button, menu) {
 
 document.addEventListener('input', function(event) {
     if (event.target.matches('.input-field, .file-field, .select-field')) {
-      const label = event.target.closest('div').querySelector('label');
-      if (label) {
-        label.classList.add('neon-text-on-no-link');
-      }
+        const label = event.target.closest('div').querySelector('label');
+        if (label) {
+            // 現在の値が元の値と異なる場合、クラスを追加
+            if (event.target.value !== event.target.dataset.originalValue) {
+                label.classList.add('neon-text-on-no-link');
+            } else {
+                // 元に戻った場合はクラスを削除
+                label.classList.remove('neon-text-on-no-link');
+            }
+        }
     }
 });
 
+document.addEventListener('change', function(event) {
+    if (event.target.matches('.input-field, .file-field, .select-field')) {
+        const label = event.target.closest('div').querySelector('label');
+        if (label) {
+            // 現在の値が元の値と同じならクラスを削除
+            if (event.target.value === event.target.dataset.originalValue) {
+                label.classList.remove('neon-text-on-no-link');
+            }
+        }
+    }
+});
