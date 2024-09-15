@@ -5876,6 +5876,10 @@
         }
       });
     });
+    const inputFields = document.querySelectorAll(".input-field, .file-field, .select-field");
+    inputFields.forEach((field) => {
+      field.dataset.originalValue = field.value;
+    });
     document.addEventListener("turbo:visit", (event) => {
       const loadElement = document.querySelector(".load");
       const url = new URL(event.detail.url);
@@ -5893,15 +5897,10 @@
       const loadElement = document.querySelector(".load");
       loadElement.style.display = "none";
     });
-    const form = document.querySelector("form");
     const loginButton = document.querySelector(".login");
     loginButton.addEventListener("click", () => {
       const loadElement = document.querySelector(".load");
       loadElement.style.display = "block";
-    });
-    const inputFields = document.querySelectorAll(".input-field, .file-field, .select-field");
-    inputFields.forEach((field) => {
-      field.dataset.originalValue = field.value;
     });
   });
   function startBlinkingForElements() {

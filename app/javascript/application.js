@@ -100,9 +100,9 @@ document.addEventListener('turbo:load', () => {
         } else {
           select.classList.add('selected');
         }
-      });
+    });
 
-      document.querySelectorAll('.select-field, .file-field').forEach(select => {
+    document.querySelectorAll('.select-field, .file-field').forEach(select => {
         select.addEventListener('change', function() {
           if (this.value === '') {
             this.classList.remove('selected');
@@ -110,7 +110,14 @@ document.addEventListener('turbo:load', () => {
             this.classList.add('selected');
           }
         });
-      });
+    });
+
+    const inputFields = document.querySelectorAll('.input-field, .file-field, .select-field');
+    
+    inputFields.forEach(field => {
+          // 初期値をデータ属性に保存
+        field.dataset.originalValue = field.value;
+    });
 
     document.addEventListener('turbo:visit', (event) => {
         const loadElement = document.querySelector('.load');
@@ -133,19 +140,11 @@ document.addEventListener('turbo:load', () => {
         loadElement.style.display = 'none'; // 非表示にする
     });
 
-    const form = document.querySelector('form');
     const loginButton = document.querySelector('.login'); // loginクラスを持つ要素を取得
 
     loginButton.addEventListener('click', () => {
         const loadElement = document.querySelector('.load');
         loadElement.style.display = 'block'; // フォーム送信中に表示
-    });
-
-      const inputFields = document.querySelectorAll('.input-field, .file-field, .select-field');
-    
-    inputFields.forEach(field => {
-        // 初期値をデータ属性に保存
-        field.dataset.originalValue = field.value;
     });
 });
 
