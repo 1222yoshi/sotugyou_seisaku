@@ -5876,22 +5876,28 @@
         }
       });
     });
-    document.addEventListener("turbo:visit", () => {
+    document.addEventListener("turbo:visit", (event) => {
       const loadElement = document.querySelector(".load");
-      loadElement.style.display = "block";
+      const url = new URL(event.detail.url);
+      if (url.pathname === "/") {
+        loadElement.style.display = "block";
+      } else {
+        loadElement.style.display = "none";
+      }
     });
     document.addEventListener("turbo:load", () => {
       const loadElement = document.querySelector(".load");
       loadElement.style.display = "none";
     });
-    const form = document.querySelector("form");
-    form.addEventListener("submit", () => {
-      const loadElement = document.querySelector(".load");
-      loadElement.style.display = "block";
-    });
     window.addEventListener("load", () => {
       const loadElement = document.querySelector(".load");
       loadElement.style.display = "none";
+    });
+    const form = document.querySelector("form");
+    const loginButton = document.querySelector(".login");
+    loginButton.addEventListener("click", () => {
+      const loadElement = document.querySelector(".load");
+      loadElement.style.display = "block";
     });
     const inputFields = document.querySelectorAll(".input-field, .file-field, .select-field");
     inputFields.forEach((field) => {

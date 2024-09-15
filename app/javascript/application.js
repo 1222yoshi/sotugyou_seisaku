@@ -112,9 +112,15 @@ document.addEventListener('turbo:load', () => {
         });
       });
 
-      document.addEventListener('turbo:visit', () => {
+    document.addEventListener('turbo:visit', (event) => {
         const loadElement = document.querySelector('.load');
-        loadElement.style.display = 'block';
+        const url = new URL(event.detail.url); // 遷移先のURLを取得
+
+        if (url.pathname === '/') { // ルート画面かどうかをチェック
+            loadElement.style.display = 'block'; // ルート画面に行くときだけ表示
+        } else {
+            loadElement.style.display = 'none'; // それ以外は非表示
+        }
     });
 
     document.addEventListener('turbo:load', () => {
@@ -122,17 +128,18 @@ document.addEventListener('turbo:load', () => {
         loadElement.style.display = 'none'; // ロード完了時に非表示にする
     });
 
-    const form = document.querySelector('form');
-    form.addEventListener('submit', () => {
-        const loadElement = document.querySelector('.load');
-        loadElement.style.display = 'block'; // フォーム送信中に表示
-    });
-
     window.addEventListener('load', () => {
         const loadElement = document.querySelector('.load');
         loadElement.style.display = 'none'; // 非表示にする
     });
 
+    const form = document.querySelector('form');
+    const loginButton = document.querySelector('.login'); // loginクラスを持つ要素を取得
+
+    loginButton.addEventListener('click', () => {
+        const loadElement = document.querySelector('.load');
+        loadElement.style.display = 'block'; // フォーム送信中に表示
+    });
 
       const inputFields = document.querySelectorAll('.input-field, .file-field, .select-field');
     
