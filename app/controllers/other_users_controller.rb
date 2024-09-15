@@ -19,7 +19,6 @@ class OtherUsersController < ApplicationController
       new_user_created_times = User.maximum(:created_at)      
 
       if last_updated_time.nil? || current_user_updated_time > last_updated_time || (other_user_updated_times.present? && other_user_updated_times) > last_updated_time || (new_user_created_times.present? && new_user_created_times > last_updated_time)
-        @trigger_js_event = true
         like_artist_names = current_user.user_albums.includes(:album).map(&:album).map(&:artist_name).uniq.reject { |artist_name| artist_name == 'Various Artists' }
         like_users = other_users.select do |user|
           user.user_albums.includes(:album).any? { |ua| like_artist_names.include?(ua.album.artist_name) }
@@ -187,7 +186,6 @@ class OtherUsersController < ApplicationController
       new_user_created_times = User.maximum(:created_at)      
 
       if last_updated_time.nil? || current_user_updated_time > last_updated_time || (other_user_updated_times.present? && other_user_updated_times) > last_updated_time || (new_user_created_times.present? && new_user_created_times > last_updated_time)
-        @trigger_js_event = true
         like_artist_names = current_user.user_albums.includes(:album).map(&:album).map(&:artist_name).uniq.reject { |artist_name| artist_name == 'Various Artists' }
         like_users = other_users.select do |user|
           user.user_albums.includes(:album).any? { |ua| like_artist_names.include?(ua.album.artist_name) }
