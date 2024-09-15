@@ -116,16 +116,23 @@ document.addEventListener('turbo:load', () => {
         const loadElement = document.querySelector('.load');
         loadElement.style.display = 'block';
     });
-    
-    window.addEventListener('load', () => {
-        const loadElement = document.querySelector('.load');
-        loadElement.style.display = 'none'; // 非表示にする
-    });
-    
+
     document.addEventListener('turbo:load', () => {
         const loadElement = document.querySelector('.load');
         loadElement.style.display = 'none'; // ロード完了時に非表示にする
     });
+
+    const form = document.querySelector('form');
+    form.addEventListener('submit', () => {
+        const loadElement = document.querySelector('.load');
+        loadElement.style.display = 'block'; // フォーム送信中に表示
+    });
+
+    window.addEventListener('load', () => {
+        const loadElement = document.querySelector('.load');
+        loadElement.style.display = 'none'; // 非表示にする
+    });
+
 
       const inputFields = document.querySelectorAll('.input-field, .file-field, .select-field');
     
@@ -221,3 +228,23 @@ document.addEventListener('change', function(event) {
         }
     }
 });
+
+function toggleClasses() {
+    const loadElements = document.querySelectorAll('.load');
+
+    loadElements.forEach(element => {
+        // 1秒後にoffクラスを追加
+        setTimeout(() => {
+            element.classList.add('off');
+            
+            // さらに1秒後にoffクラスを削除してno-animationクラスを追加
+            setTimeout(() => {
+                element.classList.remove('off');
+                element.classList.add('no-animation');
+            }, 800);
+        }, 800);
+    });
+}
+
+// 繰り返し実行する
+setInterval(toggleClasses, 1600);

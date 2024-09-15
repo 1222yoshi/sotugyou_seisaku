@@ -5880,11 +5880,16 @@
       const loadElement = document.querySelector(".load");
       loadElement.style.display = "block";
     });
-    window.addEventListener("load", () => {
+    document.addEventListener("turbo:load", () => {
       const loadElement = document.querySelector(".load");
       loadElement.style.display = "none";
     });
-    document.addEventListener("turbo:load", () => {
+    const form = document.querySelector("form");
+    form.addEventListener("submit", () => {
+      const loadElement = document.querySelector(".load");
+      loadElement.style.display = "block";
+    });
+    window.addEventListener("load", () => {
       const loadElement = document.querySelector(".load");
       loadElement.style.display = "none";
     });
@@ -5958,6 +5963,19 @@
       }
     }
   });
+  function toggleClasses() {
+    const loadElements = document.querySelectorAll(".load");
+    loadElements.forEach((element) => {
+      setTimeout(() => {
+        element.classList.add("off");
+        setTimeout(() => {
+          element.classList.remove("off");
+          element.classList.add("no-animation");
+        }, 800);
+      }, 800);
+    });
+  }
+  setInterval(toggleClasses, 1600);
 })();
 /*! Bundled license information:
 
