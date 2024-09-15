@@ -768,11 +768,54 @@ input[type="file"]:focus {
 .load {
   color: #884915;
   border-color: #127292; 
-  animation: blue-field-glow 1s ease-in-out forwards, blue-field-color-change 1s ease-in-out forwards, orange-text-glow 1s ease-in-out forwards, orange-text-color-change 1s ease-in-out forwards;
+  animation: blue-field-glow 0.3s ease-in-out forwards, blue-field-color-change 0.3s ease-in-out forwards, orange-text-glow 0.3s ease-in-out forwards, orange-text-color-change 0.3s ease-in-out forwards;
+}
+
+.load.no-animation {
+  animation: none;
+    border-color: #8bd3ff;
+    box-shadow:
+      0 0 2px #02a5dc, 
+      0 0 5px #02a5dc,
+      0 0 7px #02a5dc,
+      0 0 2px #02a5dc inset, 
+      0 0 5px #02a5dc inset,
+      0 0 7px #02a5dc inset;
+
+    text-shadow: 
+      0 0 5px #965a28, 
+     0 0 10px #965a28,
+      0 0 15px #965a28;
+
+    color: #ff9a48;
 }
 
 .load.off {
-  color: #884915;
-  border-color: #127292; 
   animation: none;
+    border-color: #8bd3ff;
+    box-shadow:
+      0 0 2px #02a5dc, 
+      0 0 5px #02a5dc,
+      0 0 7px #02a5dc,
+      0 0 2px #02a5dc inset, 
+      0 0 5px #02a5dc inset,
+      0 0 7px #02a5dc inset;
+
+    color: #884915;
+    text-shadow: none;
+
+}
+
+
+.load-message {
+  cursor: pointer;
+  background: transparent;
+  border: 2px solid transparent;
+  border-radius: 8px;
+  text-align: center;
+  position: fixed; /* 追加 */
+  left: 50%;
+  transform: translateX(-50%);
+  width: 180px;
+  z-index: 1000; 
 }
