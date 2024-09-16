@@ -31,11 +31,20 @@ class OtherUsersController < ApplicationController
 
           like_user_albums.each do |like_user_album|
             next if  like_user_album.album.artist_name == 'Various Artists'
+            album_match = false
             current_user.user_albums.each do |user_album|
               if like_user_album.album.album_name == user_album.album.album_name
                 scores[like_user.id] += 100000
-              elsif like_user_album.album.artist_name == user_album.album.artist_name
-                scores[like_user.id] += 10000
+                album_match = true
+                break
+              end
+            end
+            unless album_match
+              current_user.user_albums.each do |user_album|
+                if like_user_album.album.artist_name == user_album.album.artist_name
+                  scores[like_user.id] += 10000
+                  break
+                end
               end
             end
           end
@@ -94,7 +103,7 @@ class OtherUsersController < ApplicationController
         content += "#{@user_count}人分の、他のユーザーのIDと音楽性を送ります。\n"
         content += "以下のルールに基づいて私とのマッチ度をIDと一緒に返してください。\n"
         content += "採点基準は相対評価で、音楽性（評価基準：文化的背景>音像的特徴>年代と地域）の近いアーティストを評価して採点してください。\n"
-        content += "得点は1〜#{@user_count}の範囲で均等に分布させます。一番音楽性が遠いユーザーは必ず1点、一番音楽性の近いのユーザーは必ず#{@user_count}点とし、必ず同じ点数のユーザーが存在しないようにしてください。\n"
+        content += "得点は1〜#{@user_count}の範囲で、一番音楽性が遠いユーザーは必ず1点、一番音楽性の近いのユーザーは必ず#{@user_count}点とし、必ず連番で並べてください。\n"
         content += "他のユーザーの音楽性:\n"
         other_users_likes.each do |user|
           content += "ユーザーID: #{user[:id]}, 音楽性: #{user[:likes]}\n"
@@ -198,11 +207,20 @@ class OtherUsersController < ApplicationController
 
           like_user_albums.each do |like_user_album|
             next if  like_user_album.album.artist_name == 'Various Artists'
+            album_match = false
             current_user.user_albums.each do |user_album|
               if like_user_album.album.album_name == user_album.album.album_name
                 scores[like_user.id] += 100000
-              elsif like_user_album.album.artist_name == user_album.album.artist_name
-                scores[like_user.id] += 10000
+                album_match = true
+                break
+              end
+            end
+            unless album_match
+              current_user.user_albums.each do |user_album|
+                if like_user_album.album.artist_name == user_album.album.artist_name
+                  scores[like_user.id] += 10000
+                  break
+                end
               end
             end
           end
@@ -261,7 +279,7 @@ class OtherUsersController < ApplicationController
         content += "#{@user_count}人分の、他のユーザーのIDと音楽性を送ります。\n"
         content += "以下のルールに基づいて私とのマッチ度をIDと一緒に返してください。\n"
         content += "採点基準は相対評価で、音楽性（評価基準：文化的背景>音像的特徴>年代と地域）の近いアーティストを評価して採点してください。\n"
-        content += "得点は1〜#{@user_count}の範囲で均等に分布させます。一番音楽性が遠いユーザーは必ず1点、一番音楽性の近いのユーザーは必ず#{@user_count}点とし、必ず同じ点数のユーザーが存在しないようにしてください。\n"
+        content += "得点は1〜#{@user_count}の範囲で、一番音楽性が遠いユーザーは必ず1点、一番音楽性の近いのユーザーは必ず#{@user_count}点とし、必ず連番で並べてください。\n"
         content += "他のユーザーの音楽性:\n"
         other_users_likes.each do |user|
           content += "ユーザーID: #{user[:id]}, 音楽性: #{user[:likes]}\n"
