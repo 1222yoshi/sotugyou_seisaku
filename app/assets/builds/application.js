@@ -5880,6 +5880,42 @@
     inputFields.forEach((field) => {
       field.dataset.originalValue = field.value;
     });
+    document.addEventListener("input", function(event) {
+      if (event.target.matches(".file-field, .select-field")) {
+        const fieldset = event.target.closest("fieldset");
+        const selectFields = fieldset.querySelectorAll(".select-field");
+        const label = fieldset.parentNode.querySelector("label");
+        const originalValues = Array.from(selectFields).map((field) => field.dataset.originalValue);
+        const currentValues = Array.from(selectFields).map((field) => field.value);
+        const allMatch = originalValues.every((val, index) => val === currentValues[index]);
+        const anyMismatch = currentValues.some((val, index) => val !== originalValues[index]);
+        if (label) {
+          if (anyMismatch) {
+            label.classList.add("neon-text-on-no-link");
+          }
+          if (allMatch) {
+            label.classList.remove("neon-text-on-no-link");
+          }
+        }
+      }
+      if (event.target.matches(".input-field")) {
+        const fieldset = event.target.closest("div");
+        const inputFields2 = fieldset.querySelectorAll(".input-field");
+        const label = fieldset.querySelector("label");
+        const originalValues = Array.from(inputFields2).map((field) => field.dataset.originalValue);
+        const currentValues = Array.from(inputFields2).map((field) => field.value);
+        const allMatch = originalValues.every((val, index) => val === currentValues[index]);
+        const anyMismatch = currentValues.some((val, index) => val !== originalValues[index]);
+        if (label) {
+          if (anyMismatch) {
+            label.classList.add("neon-text-on-no-link");
+          }
+          if (allMatch) {
+            label.classList.remove("neon-text-on-no-link");
+          }
+        }
+      }
+    });
     document.addEventListener("turbo:visit", (event) => {
       const loadElement = document.querySelector(".load");
       const url = new URL(event.detail.url);
@@ -5953,16 +5989,6 @@
         if (event.target.value !== event.target.dataset.originalValue) {
           label.classList.add("neon-text-on-no-link");
         } else {
-          label.classList.remove("neon-text-on-no-link");
-        }
-      }
-    }
-  });
-  document.addEventListener("change", function(event) {
-    if (event.target.matches(".input-field, .file-field, .select-field")) {
-      const label = event.target.closest("div").querySelector("label");
-      if (label) {
-        if (event.target.value === event.target.dataset.originalValue) {
           label.classList.remove("neon-text-on-no-link");
         }
       }

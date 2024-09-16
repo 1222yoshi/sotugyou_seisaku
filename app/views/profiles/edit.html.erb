@@ -28,7 +28,7 @@
           <div>
             <%= f.label :"活動エリア", class: "text-2xl neon-logo-off" %>
             <fieldset class="flex mt-2 lg:mb-10 max-lg:mb-8 max-lg:flex-col">
-              <%= select_tag "user[area_ids][]", options_from_collection_for_select(Area.all, 'id', 'name', current_user.area_ids[0] || Area.find_by(name: '東京都')&.id), class: 'input-field w-40 mr-2' %>
+              <%= select_tag "user[area_ids][]", options_from_collection_for_select(Area.all, 'id', 'name', current_user.area_ids[0] || Area.find_by(name: '東京都')&.id), class: 'select-field w-40 mr-2' %>
               <%= select_tag "user[area_ids][]", options_for_select([['なし', '']] + Area.pluck(:name, :id), current_user.area_ids[1]), class: 'select-field w-40 mr-2 max-lg:mt-2' %>
               <%= select_tag "user[area_ids][]", options_for_select([['なし', '']] + Area.pluck(:name, :id), current_user.area_ids[2]), class: 'select-field w-40 max-lg:mt-2'%>
             </fieldset>
@@ -36,7 +36,7 @@
           <div>
             <%= f.label :"演奏楽器", class: "text-2xl neon-logo-off" %>
             <fieldset class="flex mt-2 mb-10 max-lg:mb-8 max-lg:flex-col">
-              <%= select_tag "user[instrument_ids][]", options_from_collection_for_select(Instrument.all, 'id', 'name', current_user.instrument_ids[0] || Instrument.find_by(name: 'リスナー')&.id), class: 'input-field w-40 mr-2 ' %>
+              <%= select_tag "user[instrument_ids][]", options_from_collection_for_select(Instrument.all, 'id', 'name', current_user.instrument_ids[0] || Instrument.find_by(name: 'リスナー')&.id), class: 'select-field w-40 mr-2 ' %>
               <%= select_tag "user[instrument_ids][]", options_for_select([['なし', '']] + Instrument.pluck(:name, :id), current_user.instrument_ids[1]), class: 'select-field w-40 max-lg:mt-2' %>
             </fieldset>
           </div>
