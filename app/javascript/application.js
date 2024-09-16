@@ -119,6 +119,53 @@ document.addEventListener('turbo:load', () => {
         field.dataset.originalValue = field.value;
     });
 
+    document.addEventListener('input', function(event) {
+        if (event.target.matches('.file-field, .select-field')) {
+            const fieldset = event.target.closest('fieldset');
+            const selectFields = fieldset.querySelectorAll('.select-field');
+            const label = fieldset.parentNode.querySelector('label');
+    
+            const originalValues = Array.from(selectFields).map(field => field.dataset.originalValue);
+            const currentValues = Array.from(selectFields).map(field => field.value);
+    
+            const allMatch = originalValues.every((val, index) => val === currentValues[index]);
+            const anyMismatch = currentValues.some((val, index) => val !== originalValues[index]);
+    
+            if (label) {
+                if (anyMismatch) {
+                    // 一致しないフィールドがある場合はクラスを追加
+                    label.classList.add('neon-text-on-no-link');
+                }
+                if (allMatch) {
+                    // 完全に一致したらクラスを削除
+                    label.classList.remove('neon-text-on-no-link');
+                }
+                // 一部の値が一致している場合は何もしない（現状維持）
+            }
+        }
+
+        if (event.target.matches('.input-field')) {
+            const fieldset = event.target.closest('div'); // 特定のクラス名を指定
+            const inputFields = fieldset.querySelectorAll('.input-field');
+            const label = fieldset.querySelector('label'); // ここも同じ親要素から取得
+    
+            const originalValues = Array.from(inputFields).map(field => field.dataset.originalValue);
+            const currentValues = Array.from(inputFields).map(field => field.value);
+    
+            const allMatch = originalValues.every((val, index) => val === currentValues[index]);
+            const anyMismatch = currentValues.some((val, index) => val !== originalValues[index]);
+    
+            if (label) {
+                if (anyMismatch) {
+                    label.classList.add('neon-text-on-no-link');
+                }
+                if (allMatch) {
+                    label.classList.remove('neon-text-on-no-link');
+                }
+            }
+        }
+    });
+
     document.addEventListener('turbo:visit', (event) => {
         const loadElement = document.querySelector('.load');
         const url = new URL(event.detail.url); // 遷移先のURLを取得
@@ -217,18 +264,6 @@ document.addEventListener('input', function(event) {
                 label.classList.add('neon-text-on-no-link');
             } else {
                 // 元に戻った場合はクラスを削除
-                label.classList.remove('neon-text-on-no-link');
-            }
-        }
-    }
-});
-
-document.addEventListener('change', function(event) {
-    if (event.target.matches('.input-field, .file-field, .select-field')) {
-        const label = event.target.closest('div').querySelector('label');
-        if (label) {
-            // 現在の値が元の値と同じならクラスを削除
-            if (event.target.value === event.target.dataset.originalValue) {
                 label.classList.remove('neon-text-on-no-link');
             }
         }
