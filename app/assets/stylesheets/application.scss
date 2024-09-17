@@ -160,6 +160,17 @@ scrollbar {
     border-color: #b2b2b2;
   }
 
+  .box-border {
+    border-top: 2px solid;
+    border-color: #b2b2b2;
+  }
+
+  @media (max-width: 1024px) { /* lgブレークポイント */
+    .box-border {
+      border-top: 1px solid;
+      border-color: #b2b2b2;
+    }
+  }
   .neon-text-on {
     color: #127292;
     animation: blue-glow 0.3s ease-in-out forwards, blue-color-change 0.3s ease-in-out forwards;
@@ -449,14 +460,15 @@ input[type="file"]:focus {
   border-radius: 20px;
 }
 
-.other_user_box-on {
-  border: 2px solid #127292;
-  border-color: #127292;
-  background: transparent;
-  border-radius: 20px;
-  animation: blue-field-color-change 0.3s ease-in-out forwards;
+@media (max-width: 1024px) { /* lgブレークポイント */
+  .other_user_box {
+    border: 1px solid #127292;
+    border-color: #127292;
+    background: transparent;
+    border-radius: 10px;
+  }
+  
 }
-
 .s-neon {
   color: #b2356d;
   animation: s-glow 0.3s ease-in-out forwards, s-color-change 0.3s ease-in-out forwards;
