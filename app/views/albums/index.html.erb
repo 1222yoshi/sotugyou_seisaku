@@ -73,7 +73,7 @@
     <% if @albums.present? %>
       <% @albums.each do |album| %>
         <div class="flex mb-12">
-          <div class="album w-24 h-24 overflow-hidden flex items-center justify-center">
+          <div class="album w-24 h-24 rounded overflow-hidden flex items-center justify-center">
             <%= link_to album_path(album['collectionId']), class: "object-cover w-full h-full" do %>
               <%= image_tag(album['artworkUrl100'], class: "object-cover w-full h-full ") %>
             <% end %>

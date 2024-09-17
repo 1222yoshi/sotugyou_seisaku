@@ -1,4 +1,4 @@
-<div class="flex justify-between lg:p-4 <%= other_user.user_albums.count == 9 ? 'other_user_box-on' : 'other_user_box'%> lg:mb-8 max-lg:mb-4">
+<div class="flex justify-between lg:p-4 <%= other_user.user_albums.count == 9 ? 'border-blue-on' : 'border-blue'%> other_user_box lg:mb-8 max-lg:mb-4">
   <div class="flex flex-col p-2">
     <div class="flex items-center lg:mb-4 max-lg:mb-2">
       <%= link_to other_user_path(other_user) do %>
@@ -46,7 +46,7 @@
         <% end %>
       </div>
     </div>
-    <div class="show-border lg:mt-16 max-lg:mt-2 text-center <%= other_user.user_albums.count == 9 ? 'border-orange-on' : 'border-orange'%>">
+    <div class="box-border lg:mt-16 max-lg:mt-2 text-center <%= other_user.user_albums.count == 9 ? 'border-orange-on' : 'border-orange'%>">
       <div class="lg:p-4 max-lg:p-1">
         <div class="lg:mb-6 lg:text-xl max-lg:text-xs">
         <% other_user.areas.each do |area| %>
@@ -71,7 +71,7 @@
         </div>
       </div>
     </div>
-    <div class="show-border <%= other_user.user_albums.count == 9 ? 'border-orange-on' : 'border-orange'%> lg:w-80 lg:h-64 max-lg:h-16 max-lg:w-40">
+    <div class="box-border <%= other_user.user_albums.count == 9 ? 'border-orange-on' : 'border-orange'%> lg:w-80 lg:h-64 max-lg:h-16 max-lg:w-40">
       <div class="lg:text-xl max-lg:text-xs lg:p-4 max-lg:text-ellipsis max-lg:line-clamp-4">
         <%= other_user.introduction %>
       </div>
