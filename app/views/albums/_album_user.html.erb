@@ -1,4 +1,4 @@
-<div class="flex justify-between lg:p-4 other_user_box lg:mb-8 max-lg:mb-4">
+<div class="flex justify-between lg:p-4 <%= album_user.user_albums.count == 9 ? 'other_user_box-on' : 'other_user_box'%> lg:mb-8 max-lg:mb-4">
   <div class="flex flex-col p-2">
     <div class="flex items-center lg:mb-4 max-lg:mb-2">
       <%= link_to other_user_path(album_user) do %>
@@ -8,7 +8,7 @@
       <% end %>
       <span class="lg:text-2xl max-lg:sm"><%= album_user.name %></span>
     </div>
-    <div class="grid grid-cols-3">
+    <div class="grid grid-cols-3  rounded overflow-hidden">
       <% album_user.user_albums.includes(:album).order(created_at: :asc).each do |user_album| %>
         <%= link_to album_path(user_album.album.itunes_album_id) do %>
           <div class="album w-40 h-40 overflow-hidden flex items-center justify-center max-lg:w-12 max-lg:h-12">
@@ -22,7 +22,7 @@
     </div>
   </div> 
   <div class="flex flex-col p-2">
-    <div class="show-border border-orange lg:mt-32 max-lg:mt-10 text-center">
+    <div class="show-border <%= album_user.user_albums.count == 9 ? 'border-orange-on' : 'border-orange'%> lg:mt-32 max-lg:mt-10 text-center">
       <div class="lg:p-4 max-lg:p-1">
         <div class="lg:mb-6 lg:text-xl max-lg:text-xs">
         <% album_user.areas.each do |area| %>
@@ -47,7 +47,7 @@
         </div>
       </div>
     </div>
-    <div class="show-border border-orange lg:w-80 lg:h-64 max-lg:h-16 max-lg:w-40">
+    <div class="show-border <%= album_user.user_albums.count == 9 ? 'border-orange-on' : 'border-orange'%> lg:w-80 lg:h-64 max-lg:h-16 max-lg:w-40">
       <div class="lg:text-xl max-lg:text-xs lg:p-4 max-lg:text-ellipsis max-lg:line-clamp-4">
         <%= album_user.introduction %>
       </div>

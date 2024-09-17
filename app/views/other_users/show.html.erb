@@ -78,7 +78,7 @@
         <% end %>
       </div>
     </div>
-    <div class="show-border mt-4 text-center border-blue ">
+    <div class="show-border mt-4 text-center <%= @user.user_albums.count == 9 ? 'border-blue-on' : 'border-blue'%>">
       <div class="p-4">
        <div class="mb-6 text-xl">
         <% @user.areas.each do |area| %>
@@ -103,7 +103,7 @@
         </div>
       </div>
     </div>
-    <div class="show-border border-blue lg:w-96">
+    <div class="show-border <%= @user.user_albums.count == 9 ? 'border-blue-on' : 'border-blue'%> lg:w-96">
       <div class="text-xl p-4">
         <%= @user.introduction %>
       </div>
@@ -115,7 +115,7 @@
         <% @user_albums.each do |user_album| %>
           <div class="flex items-center lg:mb-12  max-lg:flex-col">
             <%= link_to album_path(user_album.album.itunes_album_id) do %>
-              <div class="album w-32 h-32 overflow-hidden flex items-center justify-center max-lg:w-28 max-lg:h-28">
+              <div class="album w-32 h-32 rounded overflow-hidden flex items-center justify-center max-lg:w-28 max-lg:h-28">
                 <%= image_tag user_album.album.artwork_url, class: "object-cover w-full h-full" %>
               </div>
             <% end %>

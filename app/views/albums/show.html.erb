@@ -1,7 +1,7 @@
 <h1 class="text-xl neon-text-on-no-link fixed top-7 left-1/2 transform -translate-x-1/2 z-10 max-lg:text-sm max-lg:top-12 truncate"><%= @album['collectionName'] %></h1>
 <div class="max-lg:flex max-lg:h-scrern max-lg:flex-col justify-center lg:p-4 max-lg:mt-4">
   <div class="flex justify-center lg:fixed p-2">
-    <div class="album w-32 h-32 overflow-hidden flex items-center justify-center">
+    <div class="album w-32 h-32 rounded overflow-hidden flex items-center justify-center">
       <%= image_tag @album['artworkUrl100'] , class: "object-cover w-full h-full"%>
     </div>
     <div class="w-48 flex flex-col justify-center relative">
