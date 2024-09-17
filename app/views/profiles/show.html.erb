@@ -58,7 +58,7 @@
         <%= current_user.custom_link&.split('/')&.first || '' %>
       <% end %>
     </div>
-    <div class="show-border mt-4 text-center border-blue">
+    <div class="show-border mt-4 text-center <%= current_user.user_albums.count == 9 ? 'border-blue-on' : 'border-blue'%>">
       <div class="p-4">
         <div class="mb-6 text-xl">
         <% current_user.areas.each do |area| %>
@@ -83,7 +83,7 @@
         </div>
       </div>
     </div>
-    <div class="show-border border-blue">
+    <div class="show-border <%= current_user.user_albums.count == 9 ? 'border-blue-on' : 'border-blue'%>">
       <div class="text-xl p-4">
         <%= current_user.introduction %>
       </div>
@@ -92,7 +92,7 @@
   <div class="flex  justify-center lg:p-2 lg:flex-col  max-lg:pb-4">
     <%= link_to albums_path do %>
       <% if @user_albums.present? %>
-        <div class="grid grid-cols-3">
+        <div class="grid grid-cols-3 rounded overflow-hidden">
           <% @user_albums.each do |user_album| %>
             <div class="album w-40 h-40 overflow-hidden flex items-center justify-center max-lg:w-28 max-lg:h-28">
               <%= image_tag user_album.album.artwork_url, class: "object-cover w-full h-full" %>

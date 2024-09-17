@@ -116,7 +116,7 @@ scrollbar {
 
   @keyframes orange-glow {
     0% {
-      border-bottom-shadow: none;
+      border-shadow: none;
     }
     100% {
       box-shadow: 
@@ -131,10 +131,10 @@ scrollbar {
 
   @keyframes orange-color-change {
     0% {
-      border-bottom-color: #884915;
+      border-color: #884915;
     }
     100% {
-      border-bottom-color: #ff9a48;
+      border-color: #ff9a48;
     }
   }
   
@@ -449,6 +449,14 @@ input[type="file"]:focus {
   border-radius: 20px;
 }
 
+.other_user_box-on {
+  border: 2px solid #127292;
+  border-color: #127292;
+  background: transparent;
+  border-radius: 20px;
+  animation: blue-field-color-change 0.3s ease-in-out forwards;
+}
+
 .s-neon {
   color: #b2356d;
   animation: s-glow 0.3s ease-in-out forwards, s-color-change 0.3s ease-in-out forwards;
@@ -611,8 +619,19 @@ input[type="file"]:focus {
   border-color: #127292;
 }
 
+.border-blue-on {
+  border-color: #127292;
+  animation: blue-field-color-change 0.3s ease-in-out forwards;
+}
+
+
 .border-orange {
   border-color: #884915;
+}
+
+.border-orange-on {
+  border-color: #884915;
+  animation: orange-color-change 0.3s ease-in-out forwards;
 }
 
 .no-album-neon {

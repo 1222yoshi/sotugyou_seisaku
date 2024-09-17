@@ -19,7 +19,7 @@
         <div class="flex max-lg:flex-col max-lg:relative">
           <div class="flex  item-center lg:mb-12  max-lg:flex-col">
             <%= link_to album_path(user_album.album.itunes_album_id) do %>
-              <div class="album w-32 h-32 overflow-hidden flex items-center justify-center max-lg:w-28 max-lg:h-28">
+              <div class="album w-32 h-32 rounded overflow-hidden flex items-center justify-center max-lg:w-28 max-lg:h-28">
                 <%= image_tag user_album.album.artwork_url, class: "object-cover w-full h-full" %>
               </div>
             <% end %>
