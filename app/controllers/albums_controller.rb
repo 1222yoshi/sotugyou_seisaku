@@ -27,6 +27,8 @@ class AlbumsController < ApplicationController
       @album = ITunesSearchAPI.lookup(id: params[:id], media: 'music', entity: 'album', country: 'jp')
     rescue SocketError => e
       flash.now[:danger] = "再試行してください。"
+    rescue JSON::ParserError => e
+      flash.now[:danger] = "再試行してください。"
     end
 
     if current_user
