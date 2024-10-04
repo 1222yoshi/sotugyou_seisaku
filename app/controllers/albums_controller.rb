@@ -71,7 +71,8 @@ class AlbumsController < ApplicationController
         flash[:danger] = "同じアルバムは追加できません。"
         redirect_to albums_path(album: album_param)
       else
-        @user_album = current_user.user_albums.new(album: album_record)
+        order_number = current_user.user_albums.count + 1
+        @user_album = current_user.user_albums.new(album: album_record, order_number: order_number)
         if current_user.user_albums.count == 8 
           like_artist_names = current_user.user_albums.includes(:album).map(&:album).map(&:artist_name).uniq.reject { |artist_name| artist_name == 'Various Artists' }
           content = "gptの持つ全ての音楽の情報を使って処理してください。\n"
@@ -198,8 +199,12 @@ class AlbumsController < ApplicationController
   def destroy
     album_param = session[:album_search]
     user_album = current_user.user_albums.find_by(album_id: params[:id])
+    order_number = user_album.order_number
     user_album.destroy
     flash[:danger] = "アルバムを削除しました。"
+    current_user.user_albums.where('order_number > ?', order_number).find_each do |album|
+      album.update(order_number: album.order_number - 1)
+    end
     current_user.update(like_music: nil)
     redirect_to albums_path(album: album_param)
   end
