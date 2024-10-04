@@ -338,8 +338,5 @@ class OtherUsersController < ApplicationController
                     image:  "https://#{ENV['AWS_BUCKET_NAME']}.s3.us-east-1.amazonaws.com/album_grid_#{@user.id}_#{current_time}.png"
                   }
     @user_albums = @user.user_albums.includes(:album).order(created_at: :asc)
-    @user_albums.each_with_index do |user_album, index|
-      user_album.update(order_number: index + 1)
-    end
   end
 end
