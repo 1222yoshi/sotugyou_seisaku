@@ -10,6 +10,11 @@ Rails.application.routes.draw do
       get 'choose'
       get 'share'
     end
+    collection do
+      get 'sort'
+      post 'select'
+      post 'swap'
+    end
   end
   resources :other_users, only: %i[index show]
 end

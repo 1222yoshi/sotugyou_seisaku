@@ -28,7 +28,7 @@ class ProfilesController < ApplicationController
   end
 
   def show
-    @user_albums = current_user.user_albums.includes(:album).order(created_at: :asc)
+    @user_albums = current_user.user_albums.includes(:album).order(order_number: :asc)
   end
 
   private
