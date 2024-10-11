@@ -1,0 +1,36 @@
+<h1 class="text-xl neon-text-on-no-link fixed top-7 left-1/2 transform -translate-x-1/2 z-10 max-lg:text-sm max-lg:top-12">並び替え</h1>
+<div class="flex justify-center h-screen relative lg:p-4 ">
+<% if @user_albums.present? && current_user %>
+  <div class="flex max-lg:flex-col  p-2 lg:mt-6 max-lg:mt-16">
+    <div class="grid grid-cols-3">
+      <% @user_albums.each do |user_album| %>
+        <div class="flex max-lg:flex-col max-lg:relative">
+          <div class="flex  item-center mb-12 lg:ml-6 lg:mr-6 max-lg:flex-col">
+            <% if @selected_album_id.nil? || @selected_album_id.empty? %>
+              <%= button_to select_albums_path(album_id: user_album.album_id), method: :post do %>
+                <div class="album w-40 h-40 rounded overflow-hidden flex items-center justify-center max-lg:w-28 max-lg:h-28">
+                  <%= image_tag user_album.album.artwork_url, class: "object-cover w-full h-full" %>
+                </div>
+              <% end %>
+            <% else %>
+              <%= button_to  swap_albums_path(first_album_id: @selected_album_id, second_album_id: user_album.album_id), method: :post do %>
+                <div class="<%= @selected_album_id.to_i == user_album.album_id ? 'login-button' : '' %> album w-40 h-40 rounded overflow-hidden flex items-center justify-center max-lg:w-28 max-lg:h-28">
+                  <%= image_tag user_album.album.artwork_url, class: "object-cover w-full h-full" %>
+                </div>
+              <% end %>
+            <% end %>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  </div>
+<% end %>
+<div class="absolute lg:bottom-24 lg:right-80 max-lg:bottom-28 max-lg:right-4">
+  <%= link_to albums_path, class: "delete-icon" do %>
+    <svg width="20" viewBox="0 0 45 45" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+      <path d="M43.4318 40.3807C43.6321 40.581 43.791 40.8189 43.8994 41.0806C44.0079 41.3424 44.0637 41.6229 44.0637 41.9062C44.0637 42.1896 44.0079 42.4701 43.8994 42.7319C43.791 42.9936 43.6321 43.2315 43.4318 43.4318C43.2314 43.6321 42.9936 43.791 42.7318 43.8995C42.4701 44.0079 42.1895 44.0637 41.9062 44.0637C41.6229 44.0637 41.3424 44.0079 41.0806 43.8995C40.8189 43.791 40.581 43.6321 40.3807 43.4318L22.5 25.5484L4.61927 43.4318C4.21467 43.8364 3.66592 44.0637 3.09373 44.0637C2.52154 44.0637 1.97278 43.8364 1.56818 43.4318C1.16358 43.0272 0.936279 42.4784 0.936279 41.9062C0.936279 41.3341 1.16358 40.7853 1.56818 40.3807L19.4516 22.5L1.56818 4.61929C1.16358 4.21469 0.936279 3.66593 0.936279 3.09374C0.936279 2.52155 1.16358 1.9728 1.56818 1.5682C1.97278 1.1636 2.52154 0.936295 3.09373 0.936295C3.66592 0.936295 4.21467 1.1636 4.61927 1.5682L22.5 19.4516L40.3807 1.5682C40.7853 1.1636 41.334 0.936295 41.9062 0.936295C42.4784 0.936295 43.0272 1.1636 43.4318 1.5682C43.8364 1.9728 44.0637 2.52155 44.0637 3.09374C44.0637 3.66593 43.8364 4.21469 43.4318 4.61929L25.5484 22.5L43.4318 40.3807Z"/>
+    </svg>
+  <% end %>
+</div>
+</div>
+

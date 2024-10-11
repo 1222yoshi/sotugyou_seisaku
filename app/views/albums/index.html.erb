@@ -5,7 +5,7 @@
   </svg>
 </div>
 <% if params[:album].present? %>
-  <%= link_to albums_path, class: "fixed delete-icon neon-text-off right-6 lg:invisible z-20 element-to-hide", style: "top: 92px;" do %>
+  <%= link_to albums_path, class: "fixed delete-icon right-6 lg:invisible z-20 element-to-hide", style: "top: 92px;" do %>
     <svg width="20" viewBox="0 0 45 45" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
       <path d="M43.4318 40.3807C43.6321 40.581 43.791 40.8189 43.8994 41.0806C44.0079 41.3424 44.0637 41.6229 44.0637 41.9062C44.0637 42.1896 44.0079 42.4701 43.8994 42.7319C43.791 42.9936 43.6321 43.2315 43.4318 43.4318C43.2314 43.6321 42.9936 43.791 42.7318 43.8995C42.4701 44.0079 42.1895 44.0637 41.9062 44.0637C41.6229 44.0637 41.3424 44.0079 41.0806 43.8995C40.8189 43.791 40.581 43.6321 40.3807 43.4318L22.5 25.5484L4.61927 43.4318C4.21467 43.8364 3.66592 44.0637 3.09373 44.0637C2.52154 44.0637 1.97278 43.8364 1.56818 43.4318C1.16358 43.0272 0.936279 42.4784 0.936279 41.9062C0.936279 41.3341 1.16358 40.7853 1.56818 40.3807L19.4516 22.5L1.56818 4.61929C1.16358 4.21469 0.936279 3.66593 0.936279 3.09374C0.936279 2.52155 1.16358 1.9728 1.56818 1.5682C1.97278 1.1636 2.52154 0.936295 3.09373 0.936295C3.66592 0.936295 4.21467 1.1636 4.61927 1.5682L22.5 19.4516L40.3807 1.5682C40.7853 1.1636 41.334 0.936295 41.9062 0.936295C42.4784 0.936295 43.0272 1.1636 43.4318 1.5682C43.8364 1.9728 44.0637 2.52155 44.0637 3.09374C44.0637 3.66593 43.8364 4.21469 43.4318 4.61929L25.5484 22.5L43.4318 40.3807Z"/>
     </svg>
@@ -52,13 +52,16 @@
           <p>でシェア</p>
         <% end %>
       </div>
-      <div class="lg:fixed bottom-2 max-lg:order-3 ai-comment max-lg:mt-4">
+      <div class="lg:fixed bottom-2 max-lg:order-4 ai-comment">
         <div class="neon-text-on-no-link">AIコメント</div>
-        <div class="max-lg:text-sm">
+        <div class="max-lg:text-sm max-lg:mb-2">
           <%= raw(current_user.like_music.gsub('。', '。<br>')) %>
         </div>
       </div>
     <% end %>
+    <div class="sort-icon max-lg:order-3 max-lg:mt-4 max-lg:justify-end max-lg:flex lg:fixed bottom-28 left-2/3">
+      <%= link_to "並び替え", sort_albums_path %>
+    </div>
   </div>
 <% elsif params[:album].present? %>
   <h1 class="neon-text-on-no-link text-2xl p-2 mt-4 fixed right-1/2 max-lg:invisible">好きな音楽を見つけて＃私を構成する９枚を作る  →</h1>

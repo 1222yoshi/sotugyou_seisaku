@@ -337,6 +337,6 @@ class OtherUsersController < ApplicationController
                     url: "https://metronote.jp/other_users/#{@user.id}?time=#{current_time}",
                     image:  "https://#{ENV['AWS_BUCKET_NAME']}.s3.us-east-1.amazonaws.com/album_grid_#{@user.id}_#{current_time}.png"
                   }
-    @user_albums = @user.user_albums.includes(:album).order(created_at: :asc)
+    @user_albums = @user.user_albums.includes(:album).order(order_number: :asc)
   end
 end

@@ -547,6 +547,15 @@ input[type="file"]:focus {
   }
 }
 
+.sort-icon {
+  color: #1f8360;
+}
+
+.sort-icon:hover {
+  color: #1f8360;
+  animation: c-glow 0.3s ease-in-out forwards, c-color-change 0.3s ease-in-out forwards;
+}
+
 .c-neon {
   color: #1f8360;
   animation: c-glow 0.3s ease-in-out forwards, c-color-change 0.3s ease-in-out forwards;

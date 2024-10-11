@@ -2,7 +2,7 @@ class AlbumsController < ApplicationController
   skip_before_action :require_login, only: %i[index show]
   def index
     if current_user
-      @user_albums = current_user.user_albums.includes(:album).order(created_at: :asc)
+      @user_albums = current_user.user_albums.includes(:album).order(order_number: :asc)
     end
 
     if params[:artist].present? || params[:album].present? || params[:track].present?
@@ -22,6 +22,29 @@ class AlbumsController < ApplicationController
     session[:album_search] = params[:album]
   end
   
+  def sort
+    @user_albums = current_user.user_albums.includes(:album).order(order_number: :asc)
+    @selected_album_id = session[:selected_album_id]
+  end
+
+  def select
+    session[:selected_album_id] = params[:album_id]
+    redirect_to sort_albums_path
+  end
+
+  def swap
+    first_album = UserAlbum.find_by(user_id: current_user.id, album_id: params[:first_album_id])
+    second_album = UserAlbum.find_by(user_id: current_user.id, album_id: params[:second_album_id])
+
+    before_first = first_album.order_number
+    first_album.update(order_number: second_album.order_number)
+    second_album.update(order_number: before_first)
+    
+    session[:selected_album_id] = []
+    @selected_album_id = nil
+    redirect_to sort_albums_path
+  end
+
   def show
     begin
       @album = ITunesSearchAPI.lookup(id: params[:id], media: 'music', entity: 'album', country: 'jp')
@@ -128,7 +151,7 @@ class AlbumsController < ApplicationController
   end
 
   def share
-    @user_albums = current_user.user_albums.includes(:album).order(created_at: :asc).limit(9)
+    @user_albums = current_user.user_albums.includes(:album).order(order_number: :asc).limit(9)
   
     current_time = Time.now.strftime("%Y%m%d%H%M%S")
 
