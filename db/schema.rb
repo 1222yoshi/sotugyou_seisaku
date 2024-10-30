@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_10_04_093327) do
+ActiveRecord::Schema[7.1].define(version: 2024_10_17_103155) do
   create_table "albums", force: :cascade do |t|
     t.string "artist_name"
     t.string "album_name"
@@ -31,6 +31,15 @@ ActiveRecord::Schema[7.1].define(version: 2024_10_04_093327) do
     t.string "name", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+  end
+
+  create_table "likes", force: :cascade do |t|
+    t.integer "like_user_id", null: false
+    t.integer "liked_user_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["like_user_id"], name: "index_likes_on_like_user_id"
+    t.index ["liked_user_id"], name: "index_likes_on_liked_user_id"
   end
 
   create_table "matches", force: :cascade do |t|
@@ -92,6 +101,8 @@ ActiveRecord::Schema[7.1].define(version: 2024_10_04_093327) do
     t.index ["email"], name: "index_users_on_email", unique: true
   end
 
+  add_foreign_key "likes", "users", column: "like_user_id"
+  add_foreign_key "likes", "users", column: "liked_user_id"
   add_foreign_key "matches", "users"
   add_foreign_key "matches", "users", column: "other_user_id"
   add_foreign_key "user_albums", "albums"

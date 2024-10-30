@@ -24,10 +24,12 @@ document.addEventListener('turbo:load', () => {
     }
 
     // メニューボタンに関する処理
-    document.querySelectorAll('.menu-button, .search-button').forEach(button => {
+    document.querySelectorAll('.menu-button, .search-button, .likes-button').forEach(button => {
         const menu = button.classList.contains('menu-button') ? 
             document.querySelector('.home-menu') : 
-            document.querySelector('.search-menu'); // ボタンに応じたメニューを取得
+            button.classList.contains('search-button') ?
+            document.querySelector('.search-menu') :
+            document.querySelector('.likes-menu');
 
         button.addEventListener('click', (e) => {
             e.preventDefault(); // デフォルトのリンク動作を無効
@@ -289,3 +291,4 @@ function toggleClasses() {
 
 // 繰り返し実行する
 setInterval(toggleClasses, 1600);
+import "./channels"
