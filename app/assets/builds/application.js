@@ -5807,8 +5807,8 @@
         }, 1);
       }
     }
-    document.querySelectorAll(".menu-button, .search-button").forEach((button) => {
-      const menu = button.classList.contains("menu-button") ? document.querySelector(".home-menu") : document.querySelector(".search-menu");
+    document.querySelectorAll(".menu-button, .search-button, .likes-button").forEach((button) => {
+      const menu = button.classList.contains("menu-button") ? document.querySelector(".home-menu") : button.classList.contains("search-button") ? document.querySelector(".search-menu") : document.querySelector(".likes-menu");
       button.addEventListener("click", (e) => {
         e.preventDefault();
         toggleMenu(button, menu);

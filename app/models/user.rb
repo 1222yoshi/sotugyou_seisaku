@@ -17,6 +17,8 @@ class User < ApplicationRecord
   has_many :albums, through: :user_albums
   has_many :matches
   has_many :other_users, through: :matches, source: :other_user
+  has_many :likes, foreign_key: :like_user_id
+  has_many :liked_users, through: :likes, source: :liked_user
   
   def age
     if birthdate.present?

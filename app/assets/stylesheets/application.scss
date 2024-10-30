@@ -286,8 +286,27 @@ scrollbar {
     text-align: center;
     right: 50%; /* 左端を画面の中央に設定 */
     transform: translateX(50%);
-    
+  }
+}
 
+.likes-menu {
+  position: absolute;
+  top: 103%;
+  right: 0;
+  background-color: #050505;
+  padding: 8px;
+  text-align: center;
+}
+
+@media (max-width: 1024px) { /* lgブレークポイント */
+.likes-menu {
+  position: absolute;
+  top: 103%;
+  width: 120%;
+  background-color: #050505;
+  text-align: center;
+  right: 50%; /* 左端を画面の中央に設定 */
+  transform: translateX(50%);
 }
 }
 .search-menu {
@@ -468,6 +487,28 @@ input[type="file"]:focus {
     border-radius: 10px;
   }
   
+}
+
+.like-neon {
+  color: #b2356d;
+}
+
+.like-neon:hover {
+  color: #ff6eaf
+}
+
+.liked-neon {
+  color: #ff8ec1;
+  filter: drop-shadow(0 0 5px #ff6eaf);
+}
+
+.match-text-neon {
+  color: #b2356d;
+}
+
+.match-text-neon:hover {
+  color: #b2356d;
+  animation: s-glow 0.3s ease-in-out forwards, s-color-change 0.3s ease-in-out forwards;
 }
 .s-neon {
   color: #b2356d;
@@ -697,6 +738,13 @@ input[type="file"]:focus {
   animation: blue-field-glow 0.3s ease-in-out forwards, blue-field-color-change 0.3s ease-in-out forwards, orange-text-glow 0.3s ease-in-out forwards, orange-text-color-change 0.3s ease-in-out forwards;
 }
 
+@media (max-width: 1024px) { /* lgブレークポイント */
+  .login-button {
+    border: 1px solid #127292;
+    border-radius: 6px;
+  }
+}
+
 .login-button:hover {
   animation: none;
     border-color: #8bd3ff;
@@ -858,4 +906,10 @@ input[type="file"]:focus {
   transform: translateX(-50%);
   width: 200px;
   z-index: 1000; 
+}
+
+@media (max-width: 1024px) { /* lgブレークポイント */
+  .load-message {
+    border: 1px solid #127292;
+  }
 }

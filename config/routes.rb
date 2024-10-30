@@ -17,4 +17,12 @@ Rails.application.routes.draw do
     end
   end
   resources :other_users, only: %i[index show]
+  resources :likes, only: %i[create] do
+    collection do
+      get 'like_user'
+      get 'liked_user'
+      get 'match_user'
+    end
+  end
+  mount ActionCable.server => '/cable'
 end
