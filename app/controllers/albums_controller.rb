@@ -8,8 +8,8 @@ class AlbumsController < ApplicationController
     if params[:artist].present? || params[:album].present? || params[:track].present?
       search_term = "#{params[:artist]} #{params[:album]} #{params[:track]}"
       begin
-        albums = ITunesSearchAPI.search(term: search_term, media: 'music', entity: 'album', country: 'jp')
-        tracks = ITunesSearchAPI.search(term: search_term, media: 'music', entity: 'musicTrack', country: 'jp')
+        albums = Album.search_albums(search_term)
+        tracks = Album.search_tracks(search_term)
         @albums = (albums + tracks).select { |result| result['collectionId'].present? }.uniq { |result| result['collectionId'] }
       rescue JSON::ParserError => e
         @albums = []
@@ -47,7 +47,7 @@ class AlbumsController < ApplicationController
 
   def show
     begin
-      @album = ITunesSearchAPI.lookup(id: params[:id], media: 'music', entity: 'album', country: 'jp')
+      @album = Album.lookup(params[:id])
     rescue SocketError => e
       flash.now[:danger] = "再試行してください。"
     rescue JSON::ParserError => e
@@ -76,7 +76,7 @@ class AlbumsController < ApplicationController
 
   def choose
     begin
-      album_details = ITunesSearchAPI.lookup(id: params[:id], media: 'music', entity: 'album', country: 'jp')
+      album_details = Album.lookup(params[:id])
   
       album_record = Album.find_or_create_by(
         artist_name: album_details['artistName'],
