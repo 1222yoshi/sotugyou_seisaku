@@ -312,6 +312,16 @@ scrollbar {
 .search-menu {
   visibility : visible;
 }
+
+input:-webkit-autofill{
+	box-shadow: 0 0 0px 1000px #050505 inset;
+    -webkit-text-fill-color: #b2b2b2 !important;
+}
+
+input:-webkit-autofill:focus {
+  -webkit-text-fill-color: #050505 !important;
+}
+
 .input-field {
   border: 2px solid #127292;
   background: transparent;
@@ -319,8 +329,17 @@ scrollbar {
   border-radius: 10px;
 }
 
+@media (max-width: 1024px) {
+  .input-field {
+    border: 1px solid #127292;
+    background: transparent;
+    outline: none;
+    border-radius: 10px;
+  }
+}
+
 .input-field:hover {
-  border: 2px solid #02a5dc;
+  border-color: #02a5dc;
   background: transparent;
   outline: none;
   border-radius: 10px;
@@ -329,7 +348,7 @@ scrollbar {
 .input-field:focus {
 
   background-color: #050505;
-  border: 2px solid #127292;
+  border-color: #127292;
   outline: none;
   animation: blue-field-glow 0.3s ease-in-out forwards, blue-field-color-change 0.3s ease-in-out forwards;
 }
@@ -359,7 +378,7 @@ scrollbar {
 }
 
 .input-field:not(:placeholder-shown) {
-  border: 2px solid #8bd3ff;
+  border-color: #8bd3ff;
   outline: none;
 }
 
@@ -408,8 +427,17 @@ input[type="file"]:focus {
   border-radius: 10px;
 }
 
+@media (max-width: 1024px) {
+  .select-field {
+    border: 1px solid #127292;
+    background: transparent;
+    outline: none;
+    border-radius: 10px;
+  }
+}
+
 .select-field:hover {
-  border: 2px solid #02a5dc;
+  border-color: #02a5dc;
   background: transparent;
   outline: none;
   border-radius: 10px;
@@ -418,13 +446,13 @@ input[type="file"]:focus {
 .select-field:focus {
 
   background-color: #050505;
-  border: 2px solid #127292;
+  border-color: #127292;
   outline: none;
   animation: blue-field-glow 0.3s ease-in-out forwards, blue-field-color-change 0.3s ease-in-out forwards;
 }
 
 .select-field.selected {
-  border: 2px solid #8bd3ff;
+  border-color: #8bd3ff;
   outline: none;
 }
 
@@ -432,6 +460,7 @@ input[type="file"]:focus {
   color: #127292;
   border-bottom: 2px solid #884915;
   padding-bottom: 2px;
+  border-radius: 0px;
 }
 
 .profile-submit:hover {

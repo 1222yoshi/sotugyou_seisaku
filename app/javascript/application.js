@@ -124,25 +124,27 @@ document.addEventListener('turbo:load', () => {
     document.addEventListener('input', function(event) {
         if (event.target.matches('.file-field, .select-field')) {
             const fieldset = event.target.closest('fieldset');
-            const selectFields = fieldset.querySelectorAll('.select-field');
-            const label = fieldset.parentNode.querySelector('label');
+            if (fieldset) {
+                const selectFields = fieldset.querySelectorAll('.select-field');
+                const label = fieldset.parentNode.querySelector('label');
     
-            const originalValues = Array.from(selectFields).map(field => field.dataset.originalValue);
-            const currentValues = Array.from(selectFields).map(field => field.value);
+                const originalValues = Array.from(selectFields).map(field => field.dataset.originalValue);
+                const currentValues = Array.from(selectFields).map(field => field.value);
     
-            const allMatch = originalValues.every((val, index) => val === currentValues[index]);
-            const anyMismatch = currentValues.some((val, index) => val !== originalValues[index]);
+                const allMatch = originalValues.every((val, index) => val === currentValues[index]);
+                const anyMismatch = currentValues.some((val, index) => val !== originalValues[index]);
     
-            if (label) {
-                if (anyMismatch) {
-                    // 一致しないフィールドがある場合はクラスを追加
-                    label.classList.add('neon-text-on-no-link');
+                if (label) {
+                    if (anyMismatch) {
+                        // 一致しないフィールドがある場合はクラスを追加
+                        label.classList.add('neon-text-on-no-link');
+                    }
+                    if (allMatch) {
+                        // 完全に一致したらクラスを削除
+                        label.classList.remove('neon-text-on-no-link');
+                    }
+                    // 一部の値が一致している場合は何もしない（現状維持）
                 }
-                if (allMatch) {
-                    // 完全に一致したらクラスを削除
-                    label.classList.remove('neon-text-on-no-link');
-                }
-                // 一部の値が一致している場合は何もしない（現状維持）
             }
         }
 
@@ -190,11 +192,12 @@ document.addEventListener('turbo:load', () => {
     });
 
     const loginButton = document.querySelector('.login'); // loginクラスを持つ要素を取得
-
-    loginButton.addEventListener('click', () => {
-        const loadElement = document.querySelector('.load');
-        loadElement.style.display = 'block'; // フォーム送信中に表示
-    });
+    if (loginButton) {
+        loginButton.addEventListener('click', () => {
+            const loadElement = document.querySelector('.load');
+            loadElement.style.display = 'block'; // フォーム送信中に表示
+        });
+    }
 });
 
 // blinkingアニメーションを開始する関数
@@ -241,17 +244,29 @@ function toggleMenu(button, menu) {
     const elementToHide = document.querySelector('.element-to-hide');
     if (menu.style.display === 'block') {
         closeMenu(button, menu); // メニューを非表示にする処理
-        elementToHide.classList.remove('hidden'); 
+        if (elementToHide) {
+            elementToHide.classList.remove('hidden'); 
+        }
     } else {
         menu.style.display = 'block'; // メニューを表示
         button.classList.remove('neon-text-off');
         button.classList.add('neon-icon-on'); // クラスを変更
-        elementToHide.classList.add('hidden'); 
+        if (elementToHide) {
+            setTimeout(() => {
+                elementToHide.classList.add('hidden'); 
+            }, 1);
+        }
     }
 }
 
 // メニューを閉じる処理を行う関数
 function closeMenu(button, menu) {
+    if (menu.style.display === 'block') {
+        const elementToHide = document.querySelector('.element-to-hide');
+        if (elementToHide) {
+            elementToHide.classList.remove('hidden'); 
+        }
+    }
     menu.style.display = 'none'; // メニューを非表示
     button.classList.remove('neon-icon-on'); // クラスをリセット
     button.classList.add('neon-text-off'); // クラスを戻す

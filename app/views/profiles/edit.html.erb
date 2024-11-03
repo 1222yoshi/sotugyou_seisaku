@@ -8,7 +8,6 @@
         <div class="w-20 h-20 rounded-full overflow-hidden flex items-center justify-center max-lg:w-16 max-lg:h-16 lg:mt-4 max-lg:mt-2 mb-4 order-1">
           <%= image_tag current_user.profile_image_url, class: "object-cover w-full h-full"%> 
         </div>
-        <%= f.hidden_field :profile_image_cache %>
       </div>
       <div class="mb-8">
         <%= f.label :name, "名前", class: "neon-logo-off text-2xl flex" %>

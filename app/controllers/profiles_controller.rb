@@ -51,6 +51,6 @@ class ProfilesController < ApplicationController
   end
 
   def user_params
-    params.require(:user).permit(:name, :birthdate, :gender, :purpose, :introduction, :profile_image, :profile_image_cache, :x_link, :instagram_link, :youtube_link, :custom_link, area_ids: [], instrument_ids: [])
+    params.require(:user).permit(:name, :birthdate, :gender, :purpose, :introduction, :profile_image, :x_link, :instagram_link, :youtube_link, :custom_link, area_ids: [], instrument_ids: [])
   end
 end
