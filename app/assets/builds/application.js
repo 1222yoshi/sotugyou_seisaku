@@ -5883,18 +5883,20 @@
     document.addEventListener("input", function(event) {
       if (event.target.matches(".file-field, .select-field")) {
         const fieldset = event.target.closest("fieldset");
-        const selectFields = fieldset.querySelectorAll(".select-field");
-        const label = fieldset.parentNode.querySelector("label");
-        const originalValues = Array.from(selectFields).map((field) => field.dataset.originalValue);
-        const currentValues = Array.from(selectFields).map((field) => field.value);
-        const allMatch = originalValues.every((val, index) => val === currentValues[index]);
-        const anyMismatch = currentValues.some((val, index) => val !== originalValues[index]);
-        if (label) {
-          if (anyMismatch) {
-            label.classList.add("neon-text-on-no-link");
-          }
-          if (allMatch) {
-            label.classList.remove("neon-text-on-no-link");
+        if (fieldset) {
+          const selectFields = fieldset.querySelectorAll(".select-field");
+          const label = fieldset.parentNode.querySelector("label");
+          const originalValues = Array.from(selectFields).map((field) => field.dataset.originalValue);
+          const currentValues = Array.from(selectFields).map((field) => field.value);
+          const allMatch = originalValues.every((val, index) => val === currentValues[index]);
+          const anyMismatch = currentValues.some((val, index) => val !== originalValues[index]);
+          if (label) {
+            if (anyMismatch) {
+              label.classList.add("neon-text-on-no-link");
+            }
+            if (allMatch) {
+              label.classList.remove("neon-text-on-no-link");
+            }
           }
         }
       }
@@ -5934,10 +5936,12 @@
       loadElement.style.display = "none";
     });
     const loginButton = document.querySelector(".login");
-    loginButton.addEventListener("click", () => {
-      const loadElement = document.querySelector(".load");
-      loadElement.style.display = "block";
-    });
+    if (loginButton) {
+      loginButton.addEventListener("click", () => {
+        const loadElement = document.querySelector(".load");
+        loadElement.style.display = "block";
+      });
+    }
   });
   function startBlinkingForElements() {
     const blinkingElements = document.querySelectorAll(".blinking");
@@ -5969,15 +5973,27 @@
     const elementToHide = document.querySelector(".element-to-hide");
     if (menu.style.display === "block") {
       closeMenu(button, menu);
-      elementToHide.classList.remove("hidden");
+      if (elementToHide) {
+        elementToHide.classList.remove("hidden");
+      }
     } else {
       menu.style.display = "block";
       button.classList.remove("neon-text-off");
       button.classList.add("neon-icon-on");
-      elementToHide.classList.add("hidden");
+      if (elementToHide) {
+        setTimeout(() => {
+          elementToHide.classList.add("hidden");
+        }, 1);
+      }
     }
   }
   function closeMenu(button, menu) {
+    if (menu.style.display === "block") {
+      const elementToHide = document.querySelector(".element-to-hide");
+      if (elementToHide) {
+        elementToHide.classList.remove("hidden");
+      }
+    }
     menu.style.display = "none";
     button.classList.remove("neon-icon-on");
     button.classList.add("neon-text-off");

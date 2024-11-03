@@ -5,12 +5,15 @@ class AlbumsController < ApplicationController
       @user_albums = current_user.user_albums.includes(:album).order(order_number: :asc)
     end
 
-    if params[:artist].present? || params[:album].present? || params[:track].present?
-      search_term = "#{params[:artist]} #{params[:album]} #{params[:track]}"
+    if params[:album].present?
       begin
-        albums = Album.search_albums(search_term)
-        tracks = Album.search_tracks(search_term)
-        @albums = (albums + tracks).select { |result| result['collectionId'].present? }.uniq { |result| result['collectionId'] }
+        albums = Album.search_albums(params[:album]) || []
+        tracks = Album.search_tracks(params[:album]) || []
+        if (albums + tracks).empty?
+          @albums = []
+        else
+          @albums = (albums + tracks).select { |result| result['collectionId'].present? }.uniq { |result| result['collectionId'] }
+        end
       rescue JSON::ParserError => e
         @albums = []
         flash.now[:danger] = "再試行してください。"
