@@ -1,6 +1,7 @@
 class ApplicationController < ActionController::Base
   before_action :require_login
   before_action :prepare_meta_tags, if: -> { request.get? }
+  before_action :likes_color
 
   add_flash_types :success, :danger
   
@@ -31,5 +32,25 @@ class ApplicationController < ActionController::Base
     options.reverse_merge!(defaults)
 
     set_meta_tags options
+  end
+
+  def likes_color
+    @likes_color = likes_user_icon
+  end
+
+  def likes_user_icon
+    if current_user
+      unread_notifications = Notification.where(is_read: false, user_id: current_user.id)
+      return 'neon-text-off' if unread_notifications.empty? 
+  
+      source_user_ids = unread_notifications.map(&:source_user_id).uniq
+  
+      source_user_ids.each do |source_user_id|
+        if Like.exists?(like_user_id: current_user.id, liked_user_id: source_user_id)
+          return 's-neon'
+        end
+      end
+      'neon-logo-on'
+    end
   end
 end
