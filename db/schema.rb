@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_10_17_103155) do
+ActiveRecord::Schema[7.1].define(version: 2024_11_06_053848) do
   create_table "albums", force: :cascade do |t|
     t.string "artist_name"
     t.string "album_name"
@@ -51,6 +51,17 @@ ActiveRecord::Schema[7.1].define(version: 2024_10_17_103155) do
     t.index ["other_user_id"], name: "index_matches_on_other_user_id"
     t.index ["user_id", "other_user_id"], name: "index_matches_on_user_id_and_other_user_id", unique: true
     t.index ["user_id"], name: "index_matches_on_user_id"
+  end
+
+  create_table "notifications", force: :cascade do |t|
+    t.integer "user_id", null: false
+    t.integer "source_user_id", null: false
+    t.string "notification_type"
+    t.boolean "is_read", default: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["source_user_id"], name: "index_notifications_on_source_user_id"
+    t.index ["user_id"], name: "index_notifications_on_user_id"
   end
 
   create_table "user_albums", force: :cascade do |t|
@@ -105,6 +116,8 @@ ActiveRecord::Schema[7.1].define(version: 2024_10_17_103155) do
   add_foreign_key "likes", "users", column: "liked_user_id"
   add_foreign_key "matches", "users"
   add_foreign_key "matches", "users", column: "other_user_id"
+  add_foreign_key "notifications", "users"
+  add_foreign_key "notifications", "users", column: "source_user_id"
   add_foreign_key "user_albums", "albums"
   add_foreign_key "user_albums", "users"
   add_foreign_key "user_areas", "areas"

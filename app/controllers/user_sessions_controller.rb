@@ -7,6 +7,7 @@ class UserSessionsController < ApplicationController
     @user = login(params[:email], params[:password])
 
     if @user
+      cookies.signed[:user_id] = @user.id
       redirect_to root_path, success: 'ログインしました'
     else
       flash[:danger] = 'ログインに失敗しました'
@@ -15,6 +16,7 @@ class UserSessionsController < ApplicationController
   end
 
   def destroy
+    cookies.signed[:user_id] = nil
     logout
     redirect_to root_path, status: :see_other, success: 'ログアウトしました'
   end

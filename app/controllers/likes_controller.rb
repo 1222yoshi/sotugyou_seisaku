@@ -5,8 +5,15 @@ class LikesController < ApplicationController
     unless like.nil?
       like.destroy
       @action = 'destroy'
+      notification = Notification.find_by(user_id: params[:liked_user_id], source_user_id: current_user.id)
+      if notification && !notification.is_read
+        notification.destroy
+      end
     else
-      like = Like.create(like_user_id: current_user.id, liked_user_id: params[:liked_user_id])
+      Like.create(like_user_id: current_user.id, liked_user_id: params[:liked_user_id])
+      unless Notification.exists?(user_id: params[:liked_user_id], source_user_id: current_user.id)
+        Notification.create(user_id: params[:liked_user_id], source_user_id: current_user.id, notification_type: "like")
+      end
       @action = 'create'
     end
 
@@ -46,6 +53,7 @@ class LikesController < ApplicationController
   end
 
   def liked_user
+    Notification.where(user_id: current_user.id).update_all(is_read: true)
     @liked_user_ids = Like.where(liked_user_id: current_user.id).pluck(:like_user_id)
     @q = User.where(id: @liked_user_ids).ransack(params[:q])
     if current_user.like_music.present?
@@ -76,6 +84,7 @@ class LikesController < ApplicationController
   end
 
   def match_user
+    Notification.where(user_id: current_user.id).update_all(is_read: true)
     like_user_ids = Like.where(like_user_id: current_user.id).pluck(:liked_user_id)
     liked_user_ids = Like.where(liked_user_id: current_user.id).pluck(:like_user_id)
     @match_user_ids = like_user_ids & liked_user_ids
