@@ -58,18 +58,18 @@
       <div class="flex">
         <span class="text-2xl">AIマッチ：</span>
         <div class="text-3xl">
-          <% if current_user && current_user.like_music.present? && @user.match_score.present? %>
-            <% if @chatroom.other_user(current_user).match_score >= 100000 %>
+          <% if current_user.like_music.present? && @match&.score.present? %>
+            <% if @match.score >= 100000 %>
               <div class="s-neon">S</div>
-            <% elsif @chatroom.other_user(current_user).match_score >=10000 %>
+            <% elsif  @match.score >=10000 %>
               <div class="a-neon">A</div>
-            <% elsif @chatroom.other_user(current_user).match_score >=1000 %>
+            <% elsif@match.score >=1000 %>
               <div class="b-neon">B</div>
-            <% elsif @chatroom.other_user(current_user).match_score >=@user_count / 3 * 2 + 1 %>
+            <% elsif @match.score >=@user_count / 3 * 2 + 1 %>
               <div class="c-neon">C</div>
-            <% elsif @chatroom.other_user(current_user).match_score >=@user_count / 3 + 1 %>
+            <% elsif @match.score >=@user_count / 3 + 1 %>
               <div class="d-neon">D</div>
-            <% elsif @chatroom.other_user(current_user).match_score >=1 %>
+            <% elsif @match.score >=1 %>
               E
             <% else %>
               ？

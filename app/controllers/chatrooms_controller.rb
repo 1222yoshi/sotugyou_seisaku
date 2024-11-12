@@ -25,6 +25,7 @@ class ChatroomsController < ApplicationController
     unless @chatroom.user_1_id == current_user.id || @chatroom.user_2_id == current_user.id
       redirect_to root_path
     end
+    @match = Match.find_by(user_id: current_user.id, other_user_id: @chatroom.other_user(current_user).id)
     Notification.where(user_id: current_user.id, source_user_id: @chatroom.other_user(current_user).id, notification_type: "message").update_all(is_read: true)
     @messages = @chatroom.messages.includes(:user)
     @message = Message.new
