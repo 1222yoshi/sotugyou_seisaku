@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_11_06_053848) do
+ActiveRecord::Schema[7.1].define(version: 2024_11_10_034430) do
   create_table "albums", force: :cascade do |t|
     t.string "artist_name"
     t.string "album_name"
@@ -25,6 +25,15 @@ ActiveRecord::Schema[7.1].define(version: 2024_11_06_053848) do
     t.string "region"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+  end
+
+  create_table "chatrooms", force: :cascade do |t|
+    t.integer "user_1_id", null: false
+    t.integer "user_2_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_1_id"], name: "index_chatrooms_on_user_1_id"
+    t.index ["user_2_id"], name: "index_chatrooms_on_user_2_id"
   end
 
   create_table "instruments", force: :cascade do |t|
@@ -51,6 +60,16 @@ ActiveRecord::Schema[7.1].define(version: 2024_11_06_053848) do
     t.index ["other_user_id"], name: "index_matches_on_other_user_id"
     t.index ["user_id", "other_user_id"], name: "index_matches_on_user_id_and_other_user_id", unique: true
     t.index ["user_id"], name: "index_matches_on_user_id"
+  end
+
+  create_table "messages", force: :cascade do |t|
+    t.integer "user_id", null: false
+    t.integer "chatroom_id", null: false
+    t.text "body"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["chatroom_id"], name: "index_messages_on_chatroom_id"
+    t.index ["user_id"], name: "index_messages_on_user_id"
   end
 
   create_table "notifications", force: :cascade do |t|
@@ -112,10 +131,14 @@ ActiveRecord::Schema[7.1].define(version: 2024_11_06_053848) do
     t.index ["email"], name: "index_users_on_email", unique: true
   end
 
+  add_foreign_key "chatrooms", "users", column: "user_1_id"
+  add_foreign_key "chatrooms", "users", column: "user_2_id"
   add_foreign_key "likes", "users", column: "like_user_id"
   add_foreign_key "likes", "users", column: "liked_user_id"
   add_foreign_key "matches", "users"
   add_foreign_key "matches", "users", column: "other_user_id"
+  add_foreign_key "messages", "chatrooms"
+  add_foreign_key "messages", "users"
   add_foreign_key "notifications", "users"
   add_foreign_key "notifications", "users", column: "source_user_id"
   add_foreign_key "user_albums", "albums"

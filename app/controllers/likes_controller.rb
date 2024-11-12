@@ -53,7 +53,7 @@ class LikesController < ApplicationController
   end
 
   def liked_user
-    Notification.where(user_id: current_user.id).update_all(is_read: true)
+    Notification.where(user_id: current_user.id, notification_type: "like").update_all(is_read: true)
     @liked_user_ids = Like.where(liked_user_id: current_user.id).pluck(:like_user_id)
     @q = User.where(id: @liked_user_ids).ransack(params[:q])
     if current_user.like_music.present?
@@ -84,7 +84,7 @@ class LikesController < ApplicationController
   end
 
   def match_user
-    Notification.where(user_id: current_user.id).update_all(is_read: true)
+    Notification.where(user_id: current_user.id, notification_type: "like").update_all(is_read: true)
     like_user_ids = Like.where(like_user_id: current_user.id).pluck(:liked_user_id)
     liked_user_ids = Like.where(liked_user_id: current_user.id).pluck(:like_user_id)
     @match_user_ids = like_user_ids & liked_user_ids

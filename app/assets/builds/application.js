@@ -6293,6 +6293,39 @@
         document.querySelector(".likes-button").classList.add("s-neon");
       } else if (action == "new") {
         document.querySelector(".likes-button").classList.add("neon-logo-on");
+      } else if (action == "message") {
+        document.querySelector(".chat-button").classList.add("neon-logo-on");
+      }
+    }
+  });
+
+  // app/javascript/channels/message_channel.js
+  consumer_default.subscriptions.create("MessageChannel", {
+    connected() {
+    },
+    disconnected() {
+    },
+    received(data) {
+      const messagesContainer = document.getElementById("messages");
+      const currentChatroomId = parseInt(messagesContainer.getAttribute("data-chatroom-id"), 10);
+      if (data.message.chatroom_id === currentChatroomId) {
+        const newMessage = document.createElement("div");
+        newMessage.classList.add("mb-2");
+        newMessage.innerHTML = `
+        <div class="flex justify-${data.message.user_id === currentUserId ? "end" : "start"} items-start">
+          ${data.message.user_id !== currentUserId ? `
+            <a href="/other_users/${data.other_user_id}">
+              <div class="rounded-full lg:h-12 lg:w-12 lg:mr-4 max-lg:mr-1 overflow-hidden flex items-center justify-center w-8 h-8">
+                <img src="/assets/${data.other_user_img}" alt="User Profile" class="object-cover w-full h-full" />
+              </div>
+            </a>
+          ` : ""}
+          <div class="message_box lg:p-2 max-lg:pr-2 max-lg:pl-2 lg:text-xl w-2/3 break-words ${data.message.user_id === currentUserId ? "border-blue-on" : ""}">
+            ${data.message.body}
+          </div>
+        </div>
+      `;
+        messagesContainer.appendChild(newMessage);
       }
     }
   });
@@ -6448,6 +6481,12 @@
         loadElement.style.display = "block";
       });
     }
+    document.getElementById("submit-button").addEventListener("click", function() {
+      const inputField = document.querySelector(".input-field");
+      setTimeout(() => {
+        inputField.value = "";
+      }, 1);
+    });
   });
   function startBlinkingForElements() {
     const blinkingElements = document.querySelectorAll(".blinking");

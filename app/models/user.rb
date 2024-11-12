@@ -19,6 +19,9 @@ class User < ApplicationRecord
   has_many :other_users, through: :matches, source: :other_user
   has_many :likes, foreign_key: :like_user_id
   has_many :liked_users, through: :likes, source: :liked_user
+  has_many :chatrooms_as_user_1, class_name: 'Chatroom', foreign_key: 'user_1_id'
+  has_many :chatrooms_as_user_2, class_name: 'Chatroom', foreign_key: 'user_2_id'
+  has_many :messages
   
   def age
     if birthdate.present?

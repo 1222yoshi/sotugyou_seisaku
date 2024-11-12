@@ -502,20 +502,23 @@ input[type="file"]:focus {
 }
 
 .other_user_box {
-  border: 2px solid #127292;
-  border-color: #127292;
+  border: 2px solid;
   background: transparent;
   border-radius: 20px;
 }
 
 @media (max-width: 1024px) { /* lgブレークポイント */
   .other_user_box {
-    border: 1px solid #127292;
-    border-color: #127292;
+    border: 1px solid;
     background: transparent;
     border-radius: 10px;
   }
-  
+}
+
+.message_box {
+  border: 1px solid;
+  background: transparent;
+  border-radius: 10px;
 }
 
 .like-neon {

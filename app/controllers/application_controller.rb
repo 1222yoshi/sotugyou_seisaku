@@ -1,7 +1,7 @@
 class ApplicationController < ActionController::Base
   before_action :require_login
   before_action :prepare_meta_tags, if: -> { request.get? }
-  before_action :likes_color
+  before_action :header_color
 
   add_flash_types :success, :danger
   
@@ -34,13 +34,14 @@ class ApplicationController < ActionController::Base
     set_meta_tags options
   end
 
-  def likes_color
+  def header_color
     @likes_color = likes_user_icon
+    @chatroom_color = chatroom_icon
   end
 
   def likes_user_icon
     if current_user
-      unread_notifications = Notification.where(is_read: false, user_id: current_user.id)
+      unread_notifications = Notification.where(is_read: false, user_id: current_user.id, notification_type: "like")
       return 'neon-text-off' if unread_notifications.empty? 
   
       source_user_ids = unread_notifications.map(&:source_user_id).uniq
@@ -51,6 +52,16 @@ class ApplicationController < ActionController::Base
         end
       end
       'neon-logo-on'
+    end
+  end
+
+  def chatroom_icon
+    if current_user
+      if Notification.exists?(is_read: false, user_id: current_user.id, notification_type: "message")
+        'neon-logo-on'
+      else
+        'neon-text-off'
+      end
     end
   end
 end
