@@ -198,6 +198,13 @@ document.addEventListener('turbo:load', () => {
             loadElement.style.display = 'block'; // フォーム送信中に表示
         });
     }
+
+    document.getElementById("submit-button").addEventListener("click", function() {
+        const inputField = document.querySelector(".input-field");
+        setTimeout(() => {
+        inputField.value = ""; // 入力欄を空にする
+        }, 1);
+    });
 });
 
 // blinkingアニメーションを開始する関数

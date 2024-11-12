@@ -24,5 +24,8 @@ Rails.application.routes.draw do
       get 'match_user'
     end
   end
+  resources :chatrooms, only: %i[index show create] do
+    post :post_message, on: :member
+  end
   mount ActionCable.server => '/cable'
 end

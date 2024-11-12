@@ -15,6 +15,8 @@ consumer.subscriptions.create("NotificationChannel", {
       document.querySelector('.likes-button').classList.add('s-neon');
     } else if (action == 'new') {
       document.querySelector('.likes-button').classList.add('neon-logo-on');
+    } else if (action == 'message') {
+      document.querySelector('.chat-button').classList.add('neon-logo-on');
     }
   }
 });
