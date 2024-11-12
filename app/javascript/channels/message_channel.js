@@ -19,7 +19,7 @@ consumer.subscriptions.create("MessageChannel", {
       newMessage.innerHTML = `
         <div class="flex justify-${data.message.user_id === currentUserId ? 'end' : 'start'} items-start">
           ${data.message.user_id !== currentUserId ? `
-            <a href="/other_users/${data.other_user_id}">
+            <a href="${data.other_user_img === 'me-4414548e6f4cf95a9be7fb8c2b780005f376419ca47bf32f6d6a185a7d472db6.png' ? '/assets/' + data.other_user_img : data.other_user_img}">
               <div class="rounded-full lg:h-12 lg:w-12 lg:mr-4 max-lg:mr-1 overflow-hidden flex items-center justify-center w-8 h-8">
                 <img src="/assets/${data.other_user_img}" alt="User Profile" class="object-cover w-full h-full" />
               </div>
