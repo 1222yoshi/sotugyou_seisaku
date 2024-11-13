@@ -1,0 +1,17 @@
+<div class="flex flex-col items-center h-screen">
+  <% unless @quiz.image_path.nil? %>
+    <div class="w-full h-60 overflow-hidden flex justify-center mt-4">
+      <%= image_tag @quiz.image_path, class: "object-cover h-full"%> 
+    </div>
+  <% end %>
+  <div class="mt-4 flex justify-center lg:text-xl">
+    <%= @quiz.question %>
+  </div>
+  <div class="mt-12 grid grid-cols-2 lg:w-3/4 max-lg:w-full">
+    <% @choices.each do |choice| %>
+      <div class="lg:text-xl m-4 mt-8 other_user_box items-center text-center pt-2 pb-2 neon-icon-on">
+        <%= button_to choice.content, quizzes_path(id: @quiz.id, correct: choice.correct), class: "w-full h-full", method: :post %>
+      </div>
+    <% end %>
+  </div>
+</div>

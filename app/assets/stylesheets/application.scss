@@ -888,6 +888,7 @@ input[type="file"]:focus {
 .load {
   color: #884915;
   border-color: #127292; 
+  background: transparent;
   animation: blue-field-glow 0.3s ease-in-out forwards, blue-field-color-change 0.3s ease-in-out forwards, orange-text-glow 0.3s ease-in-out forwards, orange-text-color-change 0.3s ease-in-out forwards;
 }
 
@@ -908,6 +909,7 @@ input[type="file"]:focus {
       0 0 15px #965a28;
 
     color: #ff9a48;
+    background: transparent;
 }
 
 .load.off {
@@ -923,7 +925,7 @@ input[type="file"]:focus {
 
     color: #884915;
     text-shadow: none;
-
+    background: transparent;
 }
 
 
@@ -943,5 +945,29 @@ input[type="file"]:focus {
 @media (max-width: 1024px) { /* lgブレークポイント */
   .load-message {
     border: 1px solid #127292;
+  }
+}
+
+.sort-text-off {
+  color: #127292;
+  padding-bottom: 2px;
+  border-radius: 0px;
+}
+
+.sort-text-off:hover {
+  animation: blue-glow 0.3s ease-in-out forwards, blue-color-change 0.3s ease-in-out forwards;
+}
+
+.sort-text-on {
+  color: #127292;
+  border-bottom: 2px solid #884915;
+  padding-bottom: 2px;
+  border-radius: 0px;
+  animation: blue-glow 0.3s ease-in-out forwards, blue-color-change 0.3s ease-in-out forwards, orange-glow 0.3s ease-in-out forwards, orange-color-change 0.3s ease-in-out forwards;
+}
+
+@media (max-width: 1024px) { /* lgブレークポイント */
+  .sort-text-on {
+    border-bottom: 1px solid #884915;
   }
 }

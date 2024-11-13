@@ -1,0 +1,23 @@
+<h1 class="text-xl neon-text-on-no-link fixed top-7 left-1/2 transform -translate-x-1/2 z-10 max-lg:text-sm max-lg:top-12 truncate">クイズ結果</h1>
+<div class="max-lg:flex max-lg:h-scrern max-lg:flex-col justify-center lg:p-4 max-lg:mt-4">
+  <div class="lg:fixed p-4 max-lg:flex max-lg:flex-col max-lg:text-center">
+    <div class="text-3xl m-12">
+      <%= @result %>
+    </div>
+    <div class="text-3xl m-12">
+      あなたのランク：<a class="<%= @rank_class %>-neon"><%= @user_rank %></a>
+    </div>
+  </div>
+</div>
+<% if @quiz_users.present? %>
+  <div class="neon-text-on-no-link lg:text-2xl lg:left-1/2 lg:fixed text-sm flex justify-center">このクイズランク以上のユーザー</div>
+<% else %>
+  <div class="neon-text-on-no-link lg:text-2xl lg:left-1/2 lg:fixed text-sm flex justify-center">このクイズランク以上のユーザーはいません。</div>
+<% end %>
+<div class="flex lg:flex-row-reverse lg:p-4 max-lg:justify-center">
+  <div class="flex flex-col p-2 mt-6 max-lg:mt-2 lg:mr-6">
+    <% if @quiz_users.present? %>
+      <%= render partial: 'quiz_user', collection: @quiz_users %>
+    <% end %>
+  </div>
+</div>

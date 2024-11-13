@@ -16,7 +16,11 @@ Rails.application.routes.draw do
       post 'swap'
     end
   end
-  resources :other_users, only: %i[index show]
+  resources :other_users, only: %i[index show] do
+    collection do
+      get 'quiz_result'
+    end
+  end
   resources :likes, only: %i[create] do
     collection do
       get 'like_user'
@@ -26,6 +30,15 @@ Rails.application.routes.draw do
   end
   resources :chatrooms, only: %i[index show create] do
     post :post_message, on: :member
+  end
+  resources :quizzes, only: %i[index show create] do
+    collection do
+      get 'music_theory'
+      get 'rhythm'
+    end
+    member do
+      get 'result'
+    end
   end
   mount ActionCable.server => '/cable'
 end

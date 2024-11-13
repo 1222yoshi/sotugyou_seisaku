@@ -58,6 +58,44 @@
         <%= current_user.custom_link&.split('/')&.first || '' %>
       <% end %>
     </div>
+    <div class="flex flex-col">
+        <div class="flex">
+          <span class="text-2xl">理論テスト：</span>
+          <div class="text-3xl">
+            <% if current_user.results.where(quiz_type: "music_theory", clear: true).maximum(:rank_score) == 5%>
+              <div class="s-neon">S</div>
+            <% elsif current_user.results.where(quiz_type: "music_theory", clear: true).maximum(:rank_score) == 4 %>
+              <div class="a-neon">A</div>
+            <% elsif current_user.results.where(quiz_type: "music_theory", clear: true).maximum(:rank_score) == 3 %>
+              <div class="b-neon">B</div>
+            <% elsif current_user.results.where(quiz_type: "music_theory", clear: true).maximum(:rank_score) == 2 %>
+              <div class="c-neon">C</div>
+            <% elsif current_user.results.where(quiz_type: "music_theory", clear: true).maximum(:rank_score) == 1 %>
+              <div class="d-neon">D</div>
+            <% else %>
+              E
+            <% end %>
+          </div>
+        </div>
+        <div class="flex">
+          <span class="text-2xl">リズムテスト：</span>
+          <div class="text-3xl">
+            <% if current_user.results.where(quiz_type: "rhythm", clear: true).maximum(:rank_score) == 5%>
+              <div class="s-neon">S</div>
+            <% elsif current_user.results.where(quiz_type: "rhythm", clear: true).maximum(:rank_score) == 4 %>
+              <div class="a-neon">A</div>
+            <% elsif current_user.results.where(quiz_type: "rhythm", clear: true).maximum(:rank_score) == 3 %>
+              <div class="b-neon">B</div>
+            <% elsif current_user.results.where(quiz_type: "rhythm", clear: true).maximum(:rank_score) == 2 %>
+              <div class="c-neon">C</div>
+            <% elsif current_user.results.where(quiz_type: "rhythm", clear: true).maximum(:rank_score) == 1 %>
+              <div class="d-neon">D</div>
+            <% else %>
+              E
+            <% end %>
+          </div>
+        </div>
+      </div>
     <div class="show-border mt-4 text-center <%= current_user.user_albums.count == 9 ? 'border-blue-on' : 'border-blue'%>">
       <div class="p-4">
         <div class="mb-6 text-xl">

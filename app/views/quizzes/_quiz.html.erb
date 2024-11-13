@@ -1,0 +1,17 @@
+<% if current_user.user_quizzes.pluck(:quiz_id).include?(quiz.id) %>
+  <div class="other_user_box mb-4 mt-4 lg:w-1/3 max-lg:w-5/6 border-blue">
+    <div class="text-2xl max-lg:text-xl text-center">
+      <div class="lg:p-8 max-lg:p-4 w-full h-full">
+        No.<%= quiz.id %> <a class="<%= quiz.rank_class %>-neon"><%= quiz.rank_letter %></a>ランク問題
+      </div>
+    </div>
+  </div>
+<% else %>
+  <div class="other_user_box mb-4 mt-4 lg:w-1/3 max-lg:w-5/6 border-blue-on">
+    <div class="text-2xl max-lg:text-xl text-center">
+      <%= button_to quiz_path(quiz), class: "lg:p-8 max-lg:p-4 w-full h-full", method: :get do %>
+        No.<%= quiz.id %> <a class="<%= quiz.rank_class %>-neon"><%= quiz.rank_letter %></a>ランク問題
+      <% end %>
+    </div>
+  </div>
+<% end %>

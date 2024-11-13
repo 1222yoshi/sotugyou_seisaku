@@ -55,28 +55,66 @@
       <% end %>
     </div>
     <div class="flex justify-between">
-      <div class="flex">
-        <span class="text-2xl">AIマッチ：</span>
-        <div class="text-3xl">
-          <% if current_user && current_user.like_music.present? && @user.match_score.present? %>
-            <% if @user.match_score >= 100000 %>
-              <div class="s-neon">S</div>
-            <% elsif @user.match_score >=10000 %>
-              <div class="a-neon">A</div>
-            <% elsif @user.match_score >=1000 %>
-              <div class="b-neon">B</div>
-            <% elsif @user.match_score >=@user_count / 3 * 2 + 1 %>
-              <div class="c-neon">C</div>
-            <% elsif @user.match_score >=@user_count / 3 + 1 %>
-              <div class="d-neon">D</div>
-            <% elsif @user.match_score >=1 %>
-              E
+      <div class="flex flex-col">
+        <div class="flex">
+          <span class="text-2xl">AIマッチ：</span>
+          <div class="text-3xl">
+            <% if current_user && current_user.like_music.present? && @user.match_score.present? %>
+              <% if @user.match_score >= 100000 %>
+                <div class="s-neon">S</div>
+              <% elsif @user.match_score >=10000 %>
+                <div class="a-neon">A</div>
+              <% elsif @user.match_score >=1000 %>
+                <div class="b-neon">B</div>
+              <% elsif @user.match_score >=@user_count / 3 * 2 + 1 %>
+                <div class="c-neon">C</div>
+              <% elsif @user.match_score >=@user_count / 3 + 1 %>
+                <div class="d-neon">D</div>
+              <% elsif @user.match_score >=1 %>
+                E
+              <% else %>
+                ？
+              <% end %>
             <% else %>
               ？
             <% end %>
-          <% else %>
-            ？
-          <% end %>
+          </div>
+        </div>
+        <div class="flex">
+          <span class="text-2xl">理論テスト：</span>
+          <div class="text-3xl">
+            <% if @user.results.where(quiz_type: "music_theory", clear: true).maximum(:rank_score) == 5%>
+              <div class="s-neon">S</div>
+            <% elsif @user.results.where(quiz_type: "music_theory", clear: true).maximum(:rank_score) == 4 %>
+              <div class="a-neon">A</div>
+            <% elsif @user.results.where(quiz_type: "music_theory", clear: true).maximum(:rank_score) == 3 %>
+              <div class="b-neon">B</div>
+            <% elsif @user.results.where(quiz_type: "music_theory", clear: true).maximum(:rank_score) == 2 %>
+              <div class="c-neon">C</div>
+            <% elsif @user.results.where(quiz_type: "music_theory", clear: true).maximum(:rank_score) == 1 %>
+              <div class="d-neon">D</div>
+            <% else %>
+              E
+            <% end %>
+          </div>
+        </div>
+        <div class="flex">
+          <span class="text-2xl">リズムテスト：</span>
+          <div class="text-3xl">
+            <% if @user.results.where(quiz_type: "rhythm", clear: true).maximum(:rank_score) == 5%>
+              <div class="s-neon">S</div>
+            <% elsif @user.results.where(quiz_type: "rhythm", clear: true).maximum(:rank_score) == 4 %>
+              <div class="a-neon">A</div>
+            <% elsif @user.results.where(quiz_type: "rhythm", clear: true).maximum(:rank_score) == 3 %>
+              <div class="b-neon">B</div>
+            <% elsif @user.results.where(quiz_type: "rhythm", clear: true).maximum(:rank_score) == 2 %>
+              <div class="c-neon">C</div>
+            <% elsif @user.results.where(quiz_type: "rhythm", clear: true).maximum(:rank_score) == 1 %>
+              <div class="d-neon">D</div>
+            <% else %>
+              E
+            <% end %>
+          </div>
         </div>
       </div>
       <div class="flex justify-end  items-center mr-1">
