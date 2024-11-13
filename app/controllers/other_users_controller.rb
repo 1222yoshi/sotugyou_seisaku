@@ -145,14 +145,11 @@ class OtherUsersController < ApplicationController
       end
       @user_count = Match.where(user_id: current_user.id, score: 0..999).maximum(:score)
       @other_users = @q.result(distinct: true)
-                       .left_joins(:results)
-                       .joins("LEFT JOIN matches ON matches.other_user_id = users.id") 
-                       .where(matches: { user_id: current_user.id }) 
-                       .where.not(id: current_user.id)
-                       .group('users.id, matches.score') 
-                       .select('users.*, COALESCE(MAX(CASE WHEN results.clear = true THEN results.rank_score ELSE NULL END), 0) AS max_rank_score, matches.score AS match_score')
-                       .order('max_rank_score DESC')
-
+                    .joins("LEFT JOIN matches ON matches.other_user_id = users.id")
+                    .where(matches: { user_id: current_user.id })
+                    .select("users.*, matches.score as match_score")
+                    .where.not(id: current_user.id)
+                    .order('match_score DESC')
     elsif current_user
       @other_users = @q.result(distinct: true)
                        .left_joins(:user_albums)
@@ -186,11 +183,12 @@ class OtherUsersController < ApplicationController
     if current_user && current_user.like_music.present?
       @user_count = Match.where(user_id: current_user.id, score: 0..999).maximum(:score)
       @other_users = @q.result(distinct: true)
-                       .joins("LEFT JOIN results ON results.user_id = users.id")
-                       .joins("LEFT JOIN matches ON matches.other_user_id = users.id")
-                       .where.not(users: { id: current_user.id })
-                       .select('users.*, MAX(results.rank_score) AS max_rank_score, matches.score AS match_score')
-                       .group('users.id')
+                       .left_joins(:results)
+                       .joins("LEFT JOIN matches ON matches.other_user_id = users.id") 
+                       .where(matches: { user_id: current_user.id }) 
+                       .where.not(id: current_user.id)
+                       .group('users.id, matches.score') 
+                       .select('users.*, COALESCE(MAX(CASE WHEN results.clear = true THEN results.rank_score ELSE NULL END), 0) AS max_rank_score, matches.score AS match_score')
                        .order('max_rank_score DESC')
     elsif current_user
       @other_users = @q.result(distinct: true)
