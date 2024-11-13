@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_11_10_034430) do
+ActiveRecord::Schema[7.1].define(version: 2024_11_12_170746) do
   create_table "albums", force: :cascade do |t|
     t.string "artist_name"
     t.string "album_name"
@@ -34,6 +34,15 @@ ActiveRecord::Schema[7.1].define(version: 2024_11_10_034430) do
     t.datetime "updated_at", null: false
     t.index ["user_1_id"], name: "index_chatrooms_on_user_1_id"
     t.index ["user_2_id"], name: "index_chatrooms_on_user_2_id"
+  end
+
+  create_table "choices", force: :cascade do |t|
+    t.integer "quiz_id", null: false
+    t.string "content"
+    t.boolean "correct"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["quiz_id"], name: "index_choices_on_quiz_id"
   end
 
   create_table "instruments", force: :cascade do |t|
@@ -83,6 +92,25 @@ ActiveRecord::Schema[7.1].define(version: 2024_11_10_034430) do
     t.index ["user_id"], name: "index_notifications_on_user_id"
   end
 
+  create_table "quizzes", force: :cascade do |t|
+    t.string "question"
+    t.string "image_path"
+    t.string "quiz_type"
+    t.integer "quiz_rank"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "results", force: :cascade do |t|
+    t.integer "user_id", null: false
+    t.string "quiz_type"
+    t.integer "rank_score"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.boolean "clear"
+    t.index ["user_id"], name: "index_results_on_user_id"
+  end
+
   create_table "user_albums", force: :cascade do |t|
     t.integer "user_id", null: false
     t.integer "album_id", null: false
@@ -111,6 +139,15 @@ ActiveRecord::Schema[7.1].define(version: 2024_11_10_034430) do
     t.index ["user_id"], name: "index_user_instruments_on_user_id"
   end
 
+  create_table "user_quizzes", force: :cascade do |t|
+    t.integer "user_id", null: false
+    t.integer "quiz_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["quiz_id"], name: "index_user_quizzes_on_quiz_id"
+    t.index ["user_id"], name: "index_user_quizzes_on_user_id"
+  end
+
   create_table "users", force: :cascade do |t|
     t.string "email", null: false
     t.string "crypted_password"
@@ -133,6 +170,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_11_10_034430) do
 
   add_foreign_key "chatrooms", "users", column: "user_1_id"
   add_foreign_key "chatrooms", "users", column: "user_2_id"
+  add_foreign_key "choices", "quizzes"
   add_foreign_key "likes", "users", column: "like_user_id"
   add_foreign_key "likes", "users", column: "liked_user_id"
   add_foreign_key "matches", "users"
@@ -141,10 +179,13 @@ ActiveRecord::Schema[7.1].define(version: 2024_11_10_034430) do
   add_foreign_key "messages", "users"
   add_foreign_key "notifications", "users"
   add_foreign_key "notifications", "users", column: "source_user_id"
+  add_foreign_key "results", "users"
   add_foreign_key "user_albums", "albums"
   add_foreign_key "user_albums", "users"
   add_foreign_key "user_areas", "areas"
   add_foreign_key "user_areas", "users"
   add_foreign_key "user_instruments", "instruments"
   add_foreign_key "user_instruments", "users"
+  add_foreign_key "user_quizzes", "quizzes"
+  add_foreign_key "user_quizzes", "users"
 end

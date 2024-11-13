@@ -1,6 +1,6 @@
 require 'json'
 class OtherUsersController < ApplicationController
-  skip_before_action :require_login, only: %i[index show]
+  skip_before_action :require_login, only: %i[index show quiz_result]
 
   def index
     @q = User.ransack(params[:q])
@@ -145,11 +145,13 @@ class OtherUsersController < ApplicationController
       end
       @user_count = Match.where(user_id: current_user.id, score: 0..999).maximum(:score)
       @other_users = @q.result(distinct: true)
-                    .joins("LEFT JOIN matches ON matches.other_user_id = users.id")
-                    .where(matches: { user_id: current_user.id })
-                    .select("users.*, matches.score as match_score")
-                    .where.not(id: current_user.id)
-                    .order('match_score DESC')
+                       .left_joins(:results)
+                       .joins("LEFT JOIN matches ON matches.other_user_id = users.id") 
+                       .where(matches: { user_id: current_user.id }) 
+                       .where.not(id: current_user.id)
+                       .group('users.id, matches.score') 
+                       .select('users.*, COALESCE(MAX(CASE WHEN results.clear = true THEN results.rank_score ELSE NULL END), 0) AS max_rank_score, matches.score AS match_score')
+                       .order('max_rank_score DESC')
 
     elsif current_user
       @other_users = @q.result(distinct: true)
@@ -164,6 +166,47 @@ class OtherUsersController < ApplicationController
                        .select('users.*, COUNT(user_albums.id) as albums_count')
                        .group('users.id')
                        .order('albums_count DESC')
+    end
+
+    if params[:areas_name].present?
+      @other_users = @other_users.joins(:areas).where(areas: { id: params[:areas_name] })
+    end
+
+    if params[:instruments_name].present?
+      @other_users = @other_users.joins(:instruments).where(instruments: { id: params[:instruments_name] })
+    end
+
+    if params[:purpose].present?
+      @other_users = @other_users.where(users: { purpose: params[:purpose] })
+    end
+  end
+
+  def quiz_result
+    @q = User.ransack(params[:q])
+    if current_user && current_user.like_music.present?
+      @user_count = Match.where(user_id: current_user.id, score: 0..999).maximum(:score)
+      @other_users = @q.result(distinct: true)
+                       .joins("LEFT JOIN results ON results.user_id = users.id")
+                       .joins("LEFT JOIN matches ON matches.other_user_id = users.id")
+                       .where.not(users: { id: current_user.id })
+                       .select('users.*, MAX(results.rank_score) AS max_rank_score, matches.score AS match_score')
+                       .group('users.id')
+                       .order('max_rank_score DESC')
+    elsif current_user
+      @other_users = @q.result(distinct: true)
+                       .left_joins(:results)  # LEFT JOIN に変更
+                       .where.not(id: current_user.id)
+                       .group('users.id')
+                       .select('users.*, COALESCE(MAX(CASE WHEN results.clear = true THEN results.rank_score ELSE NULL END), 0) AS max_rank_score')  # clearがtrueのrank_scoreのみ取得
+                       .order('max_rank_score DESC')
+
+    else
+      @other_users = @q.result(distinct: true)
+                       .left_joins(:results)  # LEFT JOIN に変更
+                       .group('users.id')
+                       .select('users.*, COALESCE(MAX(CASE WHEN results.clear = true THEN results.rank_score ELSE NULL END), 0) AS max_rank_score')  # clearがtrueのrank_scoreのみ取得
+                       .order('max_rank_score DESC')
+
     end
 
     if params[:areas_name].present?
