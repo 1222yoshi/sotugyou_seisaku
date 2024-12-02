@@ -6332,7 +6332,7 @@
 
   // app/javascript/application.js
   document.addEventListener("turbo:load", () => {
-    const neonTexts = document.querySelectorAll(".neon-text-on, .login-button, .neon-icon-on");
+    const neonTexts = document.querySelectorAll(".neon-text-on, .login-button, .neon-icon-on, .border-blue-quiz");
     startBlinkingForElements();
     neonTexts.forEach((neonText) => {
       addHoverListeners(neonText);

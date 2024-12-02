@@ -718,7 +718,27 @@ input[type="file"]:focus {
   animation: blue-field-color-change 0.3s ease-in-out forwards;
 }
 
+.border-blue-quiz {
+  border-color: #127292;
+  animation: blue-field-color-change 0.3s ease-in-out forwards;
+}
 
+.border-blue-quiz:hover {
+  animation: none;
+  box-shadow:
+  0 0 2px #02a5dc, 
+  0 0 5px #02a5dc,
+  0 0 7px #02a5dc,
+  0 0 2px #02a5dc inset, 
+  0 0 5px #02a5dc inset,
+  0 0 7px #02a5dc inset;
+  border-color: #8bd3ff;
+}
+
+.border-blue-quiz.no-animation {
+  animation: none;
+  border-color: #8bd3ff;
+}
 .border-orange {
   border-color: #884915;
 }
