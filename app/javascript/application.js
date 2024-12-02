@@ -2,7 +2,7 @@
 import "@hotwired/turbo-rails"
 
 document.addEventListener('turbo:load', () => {
-    const neonTexts = document.querySelectorAll('.neon-text-on, .login-button, .neon-icon-on');
+    const neonTexts = document.querySelectorAll('.neon-text-on, .login-button, .neon-icon-on, .border-blue-quiz');
 
     // 毎回アニメーションを有効にする
     startBlinkingForElements();
