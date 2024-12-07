@@ -1,0 +1,17 @@
+<h1 class="text-xl neon-text-on-no-link fixed top-7 left-1/2 transform -translate-x-1/2 z-10 max-lg:text-sm max-lg:top-12">パスワードリセット</h1>
+<div class="flex items-center justify-center h-screen xl:fixed left-1/2 right-1/2">
+  <%= form_with model: @user, url:password_reset_path(@token) do |f| %>
+    <div class="mb-6" style="width: 200px;" >
+      <%= @user.email %>
+    </div>
+    <div class="mb-6">
+      <%= f.password_field :password, placeholder: 'パスワード', class: 'input-field', style: "width: 200px;" %>
+    </div>
+    <div class="mb-6">
+      <%= f.password_field :password_confirmation, placeholder: 'パスワード（確認用）', class: 'input-field', style: "width: 200px;" %>
+    </div>
+    <div class="flex justify-end mb-8">
+      <%= f.submit '更新する', id: "submit-button", class: "neon-text-off"%>
+    </div>
+  <% end %>
+</div>
