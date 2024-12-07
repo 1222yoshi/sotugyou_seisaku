@@ -4,8 +4,11 @@
     <div class="mb-12">
       <%= f.text_field :email, placeholder: 'メールアドレス', class: 'input-field', style: "width: 200px;" %>
     </div>
-    <div class="mb-6">
+    <div class="">
       <%= f.password_field :password, placeholder: 'パスワード', class: 'input-field', style: "width: 200px;" %>
+    </div>
+    <div class="flex justify-center mb-6">
+      <%= link_to "パスワードをお忘れの場合", new_password_reset_path, class: "neon-off-on"%>
     </div>
     <div class="flex justify-end mb-8">
        <%= f.submit 'ログイン', id: "submit-button", class: "neon-text-off login"%>
