@@ -9,6 +9,7 @@ class User < ApplicationRecord
   validates :name, presence: true, length: { maximum: 255 }
   validates :email, presence: true, uniqueness: true
   validates :reset_password_token, uniqueness: true, allow_nil: true
+  validates :reset_email_token, uniqueness: true, allow_nil: true
 
   has_many :user_areas, dependent: :destroy
   has_many :areas, through: :user_areas
@@ -66,6 +67,22 @@ class User < ApplicationRecord
 
   def self.ransackable_associations(auth_object = nil)
     ["areas", "user_areas", "instruments", "user_instruments"] # ここで検索可能なアソシエーションを指定
+  end
+
+  def generate_reset_email_token!
+    self.reset_email_token = SecureRandom.urlsafe_base64
+    self.reset_email_token_expires_at = 1.hour.from_now # トークン有効期限
+    self.reset_email_sent_at = Time.current
+    save!
+  end
+
+  def reset_email_token_valid?
+    if reset_email_token_expires_at && reset_email_token_expires_at > Time.current
+      true
+    else
+      self.update(reset_email: nil, reset_email_token: nil, reset_email_token_expires_at: nil)
+      false
+    end
   end
 
   private

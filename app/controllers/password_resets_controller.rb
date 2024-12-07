@@ -25,8 +25,7 @@ class PasswordResetsController < ApplicationController
     if @user.change_password(params[:user][:password])
       redirect_to login_path, success: "パスワードを変更できました"
     else
-      flash.now[:danger] = "パスワード変更できませんでした"
-      redirect_to edit_password_reset_path
+      redirect_to edit_password_reset_path, danger: "パスワード変更できませんでした"
     end
   end
 end

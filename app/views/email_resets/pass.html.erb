@@ -1,0 +1,15 @@
+<h1 class="text-xl neon-text-on-no-link fixed top-7 left-1/2 transform -translate-x-1/2 z-10 max-lg:text-sm max-lg:top-12">パスワード確認</h1>
+<div class="flex items-center justify-center h-screen lg:fixed left-1/2 right-1/2">
+  <%= form_with url: email_reset_path, method: :patch, local: true do |f| %>
+    <div class="mb-6" style="width: 200px;" >
+      <%= @user.reset_email %>
+    </div>
+    <div class="mb-6">
+      <%= f.password_field :password, placeholder: 'パスワードを入力してください', class: 'input-field', style: "width: 200px;" %>
+    </div>
+    <div class="flex justify-end mb-8">
+       <%= f.submit '確認', id: "submit-button", class: "neon-text-off login"%>
+    </div>
+  <% end %>
+  </div>
+</div>
