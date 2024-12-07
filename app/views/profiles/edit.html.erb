@@ -65,8 +65,13 @@
         <%= f.label :introduction, "自己紹介", class: "text-2xl neon-logo-off"%>
         <%= f.text_area :introduction, placeholder: '最大144文字', rows: 10, class: 'input-field  mt-2 mb-12', maxlength: 144 %>
       </div>
-      <div class="flex justify-end ">
-        <%= f.submit '保存', class: "profile-submit text-3xl"%>
+      <div class="flex justify-between items-center">
+        <div class="justify-start">
+          <%= link_to "メールアドレス変更", new_email_reset_path, class: "neon-off-on" %>
+        </div>
+        <div class="justify-end">
+          <%= f.submit '保存', class: "profile-submit text-3xl"%>
+        </div>
       </div>
     </div>
   <% end %>

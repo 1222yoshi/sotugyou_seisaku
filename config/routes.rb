@@ -41,6 +41,11 @@ Rails.application.routes.draw do
     end
   end
   resources :password_resets, only: %i[new create edit update]
+  resources :email_resets, only: %i[new create update] do
+    member do
+      get 'pass'
+    end
+  end
   mount ActionCable.server => '/cable'
   mount LetterOpenerWeb::Engine, at: '/letter_opener' if Rails.env.development?
 end

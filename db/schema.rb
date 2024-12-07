@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_12_06_090425) do
+ActiveRecord::Schema[7.1].define(version: 2024_12_07_121109) do
   create_table "albums", force: :cascade do |t|
     t.string "artist_name"
     t.string "album_name"
@@ -169,7 +169,13 @@ ActiveRecord::Schema[7.1].define(version: 2024_12_06_090425) do
     t.datetime "reset_password_token_expires_at"
     t.datetime "reset_password_email_sent_at"
     t.integer "access_count_to_reset_password_page", default: 0
+    t.string "reset_email_token"
+    t.datetime "reset_email_token_expires_at"
+    t.datetime "reset_email_sent_at"
+    t.integer "access_count_to_reset_email_page", default: 0
+    t.string "reset_email"
     t.index ["email"], name: "index_users_on_email", unique: true
+    t.index ["reset_email_token"], name: "index_users_on_reset_email_token"
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token"
   end
 
