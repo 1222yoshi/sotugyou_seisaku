@@ -50,8 +50,6 @@ gem 'activerecord'
 
 gem 'carrierwave'
 
-gem 'itunes-search-api'
-
 gem "httparty"
 
 gem 'mini_magick'

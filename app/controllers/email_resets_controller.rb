@@ -1,4 +1,5 @@
 class EmailResetsController < ApplicationController
+  skip_before_action :require_login, only: %i[pass update]
   def new; end
 
   def create

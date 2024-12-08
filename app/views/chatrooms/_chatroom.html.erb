@@ -1,4 +1,4 @@
-<div class="flex lg:p-4 max-lg:p-2 other_user_box lg:mb-8 max-lg:mb-4 <%= Notification.exists?(user_id: current_user.id, source_user_id: chatroom.other_user(current_user).id, is_read: false, notification_type: "message") ? 'border-blue-on' : 'border-blue'%>">
+<div class="flex lg:p-4 max-lg:p-2 other_user_box lg:mb-8 max-lg:mb-4 <%= Notification.exists?(user_id: current_user.id, source_user_id: chatroom.other_user(current_user).id, is_read: false, notification_type: "message") ? 'border-blue-quiz' : 'border-blue-off-on'%>">
   <div class="flex items-center w-full min-w-0">
     <%= link_to other_user_path(chatroom.other_user(current_user)) do %>
       <div class="w-20 h-20 rounded-full lg:mr-4 max-lg:mr-1 overflow-hidden flex items-center justify-center max-lg:w-8 max-lg:h-8">
