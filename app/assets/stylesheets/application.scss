@@ -718,6 +718,14 @@ input[type="file"]:focus {
   animation: blue-field-color-change 0.3s ease-in-out forwards;
 }
 
+.border-blue-off-on {
+  border-color: #127292;
+}
+
+.border-blue-off-on:hover {
+  border-color: #02a5dc;
+}
+
 .border-blue-quiz {
   border-color: #127292;
   animation: blue-field-color-change 0.3s ease-in-out forwards;
