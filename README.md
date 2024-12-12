@@ -63,7 +63,7 @@
 
 | 『私を構成する9枚』マッチング |
 | :---: | 
-| [![Image from Gyazo](https://i.gyazo.com/fc72e6304b59f75d797ad9f3319d0e8a.gif)](https://i.gyazo.com/fc72e6304b59f75d797ad9f3319d0e8a) |
+| [![Image from Gyazo](https://i.gyazo.com/99f58991fbad2fff11df9bb72894e0b9.gif)](https://i.gyazo.com/99f58991fbad2fff11df9bb72894e0b9) |
 | <p align="left">自分の『私を構成する9枚』と他のユーザーの『私を構成する9枚』のマッチ度をAIやアルゴリズムが評価、並び替えをします。</p> |
 <br>
 
