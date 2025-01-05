@@ -1,6 +1,4 @@
 class UserMailer < ApplicationMailer
-  default from: "#{ENV['GMAIL_ADDRESS']}"
-
   def reset_password_email(user)
     @user = User.find(user.id)
     @url = edit_password_reset_url(@user.reset_password_token)

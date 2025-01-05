@@ -22,7 +22,7 @@ class EmailResetsController < ApplicationController
     user = User.find_by(reset_email_token: params[:id])
 
     if user.nil? || !user.reset_email_token_valid?
-      redirect_to profile_path, alert: "期限切れです。"
+      redirect_to profile_path, danger: "期限切れです。"
       return
     end
 

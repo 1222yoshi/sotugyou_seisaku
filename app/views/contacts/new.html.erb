@@ -1,0 +1,17 @@
+<h1 class="text-xl neon-text-on-no-link fixed top-7 left-1/2 transform -translate-x-1/2 z-10 max-lg:text-sm max-lg:top-12">お問い合わせ</h1>
+<div class="flex items-center justify-center h-screen lg:fixed left-1/2 right-1/2">
+  <%= form_with model: @contact, url: contacts_path do |f| %>
+    <div class="mb-8 flex flex-col">
+      <%= f.label :subject, "件名", class: "text-2xl neon-logo-off"%>
+      <%= f.text_field :subject, placeholder: '', class: 'input-field', style: "width: 250px;" %>
+    </div>
+    <div class="flex flex-col mb-8">
+      <%= f.label :subject, "メッセージ", class: "text-2xl neon-logo-off"%>
+      <%= f.text_area :message, placeholder: '', rows: 10, class: 'input-field', style: "width: 250px;" %>
+    </div>
+    <div class="flex justify-end">
+       <%= f.submit '送信', id: "submit-button", class: "neon-text-off login"%>
+    </div>
+  <% end %>
+  </div>
+</div>
