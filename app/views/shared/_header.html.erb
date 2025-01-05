@@ -36,6 +36,7 @@
       <%= link_to "クイズ一覧", quizzes_path, class: "neon-off-on max-lg:mb-4 flex flex-col"%>
       <%= link_to "プロフィール", profile_path, class: "neon-off-on max-lg:mb-4 flex flex-col"%>
       <% if current_user %>
+        <%= link_to "お問い合わせ", new_contact_path, class: "neon-off-on max-lg:mb-4 flex flex-col"%>
         <%= button_to "ログアウト", logout_path, method: :delete, class: "delete-icon"%>
       <% end %>
     </div>

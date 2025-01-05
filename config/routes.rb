@@ -46,6 +46,7 @@ Rails.application.routes.draw do
       get 'pass'
     end
   end
+  resources :contacts, only: %i[new create]
   mount ActionCable.server => '/cable'
   mount LetterOpenerWeb::Engine, at: '/letter_opener' if Rails.env.development?
 end
