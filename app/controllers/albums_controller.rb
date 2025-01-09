@@ -51,6 +51,10 @@ class AlbumsController < ApplicationController
   def show
     begin
       @album = Album.lookup(params[:id])
+      if @album.nil?
+        flash[:danger] = "アルバムの配信が停止されています。"
+        redirect_back(fallback_location: root_path)
+      end
     rescue SocketError => e
       flash.now[:danger] = "再試行してください。"
     rescue JSON::ParserError => e
