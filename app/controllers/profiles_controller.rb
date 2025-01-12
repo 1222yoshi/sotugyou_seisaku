@@ -9,21 +9,19 @@ class ProfilesController < ApplicationController
     selected_instruments = params[:user][:instrument_ids].reject(&:blank?)
 
     if selected_areas.uniq.length != selected_areas.length
-      flash[:danger] = "選択したエリアに重複があります。"
+      flash[:danger] = '選択したエリアに重複があります。'
       redirect_to profile_path
     elsif selected_instruments.uniq.length != selected_instruments.length
-      flash[:danger] = "選択した楽器に重複があります。"
+      flash[:danger] = '選択した楽器に重複があります。'
       redirect_to profile_path
     elsif params[:user][:name].empty?
-      flash[:danger] = "名前は必須項目です。"
+      flash[:danger] = '名前は必須項目です。'
       redirect_to profile_path
+    elsif @user.update(user_params)
+      redirect_to profile_path, success: 'プロフィールを更新しました。'
     else
-      if @user.update(user_params)
-        redirect_to profile_path, success: 'プロフィールを更新しました。'
-      else
-        flash[:danger] = "更新に失敗しました。"
-        redirect_to profile_path
-      end
+      flash[:danger] = '更新に失敗しました。'
+      redirect_to profile_path
     end
   end
 
@@ -51,6 +49,7 @@ class ProfilesController < ApplicationController
   end
 
   def user_params
-    params.require(:user).permit(:name, :birthdate, :gender, :purpose, :introduction, :profile_image, :x_link, :instagram_link, :youtube_link, :custom_link, area_ids: [], instrument_ids: [])
+    params.require(:user).permit(:name, :birthdate, :gender, :purpose, :introduction, :profile_image, :x_link,
+                                 :instagram_link, :youtube_link, :custom_link, area_ids: [], instrument_ids: [])
   end
 end

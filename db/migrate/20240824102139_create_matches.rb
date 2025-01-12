@@ -8,6 +8,6 @@ class CreateMatches < ActiveRecord::Migration[7.1]
       t.timestamps
     end
 
-    add_index :matches, [:user_id, :other_user_id], unique: true
+    add_index :matches, %i[user_id other_user_id], unique: true
   end
 end

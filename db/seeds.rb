@@ -75,13 +75,13 @@ instruments.each do |instrument|
 end
 
 quiz1 = Quiz.find_or_create_by(
-  question: "この和音（コード）の構成音に含まれないものを一つ選びなさい。",
-  image_path: "/assets/quiz_music_theory_1.png",
-  quiz_type: "music_theory",
+  question: 'この和音（コード）の構成音に含まれないものを一つ選びなさい。',
+  image_path: '/assets/quiz_music_theory_1.png',
+  quiz_type: 'music_theory',
   quiz_rank: 1
 )
 
-Choice.find_or_create_by(quiz: quiz1, content: "ド", correct: false)
-Choice.find_or_create_by(quiz: quiz1, content: "ミ", correct: false)
-Choice.find_or_create_by(quiz: quiz1, content: "ファ", correct: true)
-Choice.find_or_create_by(quiz: quiz1, content: "ラ", correct: false)
+Choice.find_or_create_by(quiz: quiz1, content: 'ド', correct: false)
+Choice.find_or_create_by(quiz: quiz1, content: 'ミ', correct: false)
+Choice.find_or_create_by(quiz: quiz1, content: 'ファ', correct: true)
+Choice.find_or_create_by(quiz: quiz1, content: 'ラ', correct: false)

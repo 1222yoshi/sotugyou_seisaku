@@ -26,15 +26,15 @@ class User < ApplicationRecord
   has_many :messages
   has_many :user_quizzes
   has_many :results
-  
+
   def age
     if birthdate.present?
       today = Date.today
       age = today.year - birthdate.year
       age -= 1 if today < birthdate + age.years
-      age = "#{age}歳"
+      "#{age}歳"
     else
-      age = '年齢非公開'
+      '年齢非公開'
     end
   end
 
@@ -61,12 +61,12 @@ class User < ApplicationRecord
     end
   end
 
-  def self.ransackable_attributes(auth_object = nil)
-    ["name", "purpose"] # ここで検索可能な属性を指定
+  def self.ransackable_attributes(_auth_object = nil)
+    %w[name purpose] # ここで検索可能な属性を指定
   end
 
-  def self.ransackable_associations(auth_object = nil)
-    ["areas", "user_areas", "instruments", "user_instruments"] # ここで検索可能なアソシエーションを指定
+  def self.ransackable_associations(_auth_object = nil)
+    %w[areas user_areas instruments user_instruments] # ここで検索可能なアソシエーションを指定
   end
 
   def generate_reset_email_token!
@@ -80,7 +80,7 @@ class User < ApplicationRecord
     if reset_email_token_expires_at && reset_email_token_expires_at > Time.current
       true
     else
-      self.update(reset_email: nil, reset_email_token: nil, reset_email_token_expires_at: nil)
+      update(reset_email: nil, reset_email_token: nil, reset_email_token_expires_at: nil)
       false
     end
   end
@@ -95,36 +95,34 @@ class User < ApplicationRecord
   end
 
   def normalize_x_link
-    if x_link.present?
-      # "@"を追加し、URL形式を統一
-      normalized_link = x_link.gsub(/(https?:\/\/)?(x\.com\/)?@?/, '')
-      normalized_link = normalized_link.split('/').first
-      self.x_link = "@#{normalized_link}"
-    end
+    return unless x_link.present?
+
+    # "@"を追加し、URL形式を統一
+    normalized_link = x_link.gsub(%r{(https?://)?(x\.com/)?@?}, '')
+    normalized_link = normalized_link.split('/').first
+    self.x_link = "@#{normalized_link}"
   end
 
   def normalize_instagram_link
-    if instagram_link.present?
-      normalized_link = instagram_link.gsub(/(https?:\/\/)?(www\.instagram\.com\/)?@?/, '')
-      normalized_link = normalized_link.split('/').first
-      self.instagram_link = "@#{normalized_link}"
-    end
+    return unless instagram_link.present?
+
+    normalized_link = instagram_link.gsub(%r{(https?://)?(www\.instagram\.com/)?@?}, '')
+    normalized_link = normalized_link.split('/').first
+    self.instagram_link = "@#{normalized_link}"
   end
 
   def normalize_youtube_link
-    if youtube_link.present?
-      normalized_link = youtube_link.gsub(/(https?:\/\/)?(www\.youtube\.com\/)?@?/, '')
-      normalized_link = normalized_link.split('/').first
-      self.youtube_link = "@#{normalized_link}"
-    end
+    return unless youtube_link.present?
+
+    normalized_link = youtube_link.gsub(%r{(https?://)?(www\.youtube\.com/)?@?}, '')
+    normalized_link = normalized_link.split('/').first
+    self.youtube_link = "@#{normalized_link}"
   end
 
   def normalize_custom_link
-    if custom_link.present?
-      # https://の部分を取り除く
-      self.custom_link = custom_link.gsub(/https?:\/\//, '')
-    end
+    return unless custom_link.present?
+
+    # https://の部分を取り除く
+    self.custom_link = custom_link.gsub(%r{https?://}, '')
   end
-
 end
-
