@@ -4,7 +4,7 @@ class ApplicationController < ActionController::Base
   before_action :header_color
 
   add_flash_types :success, :danger
-  
+
   private
 
   def not_authenticated
@@ -13,19 +13,19 @@ class ApplicationController < ActionController::Base
 
   def prepare_meta_tags(options = {})
     defaults = {
-      site: "MeTRO NOTE",
-      title: "MeTRO NOTE",
-      description: "AIを使ったバンドメンバーマッチングアプリ",
+      site: 'MeTRO NOTE',
+      title: 'MeTRO NOTE',
+      description: 'AIを使ったバンドメンバーマッチングアプリ',
       og: {
         site_name: :site,
         title: :title,
         description: :description,
-        url: "https://metronote.jp",
-        image: "https://metronote.jp/assets/metro-logo.png"
+        url: 'https://metronote.jp',
+        image: 'https://metronote.jp/assets/metro-logo.png'
       },
       twitter: {
         card: 'summary_large_image',
-        image: "https://metronote.jp/assets/metro-logo.png"
+        image: 'https://metronote.jp/assets/metro-logo.png'
       }
     }
 
@@ -40,28 +40,26 @@ class ApplicationController < ActionController::Base
   end
 
   def likes_user_icon
-    if current_user
-      unread_notifications = Notification.where(is_read: false, user_id: current_user.id, notification_type: "like")
-      return 'neon-text-off' if unread_notifications.empty? 
-  
-      source_user_ids = unread_notifications.map(&:source_user_id).uniq
-  
-      source_user_ids.each do |source_user_id|
-        if Like.exists?(like_user_id: current_user.id, liked_user_id: source_user_id)
-          return 's-neon'
-        end
-      end
-      'neon-logo-on'
+    return unless current_user
+
+    unread_notifications = Notification.where(is_read: false, user_id: current_user.id, notification_type: 'like')
+    return 'neon-text-off' if unread_notifications.empty?
+
+    source_user_ids = unread_notifications.map(&:source_user_id).uniq
+
+    source_user_ids.each do |source_user_id|
+      return 's-neon' if Like.exists?(like_user_id: current_user.id, liked_user_id: source_user_id)
     end
+    'neon-logo-on'
   end
 
   def chatroom_icon
-    if current_user
-      if Notification.exists?(is_read: false, user_id: current_user.id, notification_type: "message")
-        'neon-logo-on'
-      else
-        'neon-text-off'
-      end
+    return unless current_user
+
+    if Notification.exists?(is_read: false, user_id: current_user.id, notification_type: 'message')
+      'neon-logo-on'
+    else
+      'neon-text-off'
     end
   end
 end
