@@ -230,7 +230,6 @@ class OtherUsersController < ApplicationController
                        .where.not(id: current_user.id)
                        .group('users.id, matches.score')
                        .select('users.*, COALESCE(MAX(CASE WHEN results.clear = true THEN results.rank_score ELSE NULL END), 0) AS max_rank_score, matches.score AS match_score, 
-                                (SELECT MAX(rank_score) FROM results WHERE user_id = users.id AND clear = true) AS max_rank_score,
                                 (SELECT COUNT(*) FROM user_albums WHERE user_id = users.id) AS album_count')
                        .order('max_rank_score DESC')
                        .tap do |users|
@@ -251,7 +250,6 @@ class OtherUsersController < ApplicationController
                        .where.not(id: current_user.id)
                        .group('users.id')
                        .select('users.*, COALESCE(MAX(CASE WHEN results.clear = true THEN results.rank_score ELSE NULL END), 0) AS max_rank_score, 
-                                (SELECT MAX(rank_score) FROM results WHERE user_id = users.id AND clear = true) AS max_rank_score,
                                 (SELECT COUNT(*) FROM user_albums WHERE user_id = users.id) AS album_count') # clearがtrueのrank_scoreのみ取得
                        .order('max_rank_score DESC')
                        .tap do |users|
@@ -268,7 +266,6 @@ class OtherUsersController < ApplicationController
                        .left_joins(:results) # LEFT JOIN に変更
                        .group('users.id')
                        .select('users.*, COALESCE(MAX(CASE WHEN results.clear = true THEN results.rank_score ELSE NULL END), 0) AS max_rank_score, 
-                                (SELECT MAX(rank_score) FROM results WHERE user_id = users.id AND clear = true) AS max_rank_score,
                                 (SELECT COUNT(*) FROM user_albums WHERE user_id = users.id) AS album_count') # clearがtrueのrank_scoreのみ取得
                        .order('max_rank_score DESC')
                        .tap do |users|
