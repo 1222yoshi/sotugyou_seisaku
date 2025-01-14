@@ -85,6 +85,10 @@ class User < ApplicationRecord
     end
   end
 
+  attr_accessor :i_like
+  attr_accessor :i_liked
+  attr_accessor :notification_now
+
   private
 
   def normalize_links

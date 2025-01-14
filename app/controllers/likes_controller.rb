@@ -23,20 +23,46 @@ class LikesController < ApplicationController
   def like_user
     @like_user_ids = Like.where(like_user_id: current_user.id).pluck(:liked_user_id)
     @q = User.where(id: @like_user_ids).ransack(params[:q])
+    liked_user_ids = Like.where(liked_user_id: current_user.id).pluck(:like_user_id)
+    notification_user_ids = Notification.where(user_id: current_user.id, is_read: false, notification_type: "message").pluck(:source_user_id)
     @other_users = if current_user.like_music.present?
                      @q.result(distinct: true)
                        .joins('LEFT JOIN matches ON matches.other_user_id = users.id')
+                       .includes(:areas, :instruments, user_albums: :album)
                        .where(matches: { user_id: current_user.id })
-                       .select('users.*, matches.score as match_score')
+                       .select('users.*, 
+                                matches.score as match_score, 
+                                (SELECT MAX(rank_score) FROM results WHERE user_id = users.id AND clear = true) AS max_rank_score,
+                                (SELECT COUNT(*) FROM user_albums WHERE user_id = users.id) AS album_count')
                        .where.not(id: current_user.id)
                        .order('match_score DESC')
+                       .tap do |users|
+                        users.each do |user|
+                          user.user_albums = user.user_albums.sort_by(&:order_number)
+                          user.i_like = @like_user_ids.include?(user.id)
+                          user.i_liked = liked_user_ids.include?(user.id)
+                          user.notification_now = notification_user_ids.include?(user.id)
+                        end
+                      end
                    else
                      @q.result(distinct: true)
                        .left_joins(:user_albums)
-                       .select('users.*, COUNT(user_albums.id) as albums_count')
+                       .includes(:areas, :instruments, user_albums: :album)
+                       .select('users.*, 
+                                COUNT(user_albums.id) as albums_count,
+                                (SELECT MAX(rank_score) FROM results WHERE user_id = users.id AND clear = true) AS max_rank_score,
+                                (SELECT COUNT(*) FROM user_albums WHERE user_id = users.id) AS album_count')
                        .group('users.id')
                        .where.not(id: current_user.id)
                        .order('albums_count DESC')
+                       .tap do |users|
+                        users.each do |user|
+                          user.user_albums = user.user_albums.sort_by(&:order_number)
+                          user.i_like = @like_user_ids.include?(user.id)
+                          user.i_liked = liked_user_ids.include?(user.id)
+                          user.notification_now = notification_user_ids.include?(user.id)
+                        end
+                      end
                    end
     @other_users = @other_users.joins(:areas).where(areas: { id: params[:areas_name] }) if params[:areas_name].present?
     if params[:instruments_name].present?
@@ -50,21 +76,47 @@ class LikesController < ApplicationController
     Notification.where(user_id: current_user.id, notification_type: 'like').update_all(is_read: true)
     @liked_user_ids = Like.where(liked_user_id: current_user.id).pluck(:like_user_id)
     @q = User.where(id: @liked_user_ids).ransack(params[:q])
+    like_user_ids = Like.where(like_user_id: current_user.id).pluck(:liked_user_id)
+    notification_user_ids = Notification.where(user_id: current_user.id, is_read: false, notification_type: "message").pluck(:source_user_id)
     @other_users = if current_user.like_music.present?
-                     @q.result(distinct: true)
-                       .joins('LEFT JOIN matches ON matches.other_user_id = users.id')
-                       .where(matches: { user_id: current_user.id })
-                       .select('users.*, matches.score as match_score')
-                       .where.not(id: current_user.id)
-                       .order('match_score DESC')
-                   else
-                     @q.result(distinct: true)
-                       .left_joins(:user_albums)
-                       .select('users.*, COUNT(user_albums.id) as albums_count')
-                       .group('users.id')
-                       .where.not(id: current_user.id)
-                       .order('albums_count DESC')
-                   end
+      @q.result(distinct: true)
+        .joins('LEFT JOIN matches ON matches.other_user_id = users.id')
+        .includes(:areas, :instruments, user_albums: :album)
+        .where(matches: { user_id: current_user.id })
+        .select('users.*, 
+                 matches.score as match_score, 
+                 (SELECT MAX(rank_score) FROM results WHERE user_id = users.id AND clear = true) AS max_rank_score,
+                 (SELECT COUNT(*) FROM user_albums WHERE user_id = users.id) AS album_count')
+        .where.not(id: current_user.id)
+        .order('match_score DESC')
+        .tap do |users|
+         users.each do |user|
+           user.user_albums = user.user_albums.sort_by(&:order_number)
+           user.i_like = like_user_ids.include?(user.id)
+           user.i_liked = @liked_user_ids.include?(user.id)
+           user.notification_now = notification_user_ids.include?(user.id)
+         end
+       end
+    else
+      @q.result(distinct: true)
+        .left_joins(:user_albums)
+        .includes(:areas, :instruments, user_albums: :album)
+        .select('users.*, 
+                 COUNT(user_albums.id) as albums_count,
+                 (SELECT MAX(rank_score) FROM results WHERE user_id = users.id AND clear = true) AS max_rank_score,
+                 (SELECT COUNT(*) FROM user_albums WHERE user_id = users.id) AS album_count')
+        .group('users.id')
+        .where.not(id: current_user.id)
+        .order('albums_count DESC')
+        .tap do |users|
+         users.each do |user|
+           user.user_albums = user.user_albums.sort_by(&:order_number)
+           user.i_like = like_user_ids.include?(user.id)
+           user.i_liked = @liked_user_ids.include?(user.id)
+           user.notification_now = notification_user_ids.include?(user.id)
+         end
+       end
+    end
     @other_users = @other_users.joins(:areas).where(areas: { id: params[:areas_name] }) if params[:areas_name].present?
     if params[:instruments_name].present?
       @other_users = @other_users.joins(:instruments).where(instruments: { id: params[:instruments_name] })
@@ -77,23 +129,48 @@ class LikesController < ApplicationController
     Notification.where(user_id: current_user.id, notification_type: 'like').update_all(is_read: true)
     like_user_ids = Like.where(like_user_id: current_user.id).pluck(:liked_user_id)
     liked_user_ids = Like.where(liked_user_id: current_user.id).pluck(:like_user_id)
+    notification_user_ids = Notification.where(user_id: current_user.id, is_read: false, notification_type: "message").pluck(:source_user_id)
     @match_user_ids = like_user_ids & liked_user_ids
     @q = User.where(id: @match_user_ids).ransack(params[:q])
     @other_users = if current_user.like_music.present?
-                     @q.result(distinct: true)
-                       .joins('LEFT JOIN matches ON matches.other_user_id = users.id')
-                       .where(matches: { user_id: current_user.id })
-                       .select('users.*, matches.score as match_score')
-                       .where.not(id: current_user.id)
-                       .order('match_score DESC')
-                   else
-                     @q.result(distinct: true)
-                       .left_joins(:user_albums)
-                       .select('users.*, COUNT(user_albums.id) as albums_count')
-                       .group('users.id')
-                       .where.not(id: current_user.id)
-                       .order('albums_count DESC')
-                   end
+      @q.result(distinct: true)
+        .joins('LEFT JOIN matches ON matches.other_user_id = users.id')
+        .includes(:areas, :instruments, user_albums: :album)
+        .where(matches: { user_id: current_user.id })
+        .select('users.*, 
+                 matches.score as match_score, 
+                 (SELECT MAX(rank_score) FROM results WHERE user_id = users.id AND clear = true) AS max_rank_score,
+                 (SELECT COUNT(*) FROM user_albums WHERE user_id = users.id) AS album_count')
+        .where.not(id: current_user.id)
+        .order('match_score DESC')
+        .tap do |users|
+         users.each do |user|
+           user.user_albums = user.user_albums.sort_by(&:order_number)
+           user.i_like = like_user_ids.include?(user.id)
+           user.i_liked = liked_user_ids.include?(user.id)
+           user.notification_now = notification_user_ids.include?(user.id)
+         end
+       end
+    else
+      @q.result(distinct: true)
+        .left_joins(:user_albums)
+        .includes(:areas, :instruments, user_albums: :album)
+        .select('users.*, 
+                 COUNT(user_albums.id) as albums_count,
+                 (SELECT MAX(rank_score) FROM results WHERE user_id = users.id AND clear = true) AS max_rank_score,
+                 (SELECT COUNT(*) FROM user_albums WHERE user_id = users.id) AS album_count')
+        .group('users.id')
+        .where.not(id: current_user.id)
+        .order('albums_count DESC')
+        .tap do |users|
+         users.each do |user|
+           user.user_albums = user.user_albums.sort_by(&:order_number)
+           user.i_like = like_user_ids.include?(user.id)
+           user.i_liked = liked_user_ids.include?(user.id)
+           user.notification_now = notification_user_ids.include?(user.id)
+         end
+       end
+    end
     @other_users = @other_users.joins(:areas).where(areas: { id: params[:areas_name] }) if params[:areas_name].present?
     if params[:instruments_name].present?
       @other_users = @other_users.joins(:instruments).where(instruments: { id: params[:instruments_name] })
