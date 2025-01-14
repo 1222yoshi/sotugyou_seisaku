@@ -1,4 +1,4 @@
-<div class="flex justify-between lg:p-4 <%= current_user && Like.exists?(like_user_id: other_user.id, liked_user_id: current_user.id) ? 'border-blue-on' : 'border-blue'%> other_user_box lg:mb-8 max-lg:mb-4">
+<div class="flex justify-between lg:p-4 <%= current_user && other_user.i_liked ? 'border-blue-on' : 'border-blue'%> other_user_box lg:mb-8 max-lg:mb-4">
   <div class="flex flex-col p-2">
     <div class="flex items-center lg:mb-4 max-lg:mb-2">
       <%= link_to other_user_path(other_user) do %>
@@ -9,14 +9,14 @@
       <span class="lg:text-2xl max-lg:sm"><%= other_user.name %></span>
     </div>
     <div class="grid grid-cols-3 rounded overflow-hidden">
-      <% other_user.user_albums.includes(:album).order(order_number: :asc).each do |user_album| %>
+      <% other_user.user_albums.each do |user_album| %>
         <%= link_to album_path(user_album.album.itunes_album_id) do %>
           <div class="album w-40 h-40 overflow-hidden flex items-center justify-center max-lg:w-12 max-lg:h-12">
             <%= image_tag user_album.album.artwork_url, class: "object-cover w-full h-full" %>
           </div>
         <% end %>
       <% end %>
-      <% (other_user.user_albums.count...9).each do %>
+      <% (other_user.album_count...9).each do %>
         <div class="no-album"></div>
       <% end %>
     </div>
@@ -48,22 +48,22 @@
       </div>
       <span class="lg:text-2xl max-lg:text-sm ml-2">テスト：</span>
       <div class="lg:text-3xl">
-          <% if other_user.results.where(clear: true).maximum(:rank_score) == 5%>
+          <% if other_user.max_rank_score == 5%>
             <div class="s-neon">S</div>
-          <% elsif other_user.results.where(clear: true).maximum(:rank_score) == 4 %>
+          <% elsif other_user.max_rank_score == 4 %>
             <div class="a-neon">A</div>
-          <% elsif other_user.results.where(clear: true).maximum(:rank_score) == 3 %>
+          <% elsif other_user.max_rank_score == 3 %>
             <div class="b-neon">B</div>
-          <% elsif other_user.results.where(clear: true).maximum(:rank_score) == 2 %>
+          <% elsif other_user.max_rank_score == 2 %>
             <div class="c-neon">C</div>
-          <% elsif other_user.results.where(clear: true).maximum(:rank_score) == 1 %>
+          <% elsif other_user.max_rank_score == 1 %>
             <div class="d-neon">D</div>
           <% else %>
             E
           <% end %>
       </div>
     </div>
-    <div class="box-border lg:mt-16 max-lg:mt-2 text-center <%= current_user && Like.exists?(like_user_id: other_user.id, liked_user_id: current_user.id) ? 'border-orange-on' : 'border-orange'%>">
+    <div class="box-border lg:mt-16 max-lg:mt-2 text-center <%= current_user && other_user.i_liked ? 'border-orange-on' : 'border-orange'%>">
       <div class="lg:p-4 max-lg:p-1">
         <div class="lg:mb-6 lg:text-xl max-lg:text-xs">
         <% other_user.areas.each do |area| %>
@@ -88,7 +88,7 @@
         </div>
       </div>
     </div>
-    <div class="box-border <%= current_user && Like.exists?(like_user_id: other_user.id, liked_user_id: current_user.id) ? 'border-orange-on' : 'border-orange'%> lg:w-80 lg:h-64 max-lg:h-16 max-lg:w-40">
+    <div class="box-border <%= current_user && other_user.i_liked ? 'border-orange-on' : 'border-orange'%> lg:w-80 lg:h-64 max-lg:h-16 max-lg:w-40">
       <div class="lg:text-xl max-lg:text-xs lg:p-4 max-lg:text-ellipsis max-lg:line-clamp-4">
         <%= other_user.introduction %>
       </div>
@@ -128,13 +128,13 @@
       </div>
       <div class="flex justify-end  items-center mr-1">
         <%= button_to chatrooms_path(id: other_user.id), method: :post do %>
-          <svg class="max-lg:w-8 pt-2 <%= current_user && Notification.exists?(user_id: current_user.id, source_user_id: other_user.id, is_read: false, notification_type: "message") ? 'neon-icon-on' : 'neon-text-off'%>" width="58" viewBox="0 0 58 58" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+          <svg class="max-lg:w-8 pt-2 <%= current_user && other_user.notification_now ? 'neon-icon-on' : 'neon-text-off'%>" width="58" viewBox="0 0 58 58" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
             <path d="M23.9999 26.5C23.9999 26.1685 24.1316 25.8505 24.366 25.6161C24.6004 25.3817 24.9184 25.25 25.2499 25.25H32.7499C33.0814 25.25 33.3994 25.3817 33.6338 25.6161C33.8682 25.8505 33.9999 26.1685 33.9999 26.5C33.9999 26.8315 33.8682 27.1494 33.6338 27.3839C33.3994 27.6183 33.0814 27.75 32.7499 27.75H25.2499C24.9184 27.75 24.6004 27.6183 24.366 27.3839C24.1316 27.1494 23.9999 26.8315 23.9999 26.5ZM25.2499 30.25C24.9184 30.25 24.6004 30.3817 24.366 30.6161C24.1316 30.8505 23.9999 31.1685 23.9999 31.5C23.9999 31.8315 24.1316 32.1494 24.366 32.3839C24.6004 32.6183 24.9184 32.75 25.2499 32.75H30.2499C30.5814 32.75 30.8994 32.6183 31.1338 32.3839C31.3682 32.1494 31.4999 31.8315 31.4999 31.5C31.4999 31.1685 31.3682 30.8505 31.1338 30.6161C30.8994 30.3817 30.5814 30.25 30.2499 30.25H25.2499ZM13.9999 29C14.0005 25.6976 15.0909 22.4877 17.102 19.8683C19.1131 17.2489 21.9323 15.3663 25.1225 14.5127C28.3126 13.659 31.6953 13.882 34.7458 15.147C37.7963 16.412 40.3441 18.6484 41.9939 21.5091C43.6437 24.3699 44.3033 27.6951 43.8705 30.969C43.4376 34.2429 41.9364 37.2824 39.5998 39.6161C37.2632 41.9498 34.2218 43.4471 30.9474 43.8759C27.673 44.3047 24.3486 43.6409 21.4899 41.9875L15.6449 43.9375C15.4289 44.0096 15.1974 44.0213 14.9753 43.9715C14.7531 43.9216 14.5488 43.812 14.3844 43.6546C14.22 43.4971 14.1017 43.2977 14.0423 43.0779C13.9829 42.8582 13.9847 42.6263 14.0474 42.4075L15.8274 36.18C14.6274 33.9771 13.9991 31.5085 13.9999 29ZM28.9999 16.5C26.7928 16.4998 24.6251 17.0841 22.717 18.1932C20.8089 19.3024 19.2286 20.897 18.1365 22.815C17.0445 24.7329 16.4797 26.9058 16.4996 29.1128C16.5195 31.3197 17.1234 33.4821 18.2499 35.38C18.3366 35.5266 18.3924 35.6894 18.4138 35.8583C18.4353 36.0273 18.4221 36.1988 18.3749 36.3625L17.1024 40.8125L21.2474 39.4325C21.4234 39.3737 21.6103 39.3549 21.7945 39.3774C21.9788 39.3999 22.1557 39.4631 22.3124 39.5625C23.9506 40.5992 25.8074 41.2407 27.7362 41.4362C29.665 41.6318 31.6128 41.376 33.4257 40.6891C35.2386 40.0022 36.8669 38.9031 38.1819 37.4786C39.4969 36.0541 40.4625 34.3432 41.0024 32.4812C41.5423 30.6193 41.6418 28.6572 41.2928 26.7502C40.9439 24.8432 40.1562 23.0435 38.992 21.4933C37.8278 19.9432 36.3189 18.6851 34.5847 17.8184C32.8505 16.9518 30.9386 16.5004 28.9999 16.5Z"/>
           </svg>
         <% end %>
         <%= button_to likes_path(liked_user_id: other_user.id), method: :post, remote: true do %>
           <span id="like-button-<%= other_user.id %>">
-            <% if current_user && Like.exists?(like_user_id: current_user.id, liked_user_id: other_user.id) %>
+            <% if current_user && other_user.i_like %>
               <svg class="max-lg:w-5 liked-neon pt-2", width="35" viewBox="0 0 37 37" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
                 <path d="M18.4999 8.47915L17.6674 9.28081C17.7753 9.39272 17.9046 9.48173 18.0476 9.54252C18.1907 9.60332 18.3445 9.63465 18.4999 9.63465C18.6553 9.63465 18.8092 9.60332 18.9522 9.54252C19.0952 9.48173 19.2246 9.39272 19.3324 9.28081L18.4999 8.47915ZM10.7931 25.3141C10.556 25.1191 10.2511 25.0263 9.94547 25.0561C9.63987 25.0858 9.35862 25.2358 9.16358 25.4729C8.96855 25.7101 8.87571 26.015 8.90549 26.3206C8.93527 26.6262 9.08523 26.9074 9.32238 27.1025L10.7931 25.3141ZM3.6105 20.6753C3.68339 20.8085 3.78179 20.926 3.90011 21.0212C4.01842 21.1164 4.15433 21.1874 4.30006 21.23C4.4458 21.2727 4.5985 21.2862 4.74947 21.2699C4.90044 21.2535 5.0467 21.2076 5.17992 21.1347C5.31313 21.0618 5.43069 20.9634 5.52587 20.8451C5.62105 20.7268 5.692 20.5909 5.73466 20.4451C5.77732 20.2994 5.79086 20.1467 5.77451 19.9957C5.75815 19.8448 5.71222 19.6985 5.63933 19.5653L3.6105 20.6753ZM4.2395 14.0862C4.2395 10.7716 6.11263 7.99044 8.67025 6.82031C11.1554 5.6841 14.4947 5.98473 17.6674 9.28081L19.3324 7.67902C15.5707 3.76781 11.1986 3.12185 7.70825 4.71748C4.295 6.27919 1.927 9.90519 1.927 14.0862H4.2395ZM13.0995 30.0625C13.8903 30.6853 14.7382 31.3482 15.597 31.8508C16.4557 32.3519 17.4362 32.7604 18.4999 32.7604V30.4479C18.022 30.4479 17.4608 30.2629 16.764 29.8544C16.0656 29.4474 15.3426 28.8862 14.5317 28.2464L13.0995 30.0625ZM23.9004 30.0625C26.0988 28.3281 28.9108 26.3424 31.1154 23.8588C33.3616 21.3305 35.0728 18.1963 35.0728 14.0862H32.7603C32.7603 17.4748 31.3728 20.0848 29.3872 22.3233C27.3599 24.605 24.8053 26.4041 22.4682 28.2464L23.9004 30.0625ZM35.0728 14.0862C35.0728 9.90519 32.7064 6.27919 29.2916 4.71748C25.8012 3.12185 21.4322 3.76781 17.6674 7.67748L19.3324 9.28081C22.5052 5.98627 25.8444 5.6841 28.3296 6.82031C30.8872 7.99044 32.7603 10.7701 32.7603 14.0862H35.0728ZM22.4682 28.2464C21.6572 28.8862 20.9342 29.4474 20.2358 29.8544C19.539 30.2614 18.9778 30.4479 18.4999 30.4479V32.7604C19.5637 32.7604 20.5442 32.3519 21.4029 31.8508C22.2631 31.3482 23.1095 30.6853 23.9004 30.0625L22.4682 28.2464ZM14.5317 28.2464C13.3045 27.2798 12.0573 26.3548 10.7931 25.3141L9.32238 27.1025C10.602 28.1554 11.9555 29.1606 13.0995 30.0625L14.5317 28.2464ZM5.63933 19.5668C4.71065 17.8901 4.22861 16.0029 4.2395 14.0862H1.927C1.927 16.6114 2.5745 18.7806 3.6105 20.6753L5.63933 19.5668Z"/>
               </svg>
