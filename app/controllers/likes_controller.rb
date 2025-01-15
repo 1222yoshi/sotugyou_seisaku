@@ -28,6 +28,7 @@ class LikesController < ApplicationController
     @other_users = if current_user.like_music.present?
                      @q.result(distinct: true)
                        .joins('LEFT JOIN matches ON matches.other_user_id = users.id')
+                       .left_joins(:areas, :instruments)
                        .includes(:areas, :instruments, user_albums: :album)
                        .where(matches: { user_id: current_user.id })
                        .select('users.*, 
@@ -46,7 +47,7 @@ class LikesController < ApplicationController
                       end
                    else
                      @q.result(distinct: true)
-                       .left_joins(:user_albums)
+                       .left_joins(:user_albums, :areas, :instruments)
                        .includes(:areas, :instruments, user_albums: :album)
                        .select('users.*, 
                                 COUNT(user_albums.id) as albums_count,
@@ -64,9 +65,9 @@ class LikesController < ApplicationController
                         end
                       end
                    end
-    @other_users = @other_users.joins(:areas).where(areas: { id: params[:areas_name] }) if params[:areas_name].present?
+    @other_users = @other_users.where(areas: { id: params[:areas_name] }) if params[:areas_name].present?
     if params[:instruments_name].present?
-      @other_users = @other_users.joins(:instruments).where(instruments: { id: params[:instruments_name] })
+      @other_users = @other_users.where(instruments: { id: params[:instruments_name] })
     end
     @other_users = @other_users.where(users: { purpose: params[:purpose] }) if params[:purpose].present?
     @user_count = Match.where(user_id: current_user.id, score: 0..999).maximum(:score)
@@ -81,6 +82,7 @@ class LikesController < ApplicationController
     @other_users = if current_user.like_music.present?
       @q.result(distinct: true)
         .joins('LEFT JOIN matches ON matches.other_user_id = users.id')
+        .left_joins(:areas, :instruments)
         .includes(:areas, :instruments, user_albums: :album)
         .where(matches: { user_id: current_user.id })
         .select('users.*, 
@@ -99,7 +101,7 @@ class LikesController < ApplicationController
        end
     else
       @q.result(distinct: true)
-        .left_joins(:user_albums)
+        .left_joins(:user_albums, :areas, :instruments)
         .includes(:areas, :instruments, user_albums: :album)
         .select('users.*, 
                  COUNT(user_albums.id) as albums_count,
@@ -117,9 +119,9 @@ class LikesController < ApplicationController
          end
        end
     end
-    @other_users = @other_users.joins(:areas).where(areas: { id: params[:areas_name] }) if params[:areas_name].present?
+    @other_users = @other_users.where(areas: { id: params[:areas_name] }) if params[:areas_name].present?
     if params[:instruments_name].present?
-      @other_users = @other_users.joins(:instruments).where(instruments: { id: params[:instruments_name] })
+      @other_users = @other_users.where(instruments: { id: params[:instruments_name] })
     end
     @other_users = @other_users.where(users: { purpose: params[:purpose] }) if params[:purpose].present?
     @user_count = Match.where(user_id: current_user.id, score: 0..999).maximum(:score)
@@ -135,6 +137,7 @@ class LikesController < ApplicationController
     @other_users = if current_user.like_music.present?
       @q.result(distinct: true)
         .joins('LEFT JOIN matches ON matches.other_user_id = users.id')
+        .left_joins(:areas, :instruments)
         .includes(:areas, :instruments, user_albums: :album)
         .where(matches: { user_id: current_user.id })
         .select('users.*, 
@@ -153,7 +156,7 @@ class LikesController < ApplicationController
        end
     else
       @q.result(distinct: true)
-        .left_joins(:user_albums)
+        .left_joins(:user_albums, :areas, :instruments)
         .includes(:areas, :instruments, user_albums: :album)
         .select('users.*, 
                  COUNT(user_albums.id) as albums_count,
@@ -171,9 +174,9 @@ class LikesController < ApplicationController
          end
        end
     end
-    @other_users = @other_users.joins(:areas).where(areas: { id: params[:areas_name] }) if params[:areas_name].present?
+    @other_users = @other_users.where(areas: { id: params[:areas_name] }) if params[:areas_name].present?
     if params[:instruments_name].present?
-      @other_users = @other_users.joins(:instruments).where(instruments: { id: params[:instruments_name] })
+      @other_users = @other_users.where(instruments: { id: params[:instruments_name] })
     end
     @other_users = @other_users.where(users: { purpose: params[:purpose] }) if params[:purpose].present?
     @user_count = Match.where(user_id: current_user.id, score: 0..999).maximum(:score)

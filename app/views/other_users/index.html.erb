@@ -8,14 +8,16 @@
     <% unless @other_users.present? %>
       <div class="neon-text-on-no-link lg:text-2xl lg:right-1/2 lg:fixed max-lg:mt-6 max-lg:text-center">条件に合うユーザーはいませんでした。</div>
     <% end %>
-    <div class="flex justify-center">
-      <div class="fixed">
-        <div class="flex justify-between lg:text-2xl">
-          <div class="lg:mr-64 max-lg:mr-12 sort-text-on">マッチ順</div>
-          <%= link_to "テスト順", quiz_result_other_users_path, class: "sort-text-off" %>
+    <% if @other_users.present? %>
+      <div class="flex justify-center">
+        <div class="fixed">
+          <div class="flex justify-between lg:text-2xl">
+            <div class="lg:mr-64 max-lg:mr-12 sort-text-on">マッチ順</div>
+            <%= link_to "テスト順", quiz_result_other_users_path, class: "sort-text-off" %>
+         </div>
         </div>
       </div>
-    </div>
+    <% end %>
     <div class="mt-12">
       <%= render partial: 'other_user', collection: @other_users %>
     </div>
