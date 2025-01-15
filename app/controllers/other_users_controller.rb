@@ -151,7 +151,6 @@ class OtherUsersController < ApplicationController
       notification_user_ids = Notification.where(user_id: current_user.id, is_read: false, notification_type: "message").pluck(:source_user_id)
       @other_users = @q.result(distinct: true)
                        .joins('LEFT JOIN matches ON matches.other_user_id = users.id')
-                       .left_joins(:areas, :instruments)
                        .includes(:areas, :instruments, user_albums: :album)
                        .where(matches: { user_id: current_user.id })
                        .select('users.*, 
@@ -173,7 +172,7 @@ class OtherUsersController < ApplicationController
       liked_user_ids = Like.where(liked_user_id: current_user.id).pluck(:like_user_id)
       notification_user_ids = Notification.where(user_id: current_user.id, is_read: false, notification_type: "message").pluck(:source_user_id)
       @other_users = @q.result(distinct: true)
-                       .left_joins(:user_albums, :areas, :instruments)
+                       .left_joins(:user_albums)
                        .includes(:areas, :instruments, user_albums: :album)
                        .select('users.*, 
                                 COUNT(user_albums.id) as albums_count,
@@ -192,7 +191,7 @@ class OtherUsersController < ApplicationController
                       end
     else
       @other_users = @q.result(distinct: true)
-                       .left_joins(:user_albums, :areas, :instruments)
+                       .left_joins(:user_albums)
                        .includes(:areas, :instruments, user_albums: :album)
                        .select('users.*, 
                                 COUNT(user_albums.id) as albums_count,
@@ -205,10 +204,10 @@ class OtherUsersController < ApplicationController
                       end
     end
 
-    @other_users = @other_users.where(areas: { id: params[:areas_name] }) if params[:areas_name].present?
+    @other_users = @other_users.left_joins(:areas).where(areas: { id: params[:areas_name] }) if params[:areas_name].present?
 
     if params[:instruments_name].present?
-      @other_users = @other_users.where(instruments: { id: params[:instruments_name] })
+      @other_users = @other_users.left_joins(:instruments).where(instruments: { id: params[:instruments_name] })
     end
 
     return unless params[:purpose].present?
