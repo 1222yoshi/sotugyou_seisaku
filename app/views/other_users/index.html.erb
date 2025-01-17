@@ -13,7 +13,7 @@
         <div class="fixed">
           <div class="flex justify-between lg:text-2xl">
             <div class="lg:mr-64 max-lg:mr-12 sort-text-on">マッチ順</div>
-            <%= link_to "テスト順", quiz_result_other_users_path, class: "sort-text-off" %>
+            <%= link_to "テスト順", quiz_result_other_users_path(params.permit(:q, :areas_name, :instruments_name, :purpose)), class: "sort-text-off" %>
          </div>
         </div>
       </div>

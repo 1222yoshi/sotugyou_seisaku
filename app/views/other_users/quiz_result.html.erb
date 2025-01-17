@@ -8,20 +8,22 @@
     <% unless @other_users.present? %>
       <div class="neon-text-on-no-link lg:text-2xl lg:right-1/2 lg:fixed max-lg:mt-6 max-lg:text-center">条件に合うユーザーはいませんでした。</div>
     <% end %>
-    <div class="flex justify-center">
-      <div class="fixed">
-        <div class="flex justify-between lg:text-2xl">
-          <%= link_to "マッチ順", root_path, class: "sort-text-off" %>
-          <div class="lg:ml-64 max-lg:ml-12 sort-text-on">テスト順</div>
+    <% if @other_users.present? %>
+      <div class="flex justify-center">
+        <div class="fixed">
+          <div class="flex justify-between lg:text-2xl">
+            <%= link_to "マッチ順", root_path(params.permit(:q, :areas_name, :instruments_name, :purpose)), class: "sort-text-off" %>
+            <div class="lg:ml-64 max-lg:ml-12 sort-text-on">テスト順</div>
+          </div>
         </div>
       </div>
-    </div>
+    <% end %>
     <div class="mt-12">
       <%= render partial: 'other_user', collection: @other_users %>
     </div>
   </div>
   <div class=" lg:items-end lg:p-2 max-lg:pt-2 search-menu max-lg:hidden search-back-root">
-    <%= search_form_for @q, url: other_users_path, method: :get do |f| %>
+    <%= search_form_for @q, url: quiz_result_other_users_path, method: :get do |f| %>
       <div>
         <%= f.search_field :name_cont, value: params.dig(:q, :name_cont), placeholder: "ユーザー名", class: "input-field fixed lg:right-8 w-80 z-10 lg:mt-6 max-lg:left-1/2 max-lg:transform max-lg:-translate-x-1/2",autocomplete: 'off', 'data-no-auto-focus': 'true' %>
       </div>
