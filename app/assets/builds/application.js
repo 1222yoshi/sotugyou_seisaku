@@ -6493,7 +6493,7 @@
         }, 1);
       });
     }
-    if (window.MyApp && window.MyApp.otherUsersCount !== void 0 && window.MyApp.n !== void 0) {
+    if (window.MyApp || window.MyApp.otherUsersCount !== void 0 || window.MyApp.n !== void 0) {
       if (window.MyApp.otherUsersCount >= window.MyApp.n) {
         window.addEventListener("scroll", function() {
           const urlParams2 = new URLSearchParams(window.location.search);
