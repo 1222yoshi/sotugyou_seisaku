@@ -4,7 +4,7 @@
   "dependencies": {
     "@hotwired/turbo-rails": "^8.0.4",
     "@popperjs/core": "^2.11.5",
-    "esbuild": "^0.23.0",
+    "esbuild": "^0.24.2",
     "sass": "^1.54.0"
   },
   "scripts": {

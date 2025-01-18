@@ -43,3 +43,11 @@
     <% end %> 
   </div>
 </div>
+<script>
+  // 名前空間を定義（すでに存在している場合は再利用）
+  window.MyApp = window.MyApp || {};
+
+  // 名前空間内に変数を格納
+  window.MyApp.otherUsersCount = <%= @other_users_count %>; // @other_usersの数をJavaScriptに渡す
+  window.MyApp.n = <%= params[:n].to_i || 0 %>; // nの値を取得
+</script>
