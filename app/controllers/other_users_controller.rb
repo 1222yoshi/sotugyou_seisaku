@@ -157,7 +157,6 @@ class OtherUsersController < ApplicationController
                                 matches.score as match_score, 
                                 (SELECT MAX(rank_score) FROM results WHERE user_id = users.id AND clear = true) AS max_rank_score,
                                 (SELECT COUNT(*) FROM user_albums WHERE user_id = users.id) AS album_count')
-                       .group('users.id, matches.score')
                        .where.not(id: current_user.id)
                        .order('match_score DESC')
                        .tap do |users|
@@ -199,15 +198,6 @@ class OtherUsersController < ApplicationController
                        .group('users.id')
                        .order('albums_count DESC')
     end
-
-    if params[:n].present?
-      n = params[:n].to_i
-    else
-      n = 10
-    end
-
-    @other_users_count = @q.result(distinct: true).count
-    @other_users = @other_users.limit(n)
 
     @other_users = @other_users.left_joins(:areas).where(areas: { id: params[:areas_name] }) if params[:areas_name].present?
 
