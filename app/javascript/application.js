@@ -213,7 +213,7 @@ document.addEventListener('turbo:load', () => {
         });
     }
 
-    if (['/', '/other_users/quiz_result'].includes(window.location.pathname)) {
+    if (window.MyApp && window.MyApp.otherUsersCount !== undefined && window.MyApp.n !== undefined) {
         if (window.MyApp.otherUsersCount >= window.MyApp.n) {
             window.addEventListener('scroll', function() {
                 const urlParams = new URLSearchParams(window.location.search);

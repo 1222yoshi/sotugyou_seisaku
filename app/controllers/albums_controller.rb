@@ -224,6 +224,10 @@ class AlbumsController < ApplicationController
   def destroy
     album_param = session[:album_search]
     user_album = current_user.user_albums.find_by(album_id: params[:id])
+    if user_album.order_number.nil?
+      flash[:danger] = '削除に失敗しました'
+      redirect_to albums_path(album: album_param)
+    end
     order_number = user_album.order_number
     user_album.destroy
     flash[:danger] = 'アルバムを削除しました。'
