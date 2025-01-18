@@ -157,6 +157,7 @@ class OtherUsersController < ApplicationController
                                 matches.score as match_score, 
                                 (SELECT MAX(rank_score) FROM results WHERE user_id = users.id AND clear = true) AS max_rank_score,
                                 (SELECT COUNT(*) FROM user_albums WHERE user_id = users.id) AS album_count')
+                       .group('users.id, matches.score')
                        .where.not(id: current_user.id)
                        .order('match_score DESC')
                        .tap do |users|
