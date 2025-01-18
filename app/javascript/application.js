@@ -212,19 +212,6 @@ document.addEventListener('turbo:load', () => {
             }, 1);
         });
     }
-
-    if (window.MyApp || window.MyApp.otherUsersCount !== undefined || window.MyApp.n !== undefined) {
-        if (window.MyApp.otherUsersCount >= window.MyApp.n) {
-            window.addEventListener('scroll', function() {
-                const urlParams = new URLSearchParams(window.location.search);
-                let currentN = parseInt(urlParams.get('n'))+10 || 20;
-                const currentPage = window.location.pathname;
-                if (window.innerHeight + window.scrollY >= document.body.offsetHeight) {
-                    window.location.href = `${currentPage}?n=${currentN}&scroll=${window.scrollY}`;
-               }
-            });
-        }
-    }
 });
 
 // blinkingアニメーションを開始する関数

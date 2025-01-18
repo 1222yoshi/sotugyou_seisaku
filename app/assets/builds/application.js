@@ -6493,18 +6493,6 @@
         }, 1);
       });
     }
-    if (window.MyApp || window.MyApp.otherUsersCount !== void 0 || window.MyApp.n !== void 0) {
-      if (window.MyApp.otherUsersCount >= window.MyApp.n) {
-        window.addEventListener("scroll", function() {
-          const urlParams2 = new URLSearchParams(window.location.search);
-          let currentN = parseInt(urlParams2.get("n")) + 10 || 20;
-          const currentPage = window.location.pathname;
-          if (window.innerHeight + window.scrollY >= document.body.offsetHeight) {
-            window.location.href = `${currentPage}?n=${currentN}&scroll=${window.scrollY}`;
-          }
-        });
-      }
-    }
   });
   function startBlinkingForElements() {
     const blinkingElements = document.querySelectorAll(".blinking");
