@@ -199,6 +199,15 @@ class OtherUsersController < ApplicationController
                        .order('albums_count DESC')
     end
 
+    if params[:n].present?
+      n = params[:n].to_i
+    else
+      n = 10
+    end
+
+    @other_users_count = @q.result(distinct: true).count
+    @other_users = @other_users.limit(n)
+
     @other_users = @other_users.left_joins(:areas).where(areas: { id: params[:areas_name] }) if params[:areas_name].present?
 
     if params[:instruments_name].present?
