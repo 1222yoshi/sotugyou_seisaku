@@ -1,6 +1,10 @@
 // Entry point for the build script in your package.json
 import "@hotwired/turbo-rails"
 
+const urlParams = new URLSearchParams(window.location.search);
+const scrollPosition = parseInt(urlParams.get('scroll')) || 0;
+
+window.scrollTo(0, scrollPosition);
 document.addEventListener('turbo:load', () => {
     const neonTexts = document.querySelectorAll('.neon-text-on, .login-button, .neon-icon-on, .border-blue-quiz');
 
@@ -199,12 +203,28 @@ document.addEventListener('turbo:load', () => {
         });
     }
 
-    document.getElementById("submit-button").addEventListener("click", function() {
-        const inputField = document.querySelector(".input-field");
-        setTimeout(() => {
-        inputField.value = ""; // 入力欄を空にする
-        }, 1);
-    });
+    const chatButton = document.getElementById("chat-button");
+    if (chatButton) {
+        chatButton.addEventListener("click", function() {
+            const inputField = document.querySelector(".input-field");
+            setTimeout(() => {
+                inputField.value = ""; // 入力欄を空にする
+            }, 1);
+        });
+    }
+
+    if (['/', '/other_users/quiz_result'].includes(window.location.pathname)) {
+        if (window.MyApp.otherUsersCount >= window.MyApp.n) {
+            window.addEventListener('scroll', function() {
+                const urlParams = new URLSearchParams(window.location.search);
+                let currentN = parseInt(urlParams.get('n'))+10 || 20;
+                const currentPage = window.location.pathname;
+                if (window.innerHeight + window.scrollY >= document.body.offsetHeight) {
+                    window.location.href = `${currentPage}?n=${currentN}&scroll=${window.scrollY}`;
+               }
+            });
+        }
+    }
 });
 
 // blinkingアニメーションを開始する関数

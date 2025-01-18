@@ -199,15 +199,24 @@ class OtherUsersController < ApplicationController
                        .order('albums_count DESC')
     end
 
+    if params[:n].present?
+      n = params[:n].to_i
+    else
+      n = 10
+    end
+
+    @other_users_count = @q.result(distinct: true).count
+    @other_users = @other_users.limit(n)
+
     @other_users = @other_users.left_joins(:areas).where(areas: { id: params[:areas_name] }) if params[:areas_name].present?
 
     if params[:instruments_name].present?
       @other_users = @other_users.left_joins(:instruments).where(instruments: { id: params[:instruments_name] })
     end
 
-    return unless params[:purpose].present?
-
-    @other_users = @other_users.where(users: { purpose: params[:purpose] })
+    if params[:purpose].present?
+      @other_users = @other_users.where(users: { purpose: params[:purpose] })
+    end
   end
 
   def quiz_result
@@ -263,6 +272,15 @@ class OtherUsersController < ApplicationController
                        .order('max_rank_score DESC')
     end
 
+    if params[:n].present?
+      n = params[:n].to_i
+    else
+      n = 10
+    end
+
+    @other_users_count = @q.result(distinct: true).count
+    @other_users = @other_users.limit(n)
+    
     @other_users = @other_users.left_joins(:areas).where(areas: { id: params[:areas_name] }) if params[:areas_name].present?
 
     if params[:instruments_name].present?

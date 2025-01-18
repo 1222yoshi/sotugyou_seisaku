@@ -2732,9 +2732,9 @@
       }
     }
     scrollToRestoredPosition() {
-      const { scrollPosition } = this.restorationData;
-      if (scrollPosition) {
-        this.view.scrollToPosition(scrollPosition);
+      const { scrollPosition: scrollPosition2 } = this.restorationData;
+      if (scrollPosition2) {
+        this.view.scrollToPosition(scrollPosition2);
         return true;
       }
     }
@@ -6331,6 +6331,9 @@
   });
 
   // app/javascript/application.js
+  var urlParams = new URLSearchParams(window.location.search);
+  var scrollPosition = parseInt(urlParams.get("scroll")) || 0;
+  window.scrollTo(0, scrollPosition);
   document.addEventListener("turbo:load", () => {
     const neonTexts = document.querySelectorAll(".neon-text-on, .login-button, .neon-icon-on, .border-blue-quiz");
     startBlinkingForElements();
@@ -6481,12 +6484,27 @@
         loadElement.style.display = "block";
       });
     }
-    document.getElementById("submit-button").addEventListener("click", function() {
-      const inputField = document.querySelector(".input-field");
-      setTimeout(() => {
-        inputField.value = "";
-      }, 1);
-    });
+    const chatButton = document.getElementById("chat-button");
+    if (chatButton) {
+      chatButton.addEventListener("click", function() {
+        const inputField = document.querySelector(".input-field");
+        setTimeout(() => {
+          inputField.value = "";
+        }, 1);
+      });
+    }
+    if (["/", "/other_users/quiz_result"].includes(window.location.pathname)) {
+      if (window.MyApp.otherUsersCount >= window.MyApp.n) {
+        window.addEventListener("scroll", function() {
+          const urlParams2 = new URLSearchParams(window.location.search);
+          let currentN = parseInt(urlParams2.get("n")) + 10 || 20;
+          const currentPage = window.location.pathname;
+          if (window.innerHeight + window.scrollY >= document.body.offsetHeight) {
+            window.location.href = `${currentPage}?n=${currentN}&scroll=${window.scrollY}`;
+          }
+        });
+      }
+    }
   });
   function startBlinkingForElements() {
     const blinkingElements = document.querySelectorAll(".blinking");
