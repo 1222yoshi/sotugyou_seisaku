@@ -187,6 +187,7 @@ class OtherUsersController < ApplicationController
                           user.notification_now = notification_user_ids.include?(user.id)
                         end
                       end
+      flash.now[:success] = '私を構成する9枚を作りましょう'
     else
       @other_users = @q.result(distinct: true)
                        .left_joins(:user_albums)
