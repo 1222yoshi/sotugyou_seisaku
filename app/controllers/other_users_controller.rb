@@ -151,13 +151,18 @@ class OtherUsersController < ApplicationController
       notification_user_ids = Notification.where(user_id: current_user.id, is_read: false, notification_type: "message").pluck(:source_user_id)
       @other_users = @q.result(distinct: true)
                        .joins('LEFT JOIN matches ON matches.other_user_id = users.id')
+                       .joins('LEFT JOIN LATERAL (
+                            SELECT *
+                            FROM user_albums
+                            WHERE user_albums.user_id = users.id
+                            ORDER BY user_albums.order_number ASC
+                         ) ordered_albums ON true')
                        .includes(:areas, :instruments, user_albums: :album)
                        .where(matches: { user_id: current_user.id })
                        .select('users.*, 
                                 matches.score as match_score, 
                                 (SELECT MAX(rank_score) FROM results WHERE user_id = users.id AND clear = true) AS max_rank_score,
-                                (SELECT COUNT(*) FROM user_albums WHERE user_id = users.id) AS album_count,
-                                (SELECT MAX(order_number) FROM user_albums WHERE user_id = users.id) AS max_order_number')
+                                (SELECT COUNT(*) FROM user_albums WHERE user_id = users.id) AS album_count')
                        .where.not(id: current_user.id)
                        .order('match_score DESC')
                        .tap do |users|
