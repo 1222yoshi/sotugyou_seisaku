@@ -15,7 +15,7 @@ class User < ApplicationRecord
   has_many :areas, through: :user_areas
   has_many :user_instruments, dependent: :destroy
   has_many :instruments, through: :user_instruments
-  has_many :user_albums, dependent: :destroy
+  has_many :user_albums, -> { order(order_number: :asc) }, dependent: :destroy
   has_many :albums, through: :user_albums
   has_many :matches
   has_many :other_users, through: :matches, source: :other_user

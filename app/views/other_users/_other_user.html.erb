@@ -9,7 +9,7 @@
       <span class="lg:text-2xl max-lg:sm"><%= other_user.name %></span>
     </div>
     <div class="grid grid-cols-3 rounded overflow-hidden">
-      <% other_user.sorted_albums.each do |user_album| %>
+      <% other_user.user_albums.each do |user_album| %>
         <%= link_to album_path(user_album.album.itunes_album_id) do %>
           <div class="album w-40 h-40 overflow-hidden flex items-center justify-center max-lg:w-12 max-lg:h-12">
             <%= image_tag user_album.album.artwork_url, class: "object-cover w-full h-full" %>

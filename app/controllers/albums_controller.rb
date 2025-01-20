@@ -1,7 +1,7 @@
 class AlbumsController < ApplicationController
   skip_before_action :require_login, only: %i[index show]
   def index
-    @user_albums = current_user.user_albums.includes(:album).order(order_number: :asc) if current_user
+    @user_albums = current_user.user_albums.includes(:album) if current_user
 
     if params[:album].present?
       begin
@@ -26,7 +26,7 @@ class AlbumsController < ApplicationController
   end
 
   def sort
-    @user_albums = current_user.user_albums.includes(:album).order(order_number: :asc)
+    @user_albums = current_user.user_albums.includes(:album)
     @selected_album_id = session[:selected_album_id]
   end
 
@@ -155,7 +155,7 @@ class AlbumsController < ApplicationController
   end
 
   def share
-    @user_albums = current_user.user_albums.includes(:album).order(order_number: :asc).limit(9)
+    @user_albums = current_user.user_albums.includes(:album).limit(9)
 
     current_time = Time.now.strftime('%Y%m%d%H%M%S')
 
