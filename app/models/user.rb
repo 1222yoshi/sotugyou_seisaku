@@ -88,6 +88,7 @@ class User < ApplicationRecord
   attr_accessor :i_like
   attr_accessor :i_liked
   attr_accessor :notification_now
+  attr_accessor :sorted_albums
 
   private
 

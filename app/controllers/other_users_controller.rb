@@ -151,12 +151,6 @@ class OtherUsersController < ApplicationController
       notification_user_ids = Notification.where(user_id: current_user.id, is_read: false, notification_type: "message").pluck(:source_user_id)
       @other_users = @q.result(distinct: true)
                        .joins('LEFT JOIN matches ON matches.other_user_id = users.id')
-                       .joins('LEFT JOIN LATERAL (
-                            SELECT *
-                            FROM user_albums
-                            WHERE user_albums.user_id = users.id
-                            ORDER BY user_albums.order_number ASC
-                         ) ordered_albums ON true')
                        .includes(:areas, :instruments, user_albums: :album)
                        .where(matches: { user_id: current_user.id })
                        .select('users.*, 
@@ -167,6 +161,7 @@ class OtherUsersController < ApplicationController
                        .order('match_score DESC')
                        .tap do |users|
                         users.each do |user|
+                          user.sorted_albums = user.user_albums.order(order_number: :asc)
                           user.i_like = like_user_ids.include?(user.id)
                           user.i_liked = liked_user_ids.include?(user.id)
                           user.notification_now = notification_user_ids.include?(user.id)
@@ -188,6 +183,7 @@ class OtherUsersController < ApplicationController
                        .order('albums_count DESC')
                        .tap do |users|
                         users.each do |user|
+                          user.sorted_albums = user.user_albums.order(order_number: :asc)
                           user.i_like = like_user_ids.include?(user.id)
                           user.i_liked = liked_user_ids.include?(user.id)
                           user.notification_now = notification_user_ids.include?(user.id)
@@ -204,6 +200,11 @@ class OtherUsersController < ApplicationController
                                 (SELECT COUNT(*) FROM user_albums WHERE user_id = users.id) AS album_count')
                        .group('users.id')
                        .order('albums_count DESC')
+                       .tap do |users|
+                        users.each do |user|
+                          user.sorted_albums = user.user_albums.order(order_number: :asc)
+                        end
+                      end
     end
 
     @other_users = @other_users.left_joins(:areas).where(areas: { id: params[:areas_name] }) if params[:areas_name].present?
@@ -236,6 +237,7 @@ class OtherUsersController < ApplicationController
                        .order('max_rank_score DESC')
                        .tap do |users|
                         users.each do |user|
+                          user.sorted_albums = user.user_albums.order(order_number: :asc)
                           user.i_like = like_user_ids.include?(user.id)
                           user.i_liked = liked_user_ids.include?(user.id)
                           user.notification_now = notification_user_ids.include?(user.id)
@@ -255,12 +257,12 @@ class OtherUsersController < ApplicationController
                        .order('max_rank_score DESC')
                        .tap do |users|
                         users.each do |user|
+                          user.sorted_albums = user.user_albums.order(order_number: :asc)
                           user.i_like = like_user_ids.include?(user.id)
                           user.i_liked = liked_user_ids.include?(user.id)
                           user.notification_now = notification_user_ids.include?(user.id)
                         end
                       end
-
     else
       @other_users = @q.result(distinct: true)
                        .left_joins(:results) # LEFT JOIN に変更
@@ -268,6 +270,11 @@ class OtherUsersController < ApplicationController
                        .select('users.*, COALESCE(MAX(CASE WHEN results.clear = true THEN results.rank_score ELSE NULL END), 0) AS max_rank_score, 
                                 (SELECT COUNT(*) FROM user_albums WHERE user_id = users.id) AS album_count') # clearがtrueのrank_scoreのみ取得
                        .order('max_rank_score DESC')
+                       .tap do |users|
+                        users.each do |user|
+                          user.sorted_albums = user.user_albums.order(order_number: :asc)
+                        end
+                      end
     end
 
     @other_users = @other_users.left_joins(:areas).where(areas: { id: params[:areas_name] }) if params[:areas_name].present?
@@ -439,6 +446,6 @@ class OtherUsersController < ApplicationController
       url: "https://metronote.jp/other_users/#{@user.id}?time=#{current_time}",
       image: "https://#{ENV['AWS_BUCKET_NAME']}.s3.us-east-1.amazonaws.com/album_grid_#{@user.id}_#{current_time}.png"
     }
-    @user_albums = @user.user_albums.includes(:album)
+    @user_albums = @user.user_albums.includes(:album).order(order_number: :asc)
   end
 end

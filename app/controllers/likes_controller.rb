@@ -38,6 +38,7 @@ class LikesController < ApplicationController
                        .order('match_score DESC')
                        .tap do |users|
                         users.each do |user|
+                          user.sorted_albums = user.user_albums.order(order_number: :asc)
                           user.i_like = @like_user_ids.include?(user.id)
                           user.i_liked = liked_user_ids.include?(user.id)
                           user.notification_now = notification_user_ids.include?(user.id)
@@ -56,6 +57,7 @@ class LikesController < ApplicationController
                        .order('albums_count DESC')
                        .tap do |users|
                         users.each do |user|
+                          user.sorted_albums = user.user_albums.order(order_number: :asc)
                           user.i_like = @like_user_ids.include?(user.id)
                           user.i_liked = liked_user_ids.include?(user.id)
                           user.notification_now = notification_user_ids.include?(user.id)
@@ -89,6 +91,7 @@ class LikesController < ApplicationController
         .order('match_score DESC')
         .tap do |users|
          users.each do |user|
+          user.sorted_albums = user.user_albums.order(order_number: :asc)
            user.i_like = like_user_ids.include?(user.id)
            user.i_liked = @liked_user_ids.include?(user.id)
            user.notification_now = notification_user_ids.include?(user.id)
@@ -107,6 +110,7 @@ class LikesController < ApplicationController
         .order('albums_count DESC')
         .tap do |users|
          users.each do |user|
+           user.sorted_albums = user.user_albums.order(order_number: :asc)
            user.i_like = like_user_ids.include?(user.id)
            user.i_liked = @liked_user_ids.include?(user.id)
            user.notification_now = notification_user_ids.include?(user.id)
@@ -141,6 +145,7 @@ class LikesController < ApplicationController
         .order('match_score DESC')
         .tap do |users|
          users.each do |user|
+           ser.sorted_albums = user.user_albums.order(order_number: :asc)
            user.i_like = like_user_ids.include?(user.id)
            user.i_liked = liked_user_ids.include?(user.id)
            user.notification_now = notification_user_ids.include?(user.id)
@@ -159,9 +164,10 @@ class LikesController < ApplicationController
         .order('albums_count DESC')
         .tap do |users|
          users.each do |user|
-           user.i_like = like_user_ids.include?(user.id)
-           user.i_liked = liked_user_ids.include?(user.id)
-           user.notification_now = notification_user_ids.include?(user.id)
+          user.sorted_albums = user.user_albums.order(order_number: :asc)
+          user.i_like = like_user_ids.include?(user.id)
+          user.i_liked = liked_user_ids.include?(user.id)
+          user.notification_now = notification_user_ids.include?(user.id)
          end
        end
     end
